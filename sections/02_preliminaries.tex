@@ -1,0 +1,84 @@
+\section{Preliminaries}
+
+\subsection{Notation}
+We adopt the following notation. A variable displayed like $\statest_{t}$ represents the realisation of a function (e.g. a spatial field) indexed at time $t$; the variable displayed sans-serif $\state_{t}$ represents a random variable used to model (statistically) $\statest_{t}$.
+%capital letters in calligraphic font, such as $\statesp$, represent the space of a variable like $\statest_{t}$;
+% bold, lowercase letters like ${\state}_{t}$ denote finite dimensional vectors
+%(e.g. the pointwise evaluations on $\state_t$);
+%matrices are represented by capital letters such as $K$, but this is not exclusive; 
+For simplicity, we assume that all random variables have a probability distribution that is absolutely continuous with respect to Lebesgue measure.
+That is, all random variables admit a probability density function, although this density function is not evaluated in the computations involved in our technique.
+% Our methods similarly apply to probability distributions that do not admit a probability density function, although their use may not necessarily be appropriate.
+Following conventional notation, we write $p(\cdot)$ for the probability density of a random variable, and $p(\cdot \mid \cdot)$ for conditional densities, where the meaning of $p$ is clear from context.
+We notate that a random variable $\state_t$ follows a distribution with probability density $p$ by $\state_t \sim p(\statest_t)$.
+
+\subsection{Related work}
+
+Model inversion has a long history of methodological development in the geophysical sciences, where problems often involve high-dimensional parameter spaces and complex physical models.  Popular approaches for inversion in these fields include GLUE \cite{Beven2014}, PEST \cite{Doherty2010}, DREAM \cite{Vrugt2011} and MCMC algorithms \cite{Oh2001}.
+
+In the broader scientific community, model inversion has often utilised standard Bayesian statistical approaches \cite{StuartInverse2010,DashtiBayesian2015,TarantolaInverse2005}.  For high-dimensional, computationally expensive simulators, model inversion has often involved the use of model emulation (surrogate modelling) \cite{Hooten2011FirstOrder, GramacyLocal2015, Gopalan2021HOSVD, ColeLocallyInduced2021} and/or dimension reduction methods \cite{Higdon2008SVDEmulator, SiadeSnapshot2010, Grana2019}, both of which introduce additional uncertainties into the inferential process.
+
+More recently, machine learning methods for model inversion have become an active area of research.  For example, the use of Physics-Informed Neural Networks (PINNs) \cite{HePhysicsinformed2020,YangPhysicsInformed2020,ZhangLearning2020}; stochastic inversion via adversarial learning~\cite{XuAdversarial2019,BaoNumerical2020,ChuLearning2021}; operator inversion with diffusion models~\cite{SongSolving2022,JalalRobust2021}; 
+neural operator inversion with graph neural networks~\cite{LiNeural2020};
+Bayesian neural operators with last-layer Laplace approximations~\cite{MagnaniApproximate2022}; neural linear models with functional GP priors \cite{WatsonNeural2020}.
+
+Amongst these machine learning methods, Gaussian processes have a prominent place.  For inverse problems with large numbers of observations and/or with high-dimensional data, it is common to resort to sparse GP approximations for computational feasibility.  Methods include the use of inducing points \cite{Bauer2016} and Vecchia approximations \cite{Katzfuss2020}, both of which reduce the computational complexity by introducing a simpler approximation to the likelihood function.
+
+In contrast, this work is positioned in the larger field of ``likelihood-free'' methods (e.g.~\citet{CranmerFrontier2020}) in that we endeavour to conduct inference for complex physical models without evaluating explicitly the likelihoods for the observations.  The approach makes use of Gaussian processes, but avoids making approximations of the process by working with an ensemble of samples instead.
+
+\subsection{Gaussian updates}
+The multivariate Gaussian distribution enjoys a host of mathematically convenient properties.
+One of the most widely exploited properties is the fact that jointly Gaussian random variables are closed under conditioning on values of coordinates of the random variables.
+We will leverage this fact in two forms.
+The first form, invoked in \S~\ref{sec:error_prop}, describes the conditioning operation in terms of probability densities.
+The second form, invoked in \S~\ref{sec:EnsembleInversion} describes the conditioning operation in terms of random vectors.
+
+\paragraph{Distributional conditioning}
+We repeatedly exploit the following well-known property of multivariate Gaussians.
+Jointly Gaussian variates,
+\begin{align*}
+    \begin{bmatrix}\vrv{y}\\ \vrv{w}
+\end{bmatrix}\sim\mathcal{N}\left(\begin{bmatrix}
+    \vv{m}_{\vrv{y}}\\ \vv{m}_{\vrv{w}}
+\end{bmatrix},\begin{bmatrix}
+    \mm{K}_{\vrv{y}\vrv{y}} & \mm{K}_{\vrv{y}\vrv{w}} \\
+    \mm{K}_{\vrv{w}\vrv{y}} & \mm{K}_{\vrv{w}\vrv{w}}
+\end{bmatrix}\right) \numberthis \label{eq:jointly_gaussian}
+\end{align*}
+have a data-conditional update, namely,
+\begin{align*}
+p(\vv{y}\gvn &\vrv{w}{=}\vv{w})=\dist{N}\left(
+        \hat{\vv{m}},
+        \hat{\mm{K}}
+\right), \quad \text{where} \numberthis\label{eq:cond-joint-normal} \\
+\hat{\vv{m}}
+    &=\vv{m}_{\vrv{y}}
+        +\mm{K}_{\vrv{y}\vrv{w}} \mm{K}_{\vrv{w}\vrv{w}}^{-1}(\vv{w}- \vv{m}_{\vrv{w}}), \quad \text{and} \numberthis \label{eq:gaussian-cond-mean}\\
+\hat{\mm{K}}
+    &=\mm{K}_{\vrv{y}\vrv{y}} 
+        -\mm{K}_{\vrv{y}\vrv{w}} \mm{K}_{\vrv{w}\vrv{w}}^{-1}\mm{K}_{\vrv{w}\vrv{y}}.\numberthis\label{eq:gaussian-cond-var}
+\end{align*}
+
+\paragraph{Pathwise conditioning via Matheron updates} In this work we leverage a technique that we call the \emph{Matheron update}, which is a means of perturbing samples from jointly Gaussian random variate into samples conditional on a practical observation by additive updates.
+Whereas~\eqref{eq:cond-joint-normal},~\eqref{eq:gaussian-cond-mean} and~\eqref{eq:gaussian-cond-var} describe the conditioning operation in terms of moments, the Matheron update describes the conditioning operation in terms of random variables.
+Let $\vrv{y}$ and $\vrv{w}$ be jointly Gaussian according to~\eqref{eq:jointly_gaussian}.
+Then samples from the conditional distribution with conditional density $p(\vv{y} \mid \vrv{w} = \vv{w})$ satisfy the following relation to samples from the unconditional joint density
+\begin{align*}
+    \vrv{y} \gvn (\vrv{w}{=}\vv{w}) \stackrel{d}{=} \vrv{y} 
+        +\mm{K}_{\vrv{y}\vrv{w}} \mm{K}_{\vrv{w}\vrv{w}}^{-1}(\vrv{w} - \vv{w}). \numberthis \label{eq:matheron_rule_1}
+\end{align*}
+\iffalse
+Or in density notation,
+\begin{align*}
+&(y^{(0)},w^{(0)})\sim p(\vv{y},w)\\
+&\Rightarrow y^{(0)} +\mm{K}_{\vrv{y}\vrv{w}} \mm{K}_{\vrv{w}\vrv{w}}^{-1}(w - w^{(0)}) \sim p(\vv{y}\gvn \vrv{w}{=}w)
+\end{align*}
+ where we use \(\sim\) to mean ``is sampled from'' rather than ``is distributed according to``.
+\fi
+This identity can be verified by taking the expectation and covariance of both sides of~\eqref{eq:matheron_rule_1} and noting that linear combinations of Gaussian random variables are Gaussian, as presented in~\citet[Theorem 1]{WilsonEfficiently2020}. 
+
+In machine learning this identity is known as the Matheron or \emph{pathwise} update
+(e.g.~\citet{DoucetNote2010,RitterScalable2018,WilsonPathwise2021}). The Matheron update gives us a means to move from random samples from a given distribution, to random samples from that distribution conditioned upon some observation. %For an in-depth explanation, see Appendix~\ref{app:matheron}.
+ % \russ{Is this the same notation issue again? Don't we want the conditional given all the past states, not just the last two?}
+Applications in the geoscience and data assimilation literature uses distinct terminology, e.g. \emph{conditional simulation update}~\citep{KatzfussUnderstanding2016}, or \emph{ensemble perturbation}~\citep{EvensenData2009}.
+In the current work, we connect the use of the update rule in these distinct fields.

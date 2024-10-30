@@ -1,0 +1,14 @@
+\section{Introduction}
+This paper introduces a method for inversion of models of dynamical systems whose state and static parameters are both very high-dimensional and highly correlated, but which may be modelled by a physic simulator. 
+Problems of this sort arise in geophysics, hydrology, and medical imaging, and are central to many problems in machine learning.
+In fact, inferring any hidden cause through its influence on some dynamical behaviour may be understood as a problem of this type.
+Traditionally, the methods to solve inverse problems have been statistical \cite{TarantolaInverse2005} and have often relied on strategies like model emulation / surrogate modelling and dimension reduction to make these feasible in applied settings.  
+
+ We propose the MaTHeron Ensemble inversion approach (\meth{}), which efficiently utilises a (possibly black-box) forward operator to sample from a posterior distribution over unobserved  static parameters.
+\meth{} advances our capability to handle such models, by treating the observations as an  approximation to Gaussian variates utilising the the ensemble methods of the data assimilation community~\cite{EvensenData2009}.
+Gaussian variates may be updated, sample-wise, using the Matheron update~\cite{DoucetNote2010,WilsonEfficiently2020}, without the need to calculate covariances explicitly.
+The method is general enough to be applicable to any dynamic model that is well-approximated by assuming linearity in expectation, scales to very large systems, and requires few assumptions.
+% The prior distributions may be supplied by any model from which we can sample, and are not required to, for example, possess stationary or homogenaeity.
+
+The method is structurally similar to the Ensemble Kalman filter, in that all updates between random variates are conducted via ensembles of samples rather than explicit densities.
+However, \meth{} exploits the closed form Matheron updates for static parameters rather than states. This generates closed-form ensemble update rules which are capable of assimilating multiple observations without ever constructing the prior covariance matrix, and thus scales to very high dimensions.

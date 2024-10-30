@@ -1,0 +1,248 @@
+%%%%%%%% ICML 2023 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+\input{preamble.tex}
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2023} with \usepackage[nohyperref]{icml2023} above.
+\usepackage{hyperref}
+
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2023}
+
+% If accepted, instead use the following line for the camera-ready submission:
+% \usepackage[accepted]{icml2023}
+
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+% if you use cleveref..
+%\usepackage[capitalize,noabbrev]{cleveref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THEOREMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+%\usepackage[disable,textsize=tiny]{todonotes}
+%\usepackage[textsize=tiny]{todonotes}
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+
+
+
+\icmltitlerunning{The Ensemble Kalman Update as Matheron update}
+
+% Here you can change the date presented in the paper title
+%\date{September 9, 1985}
+% Or remove it
+%\date{}
+
+%\author{ \href{https://orcid.org/0000-0001-6077-2684}{\includegraphics[scale=0.06]{orcid.pdf}\hspace{1mm}Dan B MacKinlay}%\thanks{Use footnote for providing further
+		%information about author (webpage, alternative
+		%address)---\emph{not} for acknowledging funding agencies.}
+%  \\\
+%	CSIRO's Data61 \\
+%	\texttt{Dan.MacKinlay@data61.csiro.au} \\
+%	%% examples of more authors
+%	\And
+%	Dan Pagendam \\
+%		CSIRO's Data61 \\
+%	\AND
+%	Russell Tsuchida \\
+%	CSIRO's Data61 \\
+%	\And
+%	Petra Kuhnert \\
+%	CSIRO's Data61 \\
+%	\And
+%	   Sreekanth Janardhanan \\
+%	CSIRO \\
+%}
+
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{The Ensemble Kalman Update as Matheron update}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2023
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+
+
+\begin{icmlauthorlist}
+\icmlauthor{Firstname1 Lastname1}{equal,yyy}
+\icmlauthor{Firstname2 Lastname2}{equal,yyy,comp}
+\icmlauthor{Firstname3 Lastname3}{comp}
+\icmlauthor{Firstname4 Lastname4}{sch}
+\icmlauthor{Firstname5 Lastname5}{yyy}
+\icmlauthor{Firstname6 Lastname6}{sch,yyy,comp}
+\icmlauthor{Firstname7 Lastname7}{comp}
+%\icmlauthor{}{sch}
+\icmlauthor{Firstname8 Lastname8}{sch}
+\icmlauthor{Firstname8 Lastname8}{yyy,comp}
+%\icmlauthor{}{sch}
+%\icmlauthor{}{sch}
+\end{icmlauthorlist}
+
+\icmlaffiliation{yyy}{Department of XXX, University of YYY, Location, Country}
+\icmlaffiliation{comp}{Company Name, Location, Country}
+\icmlaffiliation{sch}{School of ZZZ, Institute of WWW, Location, Country}
+
+\icmlcorrespondingauthor{Firstname1 Lastname1}{first1.last1@xxx.edu}
+\icmlcorrespondingauthor{Firstname2 Lastname2}{first2.last2@www.uk}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{likelihood free, ensemble, Gaussian Process, inverse modelling, physics}
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+%\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+\begin{abstract}
+    A popular means of 
+    
+    The cost of the resulting algorithm scales linearly with the dimension of the estimands and  does not require the calculation or storage of large covariance matrices.
+    %Nor does it require artificial evolution dynamics to be applied to static latent parameters.
+    We do not require exact likelihood evaluations of the prior or posterior samples.
+    However, we do require the ability to simulate from the prior, and sufficient regularity of the forward operator.
+    Our method achieves orders-of-magnitude speed-up over a classical physical model inversion approach for high-dimensional models, while maintaining acceptable accuracy. This increases the dimensionality of the estimand at which inference is feasible, without resorting to dimension reduction methods.
+    % \russ{Abstracts should be 4-6 sentences and a single paragraph}
+    \footnote{\textcolor{blue}{Link to publically available code to be provided upon acceptance. Reviewers, see attached .zip.}}
+\end{abstract}
+
+\subfile{sections/01_introduction}
+\subfile{sections/02_preliminaries}
+\subfile{sections/03_problemsetting}
+\subfile{sections/04_experiments}
+\subfile{sections/05_conclusion}
+
+\clearpage
+\bibliographystyle{icml2023}
+\bibliography{refs.bib}
+
+%%% Uncomment this line and comment out the ``thebibliography'' section below to use the external .bib file (using bibtex) .
+
+
+%%% Uncomment this section and comment out the \bibliography{references} line above to use inline references.
+% \begin{thebibliography}{1}
+
+% 	\bibitem{kour2014real}
+% 	George Kour and Raid Saabne.
+% 	\newblock Real-time segmentation of on-line handwritten arabic script.
+% 	\newblock In {\em Frontiers in Handwriting Recognition (ICFHR), 2014 14th
+% 			International Conference on}, pages 417--422. IEEE, 2014.
+
+% 	\bibitem{kour2014fast}
+% 	George Kour and Raid Saabne.
+% 	\newblock Fast classification of handwritten on-line arabic characters.
+% 	\newblock In {\em Soft Computing and Pattern Recognition (SoCPaR), 2014 6th
+% 			International Conference of}, pages 312--318. IEEE, 2014.
+
+% 	\bibitem{hadash2018estimate}
+% 	Guy Hadash, Einat Kermany, Boaz Carmeli, Ofer Lavi, George Kour, and Alon
+% 	Jacovi.
+% 	\newblock Estimate and replace: A novel approach to integrating deep neural
+% 	networks with existing applications.
+% 	\newblock {\em arXiv preprint arXiv:1804.09028}, 2018.
+
+% \end{thebibliography}
+
+\subfile{sections/appendix}
+
+
+\iffalse
+\clearpage
+
+\section{TODO}\label{sec:todo}
+\begin{itemize}
+    \item \sout{text: write up competing inversion methods, POD etc}
+    \item \sout{text: connect to Matheron updates}
+    \item \sout{code: EKF baseline?}
+    \item \sout{code: MCMC baseline?} out of scope
+    \item plot: EKF baseline
+    \item code: GD baseline
+    \item \sout{text: remove GD baseline; there is no time for that}
+    \item text: hyperparameters, how to select (WIP)
+    \item \sout{text: EKF stochastic forward opp. How does that even work?} It doesn't work
+    \item \sout{plot: hyperparam effect}
+    \item text: definitive \(\mathcal{O}\) costing, in ensemble size, in simulation runs, in problem dimension
+    \item text: Acknowledge Rui's proofreading
+    \item text: ICML style 
+    \begin{itemize}
+        \item author formatting
+        \item figure resizing
+    \end{itemize}
+    \item code: alternate sim model
+    \begin{itemize}
+        \item \sout{Lorentz 96?}
+        \item non-smooth prior
+        \item \sout{how about a high-dimensional non-linear VARIMA with a latent forcing?}
+        \item \sout{source localization}
+        \item advection-diffusion?
+    \end{itemize}
+    \item text: write up algorithm
+    \item \sout{code: deterministic experiments}
+    \item plot: an alternate sim model
+    \item \sout{text: EGU submission abstract}
+    \item \sout{code: Switch to generic MVP inversion via \url{https://github.com/cornellius-gp/linear_operator}}
+    \item \sout{text: can we relate nonlinear Matheron to a probability divergence? I think it is something like ensemble expectation propagation, which implies approx reverse-KL}
+    \item \sout{text: should we introduce ensemble belief propagation via matheron updates?}
+    \item \sout{text: KVSD comparison?}
+    \item \sout{plot: switch to \url{https://tueplots.readthedocs.io/en/latest/} to get consistent fonts, figure sizes}
+    \item \sout{code: advection operator is applied twice in forward step. Does this mean that we have lost interpretation of the viscosity? Check} Irrelevant for now
+    \item \sout{text: can the prior have hyperparameters as well?} out of scope
+\end{itemize}
+\fi
+\end{document}

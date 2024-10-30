@@ -1,0 +1,25 @@
+{
+    "cSpell.enableFiletypes": [
+        "!latex"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#faebfc",
+        "activityBar.background": "#faebfc",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#a69619",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#faebfc",
+        "statusBar.background": "#efbff5",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#e493ee",
+        "statusBarItem.remoteBackground": "#efbff5",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#efbff5",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#efbff599",
+        "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#efbff5"
+}
