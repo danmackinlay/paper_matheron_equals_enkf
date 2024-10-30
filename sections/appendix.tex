@@ -1,6 +1,5 @@
 \appendix
 \onecolumn
-\iffalse
 \section{Matheron updates}\label{app:matheron}
 The pathwise Gaussian process update (\emph{Matheron update}), credited to unpublished works of Matheron~\citep{WilsonPathwise2021,DoucetNote2010} is a method of simulating from a conditional of some jointly Gaussian variate.
 The Matheron update \(\pi\) for a partitioned Gaussian random vector
@@ -277,7 +276,7 @@ In the case that all state nodes\(\left(\state_{0}{=}\statest_{0},\dots, \state_
     \caption{Factor graph  for the generating equations of \eqref{eq:ts-sem}}
     \label{fig:ts_fg}
 \end{figure}
-\fi
+
 % \subsection{Noisy observations}
 % For exposition in this paper, we have assumed that we observe realisations of the series noiselessly.
 % More generally, we might observe some noisy linear function of the true target values.
@@ -520,126 +519,3 @@ In the case that all state nodes\(\left(\state_{0}{=}\statest_{0},\dots, \state_
 
 % \cite{DavisonFutureMapping2019,DonohoHigh2013}
 \fi
-
-\section{Continuous interpretation and PDE systems}\label{app:basis-functions}
-The discrete-time, vector-valued systems we target in this work arise from the discretisation of continuous, function-valued systems.
-At each time step \(t\) the state of the system is characterised by a random state \(\state_{t}\) taking values in a function space \(\statesp\)
-%\nb{this is still not QUITE right - what if there are other observed conditioning vars?}
-and each successive step is defined in terms of some \emph{forward operator} \(\op{P}:\statesp\times  \forcingsp \to \statesp\)
-which predicts successive states in terms of the previous state and some time-constant\footnote{In this section we consider the case of a static forcing and static operator, but extension to time-varying  \(\forcing\) and/or time-varying, known, operator is straightforward} forcing taking values in \( \forcingsp\).
-In the spatio-temporal context, we assume are interested in \(\statesp,\forcingsp\) as spatial fields, i.e. their realisations are functions mapping from a spatial index to some vector-valued observation
-\(\statesp\subset \{\statest:\set{S}\to\mathbb{R}^{D_{\state}}\}\),
-\(\forcingsp\subset\{\forcingst:\set{S}\to\mathbb{R}^{D_{\forcing}}\}\).
-The (compact) domain \(\set{S}\subset \mathbb{R}^{D_s}\) has interpretation as the spatial domain of the system, and (typically \(D_s \in \{1,2,3\}\)).
-In this paper it is always the unit square.
-\(D_{\forcing}\) is typically small; here we focus on problems where $D_{\forcing} = 2$, but our methods can be used for $D_{\forcing} \in \mathbb{N}$.
-Such systems arise naturally in, for example, the forward solutions to partial differential equations observed at discrete times.
-Spaces without such a spatial interpretation may also be amenable to our methods.
-
-So that we may solve such systems computationally, we operate not directly in the continuously-indexed function spaces, but on discrete representations.
-To facilitate this we endow the function spaces with a structure.
-Each of \(\statesp,\forcingsp\) is a separable Hilbert space with associated countable orthogonal basis \(\Phi^*=\{\phi_i\}_i\subseteq\statesp\) and inner product \(\langle f,g \rangle=\int_{\vv{s} \in \set{S}}f(s)g(s)\dd\lambda(\vv{s})\) for \(\lambda\) the Lebesgue measure on \(\set{S}\).
-In practice we truncate infinite bases to a finite one \(\Phi=\begin{bmatrix}
-    \phi_1 &\cdots &\phi_{D_{\vrv{z}}}
-\end{bmatrix}^{\top}\subseteq\Phi^*\), such that we that the residual after projection of solutions on to this basis is negligible.
-The spaces \(\statesp,\forcingsp\) and basis sets may be different, but for compactness we assume them to be the same here.
-Elements of the space are represented by a finite projection \(\proj_{\Phi}:\set{Z}\to\mathbb{R}^{D_{\vrv{z}}}\) which we denote with a tilde,
-\begin{align*}
-    \tilde{f} = \proj_{\Phi}\{f\} = \begin{bmatrix}
-        \langle f,\phi_1\rangle&\cdots& \langle f,\phi_{D_{\vrv{z}}}\rangle 
-    \end{bmatrix}^{\top}. \quad \textcolor{red}{
-        %\langle \cdot, \cdot \rangle = ?,
-        %\quad \proj_{\Phi}^{-1} = ?
-    }
-\end{align*}
-% We make the projection explicit only when it cannot be inferred from context.
-The solution in the original physical space may be recoved using inverse of the projection \(\proj_{\Phi}^{-1}:\mathbb{R}^{D_{\vrv{z}}}\to\statesp\) is 
-%\russ{Do we use this inverse? (beyond the composition with the projection to update in discrete space)}
-\begin{align*}
-    \proj_{\Phi}^{-1}\left\{\begin{bmatrix}\tilde{f}_1&\cdots&\tilde{f}_{D_{\vrv{z}}}\end{bmatrix}^{\top}\right\} = \sum_{i=1}^{D_{\vrv{z}}} \tilde{f}_i\phi_i.
-\end{align*}
-
-By some abuse of notation we use the same representation for the forward operator \(\op{P}\) and its discretised version, writing \(\op{P}(\statest, \forcingst)\) to mean \(\proj_{\Phi}\op{P}(\proj_{\Phi}^{-1}\statest, \proj_{\set{Y}}^{-1}\forcingst)\) where now \(\op{P}:\mathbb{R}^{D_{\vrv{z}}}\times \mathbb{R}^{|\set{Y}|} \to \mathbb{R}^{D_{\vrv{z}}}\).
-% \nb{still shonky; in fact we \emph{do} take pointwise observations in the forward projection step}
-% \russ{Is it important for us to distinguish projections from functions themselves? It seems as though the computational methods deal with projections or evaluations. There is a lot of terminology (projections, inverses, and their compositions) introduced and I wonder whether it is necessary?}
-% \danm{I also wonder that. I don't think the continuity stuff is necessarily helping us much; OTOH it only makes esne to folve problems with thousands of correlated dimension ebcause of PDEs. I wonder if we can move straight to the discretised version and punt the PDE interpreation to the appendix?}
-% We note in passing that due to this representation, there is nothing specifically  spatial about these fields, and thus it is a trivial extension of our approach to infer scalar-valued parameters or  simultaneously infer spatial, function-valued and scalar-valued parameters.
-% A scalar parameter may be treated a trivial field with a trivial basis.
-
-Throughout this work, our examples use the top-hat finite element basis, a set of piecewise constant, top-hat functions partitioning the space, centred on a square lattice of \(S\times S\) points partitioning the unit square, e.g. in two dimensions the index set is \((i,j) \in [1,\dots,K]\times [1,\dots,K]\) with %\russ{I saw something at NeurIPS this year about fast inference with top hat basis in some restricted setting --- did you see it?}
-\begin{align*}
-\Phi_{ij}(x,y) := \textstyle \one\{\frac{i-1}{S}\leq x<\frac{i}{S}\}\one\{\frac{j-1}{S}\leq y<\frac{j}{S}\}.
-\end{align*}
-Other bases, such as piecewise linear, Fourier, or polynomial bases, are substantively similar.
-Selecting a basis to guarantee convergence to some continuous true solution can be complicated in general~\cite{LassasDiscretizationinvariant2009} but we assume that solutions in the discrete projected space are close to those in a notionally continuous space if the discretisation is  ``fine enough''.
-This requires that our methods must be feasible for large basis sets, on the order of thousands or millions of basis functions.
-% Thus, our methods must be amenable to large vectors.
-%In statistical settings, we do not have access to the infinitude of values that defines a function a continuous index, but rather we observe some finite-dimensional projection of the states.
-%The elements of ${\statest}$, through finite-dimensional projections \(\seenstate{}: \statesp \to \mathbb{R}^{d_\state},\seeninp{}: \forcingsp \to \mathbb{R}^{d_\forcing}\).
-%Of particular interest here is the special projection \(\proj_{\vv{S}}:\space\) which maps a function to a vector of evaluations of that function at a finite vector of test sites \footnote{more general projection, e.g. onto a functional basis, is similar.} \(S =[s_1\,s_2\,\cdots,s_{|S|}] \subseteq \set{S}\).%\russ{Previously we said $\set{S}$ was the unit square (an uncountable set?), so I guess we should write$\subset$ instead of $\subseteq$? }\danm{haha yeah. there is still something shonky about the discretisation in this whole thing}
-%\footnote{To keep notation uncluttered we assume hereafter that the estimand is a scalar-valued field, but extension to vector-valued field is straightforward, by e.g. re-stacking vectors of vector-valued evaluations into a single vector.}
-%Specifically,
-%\begin{align*}
-%    \proj_{\vv{S}}f: &f \mapsto [f(s_i) ; i=1,\cdots,|S|].
-%\end{align*}
-%We define an an analogous projection \(\proj_{\vv{X}}\) for observations of forward predictions, where it is not necessary that \(S=X\).\nb{cute, but I don't think we need this any longer?}
-%For brevity we refer to a projected variable by decorating it with tildes, e.g. \(\state_{t}:=\proj_{\vv{X}}\state_{t}\).
-% Observations of the system may also suffer from some additional noise, $\rv{e}_i$, so that the resulting time series might be ${\state}_{1:t-1} = (\seenstate{}\statest_0 + \rv{e}_0, \cdots, \seenstate{}\statest_{t} + \rv{e}_{t})$, where $\statest_i$ is an additive random variable with the same finite dimension as $\seenstate{}\statest_i$.
-% As a statistical problem, forward prediction becomes the task of estimating the conditional distribution $\state_{T} | {\state}_{1:t-1}$. 
-% Specifically,  \(\statest_{1}\simeq \state_{1}\gvn \forcing, \statest_{2}\simeq \state_{2}\gvn \state_{1},\forcing  \cdots,\statest_{T}\simeq \state_{1}\cdots \state_{T-1},\forcing \).
-
-We take as our primary example the statistical  inverse problem of inferring  static forcing, $\forcing$ of a PDE given observation data \(\set{D}_T:=\{\state_{1}=\statest_{1},\cdots, \state_{T}=\statest_{T}\}\).
-%\nb{project}
-%\nb{Likewise, I thought sans-serif fonts were for observations?  here your font implies these are random variables}.
-%\russ{Wouldn't we observe $\state_t$?}
-
-
-\section{Navier-Stokes system}\label{app:pdes}
-
-The Navier-Stokes equation is a classic problem in fluid modeling
-\[
-\frac{\partial \vv{v}}{\partial t}+\vv{v} \cdot \nabla \vv{v}=-\frac{\nabla P}{\rho}+\eta \nabla^2 \vv{v},
-\]
-where \(\vv{v}\) is the fluid velocity, \(P\) is the fluid pressure, \(\rho\) is the fluid density, \(\eta\) is the kinematic viscosity, and \(\nabla^2\) is the Laplacian operator.
-There are many variants of these basic equations; the ones used in this work are incompressible, where an optimisation is solve to ensure that the field has zero divergence at each time step.
-
-The state \(\statest\) of the equation at each step is the concatenation of \(\begin{bmatrix}\rho\\ \vv{v}\end{bmatrix}\).
-Boundary conditions are Neumann, i.e. the velocity goes to zero at the perimeter of the solutions.
-
-The discretisation of the the equation is onto an \(n_x\times n_y\) finite element basis (Appendix~\ref{app:basis-functions}) for the domain, for each of \(\vv{v}_x\), the velocity \(x\) component, \(\vv{v}_y\), the velocity \(y\) component, and \(P\) for a fixed timestep \(\delta t\).
-At each discretised time-step we inject additive mean-zero \((2n_xn_y)\)-dimensional Gaussian white noise \(\vrv{\nu}_{t}\sim\op{N}(\vv{0},\sigma^2_{\vrv{\eta}}\mm{I})\) and static forcing term \(\forcingst\) to the velocity term before solving the equation at each timestep,
-\(\vecop(\vv{v}_t)\gets \vrv{\nu} + \vecop(\forcingst)\), in an Euler-Maryuama approximation to driving Wiener noise.
-Implementation employs pytorch and \(\Phi\)-flow~\citep{HollPhiflow2020}, available at \url{https://github.com/tum-pbs/PhiFlow}.
-
-
-
-\section{\meth{} algorithm}
-\label{app:algorithm}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Output:}}
-\begin{algorithm}
-    \caption{\meth{} algorithm}
-    \label{alg:meth}
-    \begin{algorithmic}[1] % The argument is the first line number
-            \Require{Prior $p(\forcingst)$, Forward model $\op{P}(\cdot \,, \cdot)$, Ensemble size $N \geq 1$, Initial observation $\statest_0$, Observation stream $\statest_t$ for $t=1, \ldots, T$}
-        \Procedure{\meth{} }{}
-          \State $t \gets 0$
-          \State $\mm{U}_t = [\forcingst_0^{(1)}, \ldots \forcingst_0^{(N)}]\gets \text{\sc{Sample}}\big(p(\forcingst), N\big)$
-          \Comment{Sample $N$ times from the prior and store in a $D_{\forcing} \times N$ matrix}
-            \While{\(t < T\)}
-                \State $t \gets t + 1$
-                \State $\mm{Z}_t = [\statest_t^{(1)}, \ldots, \statest_t^{(N)}] \gets \op{P}(\statest_{t-1}, \forcingst_{t-1})$ \Comment{Update the predictive ensemble}
-                \State $\breve{\mm{Z}}_t \gets \text{\sc{ComputeDeviation}}(\mm{Z}_t)$ \Comment{Compute deviation matrices}
-                \State $\breve{\mm{U}}_{t-1} \gets \text{\sc{ComputeDeviation}}(\mm{U}_{t-1})$ \Comment{Compute deviation matrices}
-                \State $\statest_t \gets \text{\sc{MakeObservation}}(t)$ \Comment{Make an observation from the stream}
-                \State $\mm{U}_t \gets \mm{U}_{t-1} + \breve{\mm{Z}}_{t}\breve{\mm{U}}_{\tm}^{\top}
-    \left(\breve{\mm{Z}}_{t}\breve{\mm{Z}}_{t}^{\top}+\sigma^2\mm{I}\right)^{-1}
-    \left(
-        \mm{Z}_t-\statest_{t} 1_{1 \times N}
-    \right)$ \Comment{Update parameter ensemble}
-            \EndWhile\label{euclidendwhile}
-            \State \textbf{return} \(\mm{U}_T\)
-             
-        \EndProcedure
-    \end{algorithmic}
-\end{algorithm}
