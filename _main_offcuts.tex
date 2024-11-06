@@ -21,22 +21,22 @@
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
-\usepackage[]{todonotes} 
+\usepackage[]{todonotes}
 %\usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
-\usepackage{enumitem} 
-\usepackage{bm} 
+\usepackage{enumitem}
+\usepackage{bm}
 \usepackage{amsmath}
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{bbm}
 \usepackage{mathrsfs}       % mathscr
-%\usepackage[pdftex]{graphicx} 
+%\usepackage[pdftex]{graphicx}
 \usepackage{natbib}
 \usepackage{comment}
 \usepackage{caption} % subfigures
@@ -73,14 +73,14 @@
 \newcommand{\lat}{\rv{b}}   % Kept changing the symbol for latent state
 \newcommand{\latst}{b}      % so now it is a macro
 \newcommand{\latsp}{\mathcal{B}}
-\newcommand{\inp}{\rv{u}}   
-\newcommand{\inpst}{u}      
+\newcommand{\inp}{\rv{u}}
+\newcommand{\inpst}{u}
 \newcommand{\inpsp}{\mathcal{U}}
-\newcommand{\state}{\rv{x}}   
-\newcommand{\statest}{x}      
+\newcommand{\state}{\rv{x}}
+\newcommand{\statest}{x}
 \newcommand{\statesp}{\mathcal{X}}
-\newcommand{\outp}{\rv{y}}   
-\newcommand{\outpst}{y}      
+\newcommand{\outp}{\rv{y}}
+\newcommand{\outpst}{y}
 \newcommand{\outpsp}{\mathcal{Y}}
 \newcommand{\latwt}{\vrv{w}}
 \newcommand{\latwtst}{\vv{w}}
@@ -131,7 +131,7 @@ Here we conduct a study of the effectiveness of the Fourier Neural Operator cons
 
 
  \subsection{Posterior sampling by Stochastic Gradient descent}
- 
+
 \cite{MandtStochastic2017} gives conditions for approximation of the posterior distribution of a target RV by gradient descent.
 Observe that the stochastic gradient is a sum of \(S\) independent, uniformly sampled contributions. Invoking the central limit theorem, we assume that the gradient noise is Gaussian with covariance \(\frac{1}{S} C(\theta)\), hence
 \[
@@ -142,11 +142,11 @@ As a symmetric positive-semidefinite matrix, this constant matrix \(C\) factoriz
 \[
 C(\theta) \approx C=B B^{\top}
 \]
-We approximate SGD as an Ornstein-Uhlenbeck process. 
+We approximate SGD as an Ornstein-Uhlenbeck process.
 \[
 d \theta(t)=-\epsilon A \theta(t) d t+\frac{1}{\sqrt{S}} \epsilon B d W(t)
 \]
-The Ornstein-Uhlenbeck process has a Gaussian analytic stationary distribution \(q(\theta)\). 
+The Ornstein-Uhlenbeck process has a Gaussian analytic stationary distribution \(q(\theta)\).
 \[
 q(\theta) \propto \exp \left\{-\frac{1}{2} \theta^{\top} \Sigma^{-1} \theta\right\} .
 \]
@@ -164,7 +164,7 @@ We can use this if we can cheaply calculate \((\mm{B}\mm{B}^{\top})^{-1}\) s.t.
 \mm{B}\mm{B}^{\top}
     &=\mm{C}\\
     &= \var\left[\nabla_{\theta}\mathcal{L}\right]\\
-    &= \Ex\left[\nabla_{\theta}\mathcal{L}\nabla_{\theta}^{\top}\mathcal{L}\right] 
+    &= \Ex\left[\nabla_{\theta}\mathcal{L}\nabla_{\theta}^{\top}\mathcal{L}\right]
     - \Ex\left[\nabla_{\theta}\mathcal{L}\right]\Ex\left[\nabla_{\theta}^{\top}\mathcal{L}\right]\\
     &= \Ex\left[\nabla_{\theta}\mathcal{L}\nabla_{\theta}^{\top}\mathcal{L}\right] &\text{opt}\\
     &\simeq \Ex\left[\nabla^2_{\theta}\mathcal{L}\right] &\text{Fisher}\\
@@ -195,8 +195,8 @@ The joint finite-dimensional distributions are
     \end{array}\right],
     \left[\begin{array}{ccc}
         \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\vv{\state}}_{t}}
-        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}^{\top} 
-        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}^{*}}^{\top} \\ 
+        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}^{\top}
+        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}^{*}}^{\top} \\
           \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}
         & \mm{K}_{\tilde{\forcing}\tilde{\forcing}}^{\top}
         & \mm{K}_{\tilde{\forcing}\tilde{\forcing}^{*}}^{\top} \\
@@ -206,7 +206,7 @@ The joint finite-dimensional distributions are
     \end{array}\right]\numberthis\label{eq:discrete_joint_naive_sub}
 \right).
 \end{align*}
-Conditioning on \(\tilde{\vv{\state}}_{t},\tilde{\forcing}\), 
+Conditioning on \(\tilde{\vv{\state}}_{t},\tilde{\forcing}\),
 \begin{align*}
     \tilde{\forcing}^{*}\gvn  \tilde{\vv{\state}}_{t},\tilde{\forcing}
 &\sim\dist{N}(
@@ -216,7 +216,7 @@ Conditioning on \(\tilde{\vv{\state}}_{t},\tilde{\forcing}\),
 \end{align*}
 where
 \begin{align*}
-\hat{\vv{m}}_{\tilde{\forcing}^{*}} 
+\hat{\vv{m}}_{\tilde{\forcing}^{*}}
 &=\vv{m}_{\tilde{\forcing}^{*}} + \\
 &\sim\dist{N}\left(
     \left[\begin{array}{c}
@@ -226,8 +226,8 @@ where
     \end{array}\right],
     \left[\begin{array}{ccc}
         \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\vv{\state}}_{t}}
-        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}^{\top} 
-        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}^{*}}^{\top} \\ 
+        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}^{\top}
+        & \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}^{*}}^{\top} \\
           \mm{K}_{\tilde{\vv{\state}}_{t}\tilde{\forcing}}
         & \mm{K}_{\tilde{\forcing}\tilde{\forcing}}^{\top}
         & \mm{K}_{\tilde{\forcing}\tilde{\forcing}^{*}}^{\top} \\
@@ -243,9 +243,9 @@ where
 When does a neural network ever imply anything about its own inputs?
 Classic ProbNNs have this structure
 \begin{align*}
-    \vrv{y}=f(\vrv{x}, \vrv{w}, \netparamst) 
+    \vrv{y}=f(\vrv{x}, \vrv{w}, \netparamst)
 \end{align*}
-where by assumption \(\vrv{x} \indep \vrv{w}\) at inference time (i.e. 
+where by assumption \(\vrv{x} \indep \vrv{w}\) at inference time (i.e.
 \(\vrv{x},\vrv{y} \indep \vrv{w}\gvn\mathcal{D}\).
 This is probably fine for calculating a posterior predictive.
 However, it can be problematic for inverting the model, since means that the weights \(\vrv{w}\) are not informative about network inputs.
@@ -260,9 +260,9 @@ The combined network with params written explicitly is then
 \end{align*}
 where \(\netparamst, \vv{\psi} \) are point-estimated by gradient descent, and \(\Sigma_{\vv{w}}\) is learned by conditioning a variational approximation.
 
-Why bother? 
+Why bother?
 The nice thing is that we can then update samples \(\vrv{x}\gvn\vrv{w}\), I think.
-If the model graph comes out OK can we 
+If the model graph comes out OK can we
 
 \section{Questions and notes}
 
@@ -304,7 +304,7 @@ In the forward problem our goal is construct predictions for each successive tim
 In the inverse setting, we observe the forcing and state inputs only through projections \(\seenstate{}: \statesp \to \mathbb{R}^{d_\state},\seeninp{}: \inpsp \to \mathbb{R}^{d_\inp},\).
 The goal, given a series of observations comprised of projections of the observations, \(\set{D}:=\{\seenstate{\statest}_{1},\dots, \seenstate{\statest}_{T},\seeninp{\inpst}\}\), is to estimate the complete data
 \(\{\statest_{1},\dots, \statest_{T},\inpst_{T}\}\)
-such that the estimates \(\{\hat{\statest}_{1},\dots,\hat{\statest}_{T},\hat{\inpst}\}\), taken as inputs to the recursive prediction operator, reconstruct the observations with low error by some metric, i.e. that for \(t=2,\dots,T\), 
+such that the estimates \(\{\hat{\statest}_{1},\dots,\hat{\statest}_{T},\hat{\inpst}\}\), taken as inputs to the recursive prediction operator, reconstruct the observations with low error by some metric, i.e. that for \(t=2,\dots,T\),
 \(\seenstate{\statest}_{t}\approx\seenstate{\op{P}}\left(\hat{\statest}_{t-1}, \hat{\inpst}\right)\) and \(\seeninp{\inpst}\approx\seeninp{\hat{\inpst}}\).\todo{representing the function in terms of some arbitrary basis still involves a projection step}
 
 This problem is typically underdetermined, in the sense that many solutions may produce solutions with similar discrepancy from the observations.
@@ -312,13 +312,13 @@ This underdetermination can lead to various difficulties;
 Optimisation may be unstable or ill-condition\todo{terminology?}; and there may be a difficulties in identifying and representing the entire feasible solution set.
 The former problem is typically addressed by regularisation, favouring solutions which are closer to some plausible domain.
 The latter is often addressed by maintaining ensembles of possible solutions.
-Probabilistic methods address both challenges, simultaneously regularizing solutions via a prior measure on the solution function space and estimating a distribution over the set of feasible solutions. 
-\begin{comment} 
-Dan: You may be interested to have a look at Tikhonov (and singular value decomposition) regularisation method as described in the PEST book (I will send you on teams). These are quite popular in the groundwater model calibration and uncertainty analysis world. 
+Probabilistic methods address both challenges, simultaneously regularizing solutions via a prior measure on the solution function space and estimating a distribution over the set of feasible solutions.
+\begin{comment}
+Dan: You may be interested to have a look at Tikhonov (and singular value decomposition) regularisation method as described in the PEST book (I will send you on teams). These are quite popular in the groundwater model calibration and uncertainty analysis world.
 \end{comment}
 The probabilistic model assigns distributions to various quantities of interest, e.g.
 \begin{align*}
-\state_{t} \gvn \state_{t-1},\inp 
+\state_{t} \gvn \state_{t-1},\inp
 &= \op{P}(\state_{t-1},\inp ), \quad t=2,\dots,T.
 \numberthis \label{eq:proc_proj_sem} \\
 \state_{t}
@@ -338,14 +338,14 @@ Here we consider\todo{multidimensional output space?}
 \state &\sim \dist{GP}(m_{\state},k_{\state}).
 \numberthis \label{eq:gp_approx_state} \\
 \inp &\sim \dist{GP}(m_{\inp},k_{\inp}).
-\numberthis \label{eq:gp_approx_prior} 
+\numberthis \label{eq:gp_approx_prior}
 \end{align*}
 The forward predictors we are interested in are one-step-ahead prediction operators arising from the governing equations of fluid flow and as such they are generally both nonlinear and computationally expensive, and the integrals involved in calculating the full conditional \eqref{eq:proc_proj_sem_inv} are analytically intractable.
 We may however, approximate the posterior distribution by a Gaussian process also,\todo{in which metric?}
 \begin{align*}
     \state_{t} \gvn \state_{t-1},\inp
 &\sim \dist{GP}(\op{P}(\state_{t-1},\inp ), \op{K}(\state_{t-1},\inp )).
-\numberthis \label{eq:gp_approx_proc} 
+\numberthis \label{eq:gp_approx_proc}
 \end{align*}
 The posterior distributions in this case are still non-Gaussian in general.
 We approximate the distributions over these solutions using collection of Monte Carlo samples from the relevant posterior distribution.
@@ -369,8 +369,8 @@ Simulate from the neural linear model posterior
 
 Model for process state evolution and observation.\footnote{Notation: We write random variates as sans-serif, \(\rv{x}\). When a function maps between function spaces, i.e. it is an operator, we emphasize this by writing it in  fraktur, \(\mathfrak{f}\). Both function spaces and sets are written calligraphically \(\mathcal{C}\).}
 \begin{align*}
-\rv{v}_{t} \gvn \lat, \rv{v}_{t-1}, \rv{v}_{t-2}, \dots  
-&\sim \dist{P}(\lat, \rv{v}_{t-1}, \rv{v}_{t-2}, \dots  ) 
+\rv{v}_{t} \gvn \lat, \rv{v}_{t-1}, \rv{v}_{t-2}, \dots
+&\sim \dist{P}(\lat, \rv{v}_{t-1}, \rv{v}_{t-2}, \dots  )
 \numberthis \label{eq:proc_sem} \\
 \rv{y}_{t}\gvn \rv{v}_{t}
 &\sim \dist{O}(\rv{v}_{t})\\
@@ -388,7 +388,7 @@ The goal: Can we infer a posterior distribution for
 
 To keep the notation clean, we consider a simpler model which assumes only one time step of process history dependence (Figure~\ref{fig:filteringfgnoisy})
 \begin{align*}
-\rv{v}_{t}  \gvn \lat,\rv{v}_{t-1},  
+\rv{v}_{t}  \gvn \lat,\rv{v}_{t-1},
 &\sim \dist{P}(\lat,\rv{v}_{t-1})
 \numberthis \label{eq:proc_sem_lite} \\
 \rv{y}_{t}  \gvn \rv{v}_{t}
@@ -415,7 +415,7 @@ What would happen if \(\set{S}\) were random or or a time-indexed one, or adapti
 Are there beneficial sampling strategies?
 How big \emph{should} the set be? See \cite{LassasDiscretizationinvariant2009}.
 
-Question: Is this the only reasonable observation model? 
+Question: Is this the only reasonable observation model?
 Can we work instead by projecting the observations onto the basis induced by the FNO final layer?
 My instinct says that in that case we would need to have an extra residual GP to capture the fact that the basis will not in general include the observations.
 Also that basis will not in general be orthogonal so the distribution over basis weights will be at risk of being degenerate.
@@ -470,7 +470,7 @@ If we further neglect observation noise by setting \(\rv{v}_{t}\equiv \rv{y}_{t}
 \subsection{Gaussian approximations of operators}
 
 Suppose we can calculate an operator mapping possibly random functions to the mean of the prediction function, \(\op{P}:\lat,\rv{v}_{t-1}\mapsto \Ex\rv{v}_{t}\gvn \lat,\rv{v}_{t-1}\).
-% Minimise some prediction loss over some data set of an approximation to the forward operator 
+% Minimise some prediction loss over some data set of an approximation to the forward operator
 % For argument's sake, we can assume this is a Fourier Neural Operator Network.
 % For many problems it is easy to learn an operator which is good in the sense of minimising an empirical predictive loss.
 % Frequently this estimator is more efficient than the ground-truth solver.
@@ -487,7 +487,7 @@ We further assume this predictive process is a Gaussian process as well as the p
 &\sim \dist{GP}(\rv{v}_{t},\op{K}_{y}\{\rv{v}_{t}\})
 \numberthis \label{eq:gp_approx_obs} \\
 \lat &\sim \dist{GP}(m_{\lat},k_{\lat}).
-\numberthis \label{eq:gp_approx_prior} 
+\numberthis \label{eq:gp_approx_prior}
 \end{align*}
 
 % Assume the process values are observed without noise,
@@ -496,7 +496,7 @@ We further assume this predictive process is a Gaussian process as well as the p
 % &\sim \dist{GP}(m_{v},\op{K}_{v}(\lat,\rv{v}_{t-1}))
 % \numberthis \label{eq:gp_approx_proc_lite} \\
 % \lat &\sim \dist{GP}(m_{\lat},k_{\lat}).
-% \numberthis \label{eq:gp_approx_prior_lite} 
+% \numberthis \label{eq:gp_approx_prior_lite}
 % \end{align*}
 
 % If we then choose a set \(\set{S}\) of observation sites as in~\eqref{eq:fidi_proc_ex} and ~\eqref{eq:fidi_proc_var} then we have a concrete observation likelihood; we write
@@ -505,7 +505,7 @@ We further assume this predictive process is a Gaussian process as well as the p
 % &\sim \dist{N}(m_{v}[b](\set{S}),K_{v}[b](\set{S}))
 % \numberthis \label{eq:mvn_approx_proc_lite} \\
 % \lat &\sim \dist{N}(m_{\lat},k_{\lat}).
-% \numberthis \label{eq:mvn_approx_prior_lite} 
+% \numberthis \label{eq:mvn_approx_prior_lite}
 % \end{align*}\todo{b is still not fidi here}
 % Analogously, \(K[y](\set{S})\) maps to the covariance matrix \([k[y](x_i,x_j)]_{ij}\) for pairwise covariances \(x_{i},x_{j}\in \set{S}\) implied by the covariance kernels parameterized by \(y\).
 
@@ -529,7 +529,7 @@ This converts the problem into one of representing the joint distribution\todo{k
 &\sim \dist{N}(\rv{v}_{t}(\set{S}),\op{K}_{y}\{\rv{v}_{t}\}(\set{S}))
 \numberthis \label{eq:mvn_approx_obs_fidi} \\
 \latwt &\sim \dist{N}(\vv{m}_{\latwt},k_{\latwt}).
-\numberthis \label{eq:mvn_approx_prior_fidi} 
+\numberthis \label{eq:mvn_approx_prior_fidi}
 \end{align*}
 We now have a choice of further approximations to make the distribution of these terms \emph{jointly} Gaussian.
 
@@ -561,14 +561,14 @@ What constructions give us the required joint relationship, i.e. give us the joi
 It is natural to think of joint distributions which leverage our access to the predictive \(\op{P}\) operator.
 Two obvious candidate constructions:
 \begin{enumerate}
-    \item \(\op{P}\) is deterministic, mapping prior weight onto an approximately Gaussian predictive process. 
+    \item \(\op{P}\) is deterministic, mapping prior weight onto an approximately Gaussian predictive process.
     \(\op{M}_{v}\{\latwt\}\) and \(\op{K}_{v}\{\latwt\}\) are estimated by, e.g. linearized or unscented transforms of \(\latwt\) by \(\op{P}\{\cdot,\rv{v}_{t-1}\}\).
     This assumes the emulator is perfect but introduces additional error from the linearization of the transform.
     The joint distribution of \(\rv{v}_t\) and \(\lat\) is degenerate.
     Call this \emph{deterministic-Gaussian}.
     We could add an additional noise term here to, e.g. handle model misfit.
     \item Local Laplace approx to  \(\op{P}\{\cdot,\rv{v}_{t-1}\}\gvn \lat\) or \(\op{P}^*\{\cdot,\rv{v}_{t-1}\}\gvn \latwt\) network, giving us a GP prediction for any fixed sample \(\lat=\latst_i\), or \(\latwt=\latwtst_i\) respectively. Call this \emph{local-Laplace}.
-    A last layer variance approximation will be low-rank if we use the FNO (Appendix~\ref{sec:fn_laplace_low_rank}). 
+    A last layer variance approximation will be low-rank if we use the FNO (Appendix~\ref{sec:fn_laplace_low_rank}).
 \end{enumerate}
 
 After choosing one of these we still need to work out how to propagate our uncertainty through the nodes in the factor graph, and how to represent the posterior updates.
@@ -576,7 +576,7 @@ After choosing one of these we still need to work out how to propagate our uncer
 \section{Deterministic-Gaussian}
 
 Let us take a low order Taylor expansion.\todo{unscented transforms might be interesting alternatives}
-We have a free variable, which is the point \(\vv{w}^\dagger\) about which we choose to linearise \(\tilde{\vrv{v}}\simeq \op{P}^*\{\latwt,\rv{v}_{t-1}\}(\set{S})\). 
+We have a free variable, which is the point \(\vv{w}^\dagger\) about which we choose to linearise \(\tilde{\vrv{v}}\simeq \op{P}^*\{\latwt,\rv{v}_{t-1}\}(\set{S})\).
 Ideally it should be prior mean, \(\vv{w}^\dagger=\vv{m}_{\latwt}\).\todo{Do we always know the prior mean?
 If not, it is harder and we might want a higher-order approximation.}
 We expand the function
@@ -590,7 +590,7 @@ The Taylor expansion to about \(\vv{m}_{\latwt}\) of \(\pi^*\), truncated to sec
         (\latwt-\vv{m}_{\latwt})^\top\nabla^2_{\latwtst}\pi(\latwtst,x_i)(\latwt-\vv{m}_{\latwt})
     \right]_{i} \right|_{\latwtst=\vv{m}_{\latwt}}.
 \end{align*}
-For compactness we define \(J_{\latwtst}:=\nabla_{\latwtst} \pi^*(\latwtst,\set{S}).\) 
+For compactness we define \(J_{\latwtst}:=\nabla_{\latwtst} \pi^*(\latwtst,\set{S}).\)
 The first order approximation has moments
 \begin{align*}
     \Ex[\tilde{\vrv{v}}^1] &=
@@ -605,7 +605,7 @@ We could add observation noise into the model, say \(\rv{y}_t\sim\dist{N}(\rv{v}
 The simplest way to do this would be to add extra noise to the predictive variance.
 To be consistent we would actually implement a full Kalman filter step where we estimate \(\rv{v}_t\) from \(\rv{y}\) rather than taking it as given.
 What do the updates look like in this case?
-Joint distribution is given by 
+Joint distribution is given by
 \begin{align*}
 \left[\begin{array}{c}
     \latwt\\ \tilde{\vrv{v}}^1
@@ -626,9 +626,9 @@ Joint distribution is given by
         \pi^*(\vv{m}_{\latwt},\set{S})
     \end{array}\right],
     \left[\begin{array}{cc}
-        \mm{C}_{\latwt} & 
+        \mm{C}_{\latwt} &
           \mm{C}_{\latwt} J_{\latwtst}^\top\\
-        J_{\latwtst}\mm{C}_{\latwt}&   
+        J_{\latwtst}\mm{C}_{\latwt}&
           J_{\latwtst}\mm{C}_{\latwt}J_{\latwtst}^{\top}
     \end{array}\right]
 \right).
@@ -644,9 +644,9 @@ If we add observation noise so that our observations are \(\rv{y}_{t}(x_i)=\rv{v
         \pi^*(\vv{m}_{\latwt},\set{S})
     \end{array}\right],
     \left[\begin{array}{cc}
-        \mm{C}_{\latwt} & 
+        \mm{C}_{\latwt} &
           \mm{C}_{\latwt}J_{\latwtst}^\top\\
-        J_{\latwtst}\mm{C}_{\latwt}&   
+        J_{\latwtst}\mm{C}_{\latwt}&
           J_{\latwtst}\mm{C}_{\latwt}J_{\latwtst}^{\top} + \sigma^2\mm{I}
     \end{array}\right]
 \right).
@@ -676,7 +676,7 @@ Assume that \eqref{eq:gp_approx_proc} and \eqref{eq:gp_approx_prior} hold exactl
 Suppose we draw \(\latst_{1}\sim \lat = \dist{GP}(m_{\lat},k_{\lat})\), and find that the conditional predictive is distributed as
 \(\big(\rv{v}_{t}\gvn \lat{=}\latst_{1}\big)
 \sim \dist{GP}\big(\op{P}^*(\latst_{1}),\mathring{k}_{v}(\latst_{1})\big)\).
-% For brevity we define 
+% For brevity we define
 % \(\op{P}^*(\cdot;\latst):=\op{P}(\latst ,\rv{v}_{t-1})(\cdot)\) and
 % \(\mathring{k}(\cdot, \cdot;\latst):=\op{K}_{v}(\latst,\rv{v}_{t-1})(\cdot, \cdot)\).
 
@@ -717,7 +717,7 @@ The moments of the posterior,
     \widehat{m_{\lat}|v_{t}}
     &= \bar{\lat}
     =: \frac1J\sum_{j}\vv{b}_j\\
-    \widehat{k_{\lat}|v_{t}} 
+    \widehat{k_{\lat}|v_{t}}
     % &= \widebar{\lat^\top\lat}\bar{\mm{b}} \\
     &=: \frac1{J(J-1)}\sum_{j}\left(\vv{b}_j-\bar{\lat}\right)^\top\left(\vv{b}_j-\bar{\lat}\right).
 \end{align}
@@ -846,7 +846,7 @@ Does a Hessian get us there?
 %&\sim \dist{N}(\rv{v}_{t}(\set{S}),\op{K}_{y}\{\rv{v}_{t}\}(\set{S}))
 %\numberthis \label{eq:mvn_approx_obs_fidi} \\
 %\latwt &\sim \dist{N}(\vv{m}_{\latwt},k_{\latwt}).
-%\numberthis \label{eq:mvn_approx_prior_fidi} 
+%\numberthis \label{eq:mvn_approx_prior_fidi}
 %\end{align*}
 
 \section{Quality of gradient approximation in emulated operators}
@@ -874,7 +874,7 @@ Plugging that in, we see that \todo{update for new rep}
   &= \vv{v}_{t}(\vv{x})\mm{C}_{\vrv{w}_{v}}\vv{v}_{t}(\vv{y})^{\top}.
 \end{align*}
 
-So in this case \(\mm{K}_{v}(\set{S};\latst):=[\mathring{k}_{v}(x_{i};x_{j};\latst)]=\vv{v}_{t}(\set{S})\mm{C}_{\vrv{w}_{v}}\vv{v}_{t}(\set{S})^{\top}\), i.e. the Gram matrix is low-rank, so that 
+So in this case \(\mm{K}_{v}(\set{S};\latst):=[\mathring{k}_{v}(x_{i};x_{j};\latst)]=\vv{v}_{t}(\set{S})\mm{C}_{\vrv{w}_{v}}\vv{v}_{t}(\set{S})^{\top}\), i.e. the Gram matrix is low-rank, so that
 \(\mm{K}_{v,\latst}=(\vv{v}_{t}(\set{S})\mm{C}_{\vrv{w}_{v}}^{1/2})(\mm{C}_{\vrv{w}_{v}}^{1/2}\vv{v}_{t}(\set{S}))^{\top}.\)
 
 That is nice, but what does it buy us?
@@ -909,12 +909,12 @@ We will need updates from the factors connected to the \(\lat\) node, which is a
 
 The overall projection for the output of the network is the composition of the mappings
 \begin{align*}
-\rv{v}_{t}\gvn \lat,\rv{v}_{t-1} 
+\rv{v}_{t}\gvn \lat,\rv{v}_{t-1}
 &= \op{P}(\vrv{w}_{\latst}.\vv{\latst},\rv{v}_{t-1})
 \end{align*}
-Linearising \(\op{P}(\vrv{w}_{\latst}.\vv{\latst},\rv{v}_{t-1})\) around \(\lat=\latst^\dagger \) we get 
+Linearising \(\op{P}(\vrv{w}_{\latst}.\vv{\latst},\rv{v}_{t-1})\) around \(\lat=\latst^\dagger \) we get
 \begin{align*}
-\rv{v}_{t}\gvn \lat,\rv{v}_{t-1} &\sim 
+\rv{v}_{t}\gvn \lat,\rv{v}_{t-1} &\sim
 \dist{GP}\left(
   \cdot,
   \cdot
@@ -982,7 +982,7 @@ I think so. We partition \(\mm{P}=\begin{bmatrix}
       \rv{v}_{t}
     \end{bmatrix}\\
     &=
-      \mm{P}_{\latst}\lat + 
+      \mm{P}_{\latst}\lat +
       \mm{P}_{v}\rv{v}_{t}\\
     \mm{P}_{\latst}\lat &= q_0 - \mm{P}_{v}\rv{v}_{t}
 \end{align}
@@ -998,8 +998,8 @@ or equivalently, pseudo-inverse gives us
 \end{align}\todo{I feel like I am belabouring some basic least-squares multiple-regression stuff.}
 
 But this should be underdetermined, so we want to find the spanning set of solutions, which I guess we may as well do with an SVD?
-Let \(\mm{P}_{\latst}^\top=\mm{U}_\theta\mm{C}_\theta\mm{V}_\theta^{\top}\) be an SVD. 
-Then the solution of 
+Let \(\mm{P}_{\latst}^\top=\mm{U}_\theta\mm{C}_\theta\mm{V}_\theta^{\top}\) be an SVD.
+Then the solution of
 \begin{align}
     \mm{P}_{\latst}\theta &= \vv{0}
 \end{align}
@@ -1030,7 +1030,7 @@ Observation I am implicitly decomposing \(\lat\) into a basis here.
 What this tells me is that at least in this inner problem the different components of \(\lat\) linearly correlated.
 
 But in fact this is a weird system and equality never happens. Do we need to care?
-The the vectors here are defined over a field of \emph{functions on the spatial domain}, and in fact we know that this almost certainly does \emph{not} span the desired space. But it might get close. 
+The the vectors here are defined over a field of \emph{functions on the spatial domain}, and in fact we know that this almost certainly does \emph{not} span the desired space. But it might get close.
 
 
 What happens when we break \(\lat\) into an orthogonal basis, so that \(\lat=\mm{M}\vv{\psi}\) where \(\mm{W}\) is a mixing matrix, which I guess is unknown.
@@ -1078,7 +1078,7 @@ I think so. We partition \(\mm{P}=\begin{bmatrix}
       \rv{v}_{t}
     \end{bmatrix}\\
     &=
-      \mm{P}_{\latst}\lat + 
+      \mm{P}_{\latst}\lat +
       \mm{P}_{v}\rv{v}_{t}\\
     \mm{P}_{\latst}\lat &= q_0 - \mm{P}_{v}\rv{v}_{t}.
 \end{align}
@@ -1086,7 +1086,7 @@ I think so. We partition \(\mm{P}=\begin{bmatrix}
 Now, suppose that \(\lat=\sum_i a_i \psi_i, 1\leq i \leq K\) where \(a_i\in\mathbb{R}\) and \(\psi_i\) are an orthonormal basis for the solution space.
 \todo{relax this to \(\lat\) being \emph{projected} onto this basis.}
 Also  define \(Y:=q_0 - \mm{P}_{v}\rv{v}_{t}\) with \(Y_j =\sum_i \latst_{i,j} \psi_i\).
-We rewrite the relation 
+We rewrite the relation
 \begin{align}
     \mm{P}_{\latst}\sum_i a_i \psi_i &= \begin{bmatrix}
         \sum_i \latst_{i,j} \psi_i\\
@@ -1125,13 +1125,13 @@ Now the field may be approximated by linearization about $\set{S}$ as
 +\left.\frac{\partial}{\partial \vv{u}}
   \widehat{\mathcal{F}}_{t}\left(
     \vv{u},\vv{x}^*(0)
-  \right)\right|_{\substack{\vv{u}=\vv{u}^*}} 
+  \right)\right|_{\substack{\vv{u}=\vv{u}^*}}
   \cdot (\vv{u}-\vv{u}^*)
   +\vv{\eta}(t)\\
 &=:\widehat{\mathcal{F}_{t}}^*
 + \nabla_{\vv{u}} \widehat{\mathcal{F}_{t}}^*
   \cdot (\vv{u}-\vv{u}^*)
-  +\vv{\eta}(t)\\ 
+  +\vv{\eta}(t)\\
 &=\left(\widehat{\mathcal{F}_{t}}^*
   -\nabla_{\vv{u}} \widehat{\mathcal{F}_{t}}^*\cdot \vv{u}^*\right)
   +\nabla_{\vv{u}} \widehat{\mathcal{F}_{t}}^*\cdot \vv{u}
@@ -1196,7 +1196,7 @@ Now we calculate the joint distribution of \(\vv{u}\) and \(\vv{x}(t)\) as
   &\sim\dist{N}\left(\begin{bmatrix}
    \nabla \widehat{\mathcal{F}_{t}}^*\vv{\mu}_u +\vv{\mu}_{\eta}
   +\left(\widehat{\mathcal{F}_{t}}^* -\nabla_{\vv{u}} \widehat{\mathcal{F}_{t}}^*\cdot \vv{u}^*\right)\\ \vv{\mu}_u
-\end{bmatrix}, 
+\end{bmatrix},
 \begin{bmatrix}
   \nabla \widehat{\mathcal{F}_{t}}^* \mm{C}_u\nabla \widehat{\mathcal{F}_{t}}^*{}^\top +\mm{C}_{\eta} & \nabla \widehat{\mathcal{F}_{t}}^* \mm{C}_u\\
   \left(\mm{C}_{u}\widehat{\mathcal{F}_{t}}\right)^\top & \mm{C}_{u}
@@ -1205,7 +1205,7 @@ Now we calculate the joint distribution of \(\vv{u}\) and \(\vv{x}(t)\) as
 &=:\dist{N}\left(\begin{bmatrix}
    \vv{\mu}_x\\
    \vv{\mu}_u
-\end{bmatrix}, 
+\end{bmatrix},
 \begin{bmatrix}
   \mm{C}_{x} & \mm{C}_{xu} \\
   \mm{C}_{xu}^\top & \mm{C}_{u}
@@ -1273,8 +1273,517 @@ Using a Gaussian random weight vector \(\vrv{w} \sim \dist{N}\left(\mu_{\vrv{w}}
 \end{align*}
 
 We are not required to use the same bases for each of the random fields here.
-Evaluated at a given matrix \(\set{S}\) of \(n\) sites stacked as column vectors, 
+Evaluated at a given matrix \(\set{S}\) of \(n\) sites stacked as column vectors,
 \(\lat^{(\vrv{w})}\) is a random function satisfying \(\lat^{(\vrv{w})}(\set{S}) \sim \dist{N}\left(\mathbf{0}, \vv{\phi} \mm{C}_{\vrv{w}} \vv{\phi}^{\top}\right)\), where \(\vv{\phi}=\vv{\phi}(\set{S})\) is a \(|\set{S}| \times \ell\) matrix of features.
+
+% \subsection{pretend \(\op{T}\) is linear}
+
+% do one as-if-linear update step and pray that successive updates wash out the bias.
+
+% \subsection{(multi-)line search}
+% ``rescaling the update steps is ok actually''.
+
+% For each \(y^{(i)}\), its update \eqref{eq:ensemble-matheron} can be imagined to provide a line-search direction with a distance to travel scaled by some \(\Delta^{(i)}\):
+% \begin{align*}
+%     \pi:\mm{Y},\op{T}, w &\mapsto \mm{Y}'\\
+%     % &=\left[y^{(i)} + \Delta^{(i)}\left(\breve{\mm{Y}}\breve{\mm{W}}{}^{\top}(\breve{\mm{W}}\breve{\mm{W}}{}^{\top}+\mm{S})^{-1}(\vv{1}w-\op{T}y^{(i)})\right)\right]_i \numberthis \label{eq:ensemble-matheron-ls}\\
+%     &= \left[y^{(i)} + %\Delta^{(i)}
+%     \left(\breve{\mm{Y}}\breve{(\op{T}\mm{Y})}{}^{\top}(\breve{(\op{T}\mm{Y})}\breve{(\op{T}\mm{Y})}{}^{\top}+\mm{S})^{-1}(\vv{1}w-\op{T}y^{(i)})\right)\right]_i\numberthis \label{eq:ensemble-matheron-ls}\\
+% \end{align*}
+
+% What discrepancy would we minimise here to choose \(\Delta^{(i)}\)?
+% What is the justification for this approach?
+
+% \subsection{iterative search}
+
+% re-calc quadratic objective after each step; update is defined implicitly.
+% This one hurts my brain. Is it right?
+
+% \begin{align*}
+%     \mm{Y}'
+%     &= \left[y^{(i)} + \left(\breve{\mm{Y}}\breve{(\op{T}\mm{Y}')}{}^{\top}(\breve{(\op{T}\mm{Y}')}\breve{(\op{T}\mm{Y}')}{}^{\top}+\mm{S})^{-1}(\vv{1}w-\op{T}y^{(i)})\right)\right]_i
+% \end{align*}
+
+
+
+% \subsection{if we had an approx eigendecomp of the operator this might not suck}
+% but we rather assume we don't have that.
+% And i think learning it requires solving the original problem.
+% Then we are doing POD, I think, which is a known method.
+
+% \subsection{I suppose we do have the jacobian of the op in this case}
+% Does that help?
+
+% \begin{align*}
+%     \pi:\mm{Y},\mm{W}, w &\mapsto \mm{Y}'\\
+%     &\Leftrightarrow \\
+%     \overline{\mm{Y}}'
+%         &\approx {\color{red}\overline{\mm{Y}}} + \breve{\mm{W}}'\breve{\mm{Y}}'{}^{\top}(\breve{\mm{Y}}'\breve{\mm{Y}}'{}^{\top}+\mm{S})^{-1}(\vv{1}w-{\color{red}\overline{\mm{W}}'}) \\
+%     \breve{\mm{Y}}'\breve{\mm{Y}}'{}^{\top}
+%         &\approx \breve{\mm{Y}}\breve{\mm{Y}}^{\top} + \breve{\mm{W}}'\breve{\mm{Y}}'{}^{\top}(\breve{\mm{Y}}'\breve{\mm{Y}}'{}^{\top}+\mm{S})^{-1}\breve{\mm{Y}}'{}\breve{\mm{W}}'{}^{\top}
+% \end{align*}
+
+% We can obtain plug-in estimates of each of \(\hat{\mm{T}}\)
+% and \(\hat{\mm{K}}_{\vrv{z}}\) via multiple linear regression, which makes this look concerningly nastier than we would like.
+% Let us work through and see if the bad terms integrate out. crossed finger emoji.
+
+
+% \subsection{Ensemble updates are superpositions}
+% In this section we think about parameterising the problem in terms of what ensemble updates look like.
+% Does this help?
+
+% In an ensemble update we still have \(\mm{Y}'=\mm{Y}\mm{M}+\vv{1}\operatorname{diag}(\vv{b})\) for some \(\mm{M}.\)
+% Actually let's say \(\mm{Y}'=\mm{Y}\mm{A}\) and let \(\mm{A}\) be an affine transform rather than plain old matrix, to keep it compact.
+% The task is might be  accomplished iteratively, where we repeatedly update some estimand \(\mm{A}^{(i)}\) until we achieve convergence.
+% But can it be?
+% .
+% Then we have a characterisation of permitted transforms of \(\mm{Y}\), which is in terms of mixtures of existing samples.
+% \(\mm{Y}'=\mm{Y}\mm{M}+\vv{1}\operatorname{diag}(\vv{b})\) where \(\mm{Y}\) is the ensemble matrix, \(\mm{M}\) is a square matrix, i.e. the new ensemble is an affine mixture of the old ensemble.
+% \(\mm{Y}\in\mathbb{R}^{D\times N}, \mm{M}\in\mathbb{R}^{N\times N}, \vv{b}\in\mathbb{R}^{N\times 1} \).
+% We can solve for \(\mm{M},\vv{b},\mm{T},\mm{K}_{\vrv{z}}\) I spose.
+% This is a lot of matrix unknowns for each time step. We could fix some to some interesting domain, i.e. require \(\mm{M}\) to scale diagonally about the ensemble mean or fix \(\mm{K}_{\vrv{z}}=\sigma\mm{I}\).
+% We don't need a perfect 2nd order update at any given step; a fixed point iteration with a correct fixed point would be fine.
+
+% Let us ignore the constant \(\vv{b}\) term for now to keep it simple.
+
+% However, I think that now we are just calculating the classic kalman gain?
+% We could do GD on the KL divergence I suppose, or Wasserstein-2 or some proxy thereto.
+% Stein discrepancy?
+% Hmm. Are we about to reinvent SVGD?
+% Is it time to ask Cheng Soon about Bregman divergences?
+
+% The prediction model is differentiable in this case; can/should we use that?
+% \subsection{ensemble updates as KSVD?}
+
+% \section{Lanczos approximations to the inverse covariance matrix}
+% The Lanczos algorithm iteratively approximates  \(\mm{A} \in\mathbb{R}^{n \times n}\) by a sequence of factorisations in which, after the \(k\)th step, \(\mm{A}\simeq \mm{Q}^{(k)} \mm{T}^{(k)} \mm{Q}^{(k)}{}^{\top}\), where \(\mm{T} \in \mathbb{R}^{k \times k}\) is positive-definite, tridiagonal and \(\mm{Q} \in \mathbb{R}^{n \times k}\) has orthogonal columns.
+% We do not need to form \(\mm{A}\), but simply to evaluate \(\mm{A}\vv{b}\) for vectors \(\vv{b}\).
+% \nb{accuracy of this update? Depends on condition number}
+% Hereafter we suppress the \((k)\) superscript, assuming that the number of iterations is held fixed and sufficiently large.
+
+% Moreover, with a given Lanczos approximand \(\mm{Q},\mm{T}\) we may estimate \(\mm{A}^{-1}\vv{c}\simeq \mm{Q}\mm{T}^{-1}\mm{Q}^{\top}\vv{c}\).\nb{citation chase for bounds on this approx quality?}
+% This is the essential trick in making \(\left(\tilde{\mm{K}} +\sigma^2 \mm{I}_{N}\right)^{-1}\vv{b} \approx  \left(\breve{\mm{U}} \breve{\mm{U}}+\sigma^2 \mm{I}\right)^{-1}\mathbf{b}\) which speeds the calculation of \eqref{eq:pathwise-update-ensemble-sim}.
+% Lanczos approximation of this quantity requires us to calculate products \((\breve{\mm{U}} \breve{\mm{U}}^{\top}+\sigma^2 \mm{I})\vv{b}=\breve{\mm{U}} (\breve{\mm{U}}^{\top}\vv{b}) +\sigma^2 \vv{b}\),, where the latter form leads to a cheap matrix product.
+
+% How good is our Lanczos approximation?
+% \cite{SaadIterative2003} show that the residual vector of the approximate solution \(x_m\) is such that
+% \[
+% b-A x_m=-\beta_{m+1} e_m^T y_m v_{m+1} .
+% \]
+\iffalse
+\section{Conditional update}\label{app:conditioning-dag}
+
+% \subsection{Noiseless observations}
+We have asserted there is a simple rule \eqref{eq:filtering} for iteratively updating beliefs about \(\forcing\), to wit,
+\(\Law(\forcing_{t}) = \Law\big(\forcing_{\tm} \gvn (\state_{\tm}{=}\statest_{\tm}, \state_{t}{=}\statest_{t})\big)\).
+For simplicity of explanation of this in terms of Bayes' rule, we assume all joint and conditional densities exist, and write the update in terms of the implied factorisation of the joint density,
+\begin{align*}
+    p(\forcingst, \statest_{0},\dots,\statest_{T})
+    &=p(\forcingst)p(\statest_{0})\prod_{t=1}^{T}p(\statest_{t}\gvn \forcingst, \statest_{\tm})
+\end{align*}
+from which
+\begin{align*}
+    p(\forcingst\gvn \statest_{0},\dots,\statest_{T})
+    &\propto p(\forcingst)p(\statest_{0})\prod_{t=1}^{T}p(\statest_{t}\gvn \forcingst, \statest_{\tm}),
+\end{align*}
+which is the density of \(\forcing_{t}=\forcing\gvn (\state_{0}{=}\statest_{0},\dots,\state_{t}{=}\statest_{t})\). Now,
+\begin{align*}
+    p(\forcingst\gvn \statest_{0},\dots,\statest_{T})
+    &\propto p(\statest_{t}\gvn \forcingst, \statest_{\tm})p(\forcingst \gvn \statest_{0},\dots, \statest_{\tm})
+\end{align*}
+All the \(\statest_{s}\) terms are observed and thus fixed, so the proportionality is in fact equality, and
+\begin{align*}
+    p(\forcingst\gvn \statest_{0},\dots,\statest_{T})
+    &= p(\statest_{t}\gvn \forcingst, \statest_{\tm})p(\forcingst \gvn \statest_{0},\dots, \statest_{\tm})
+\end{align*}
+which is the posterior update for \(p(\forcingst \gvn \statest_{0},\dots, \statest_{\tm})\) given new observation \(\state_{t}{=}\statest_{t}\),
+from which it follows that~\eqref{eq:filtering} holds.
+
+
+% Defining \(\forcing_{t}:=\forcing\gvn \left(\state_{0}{=}\statest_{0},\dots, \state_{t}{=}\statest_{t}\right)\),
+Equivalently, we can construct the factor graph \citep{KschischangFactor2001,FreyFactor1997} for this model (Figure~\ref{fig:ts_fg}) and deduce the associated belief propagation schedule.
+In the case that all state nodes\(\left(\state_{0}{=}\statest_{0},\dots, \state_{t}{=}\statest_{t}\right)\) (shown hatched in this figure) are observed, we can see that all factor messages necessary to update the node \(\forcing\) are accumulated by assimilating each of the \(\left(\state_{\tm}{=}\statest_{\tm}, \state_{t}{=}\statest_{t}\right)\) pairs.
+% From this we see that for a given prior distribution \(\left(\forcing\gvn \state_{0}=\statest_{0},\dots,\state_{\tm}=\statest_{\tm}\right)\), the conditional update given a new observation \(\state_{t}=\statest_{t}\) is
+% \begin{align*}
+% \left(\forcing\gvn \state_{0}=\statest_{0},\dots,\state_{t}=\statest_{t}\right)
+% &= \left(\left(\forcing\gvn \state_{0}=\statest_{0},\dots,\state_{\tm}=\statest_{\tm}\right) \gvn\state_{\tm}=\statest_{\tm},\state_{t}=\statest_{t}\right)\\
+% &= \left(\left(\forcing\gvn \state_{0}=\statest_{0},\dots,\state_{\tm}=\statest_{\tm}\right) \gvn \state_{t}=\statest_{t}\right).
+% \end{align*}
+
+\begin{figure}
+    \centering
+    \includegraphics{FG_ts.drawio.pdf}
+    \caption{Factor graph  for the generating equations of \eqref{eq:ts-sem}}
+    \label{fig:ts_fg}
+\end{figure}
+
+% \subsection{Noisy observations}
+% For exposition in this paper, we have assumed that we observe realisations of the series noiselessly.
+% More generally, we might observe some noisy linear function of the true target values.
+% \begin{align*}
+%     \state_{t}&=\op{P}(\state_{\tm}, \forcing),\quad t=1, 2, \cdots, T\\
+%     \outp_{t}&=\op{Y}\state_{t},\quad t=1, 2, \cdots, T\numberthis\label{eq:ts-sem-noisy}
+% \end{align*}\nb{missing priors}
+% where our observations are actually of \(\outp_{t}=\outpst_{t}\).
+% Then the associated factor graph is more complicated (Figure~\ref{fig:ts_fg_noisy}) and the inference procedure is in fact loopy belief propagation.
+% In this case we need to solve the filtering problem, estimating \(\{\state_{t}\}_t\) from \(\{\outp_{t}\}_t\).
+% The message-pasing schedule in this case is loopy, and may not converge, although the ensemble updates are well-defined under the assumption that our ensemble statistics are.
+% \begin{figure}
+%     \centering
+%     \includegraphics{FG_ts_noisy.drawio.pdf}
+%     \caption{Factor graph for the generating equations of \eqref{eq:ts-sem-noisy}}
+%     \label{fig:ts_fg_noisy}
+% \end{figure}
+
+% \section{Stationary moves in an ensemble Gaussian posterior}
+% \subsection{Elliptical slice sampling}
+% \subsection{Langevin}
+% Suppose \(\vrv{x}\) is a  \(d\)-dimensional Gaussian RV
+% \begin{align*}
+% \vrv{x}&\sim\mathcal{N}(\overline{m}_{x}, \mm{K}_{\vrv{x}\vrv{x}})
+% \end{align*}
+% whose moments are  chosen to match the empirical moments of an ensemble \(\mm{X}=\begin{bmatrix}
+%     \vrv{x}^{(1)} & \cdots & \vrv{x}^{(N)}
+% \end{bmatrix}\) of iid samples
+% so that
+% \begin{align*}
+% \overline{m}_{\vrv{x}}&:=\frac{1}{N}\sum_{i=1}^N \tilde{\vrv{x}^{(i)}}\\
+% \mm{K}_{\vrv{x}\vrv{x}} &:= \breve{\mm{X}} \breve{\mm{X}}^{\top}\\
+% \breve{\mm{X}}&=\frac{1}{\sqrt{N-1}}\begin{bmatrix}
+%     (\vrv{x}^{(1)}-\overline{m}_{\vrv{x}}) & \cdots & (\vrv{x}^{(N)}-\overline{m}_{\vrv{x}})
+% \end{bmatrix}\\
+% \end{align*}
+% Note that that the deviation matrix represents a square-root factorisation for the covariance, we can simulate new realisations from the distribution of this variable using
+% \(\rv{x}\sim{m}_{\vrv{x}} + \breve{\mm{X}}\xi\) for \(\xi\sim\mathcal{N}(\vv{0}, \mm{I})\).
+% A corollary to this is that this distribution and its updates comprise linear combinations of members of the ensemble, and so if \(d>N\) it cannot span the space of all possible realisations.\nb{not quite. what does it actually imply?}
+
+% We could diversify the ensemble, in the sense of simulating realisations with the same moments but which did not come from the span of the ensemble if there existed a non-trivial random transform \(j\) which was not restricted to the span of this basis such that \(\vrv{x}\sim \dist{N}({m}_{\vrv{x}},\mm{K}_{\vrv{x}})\Rightarrow j(\vrv{x}) \disteq \vrv{x}\).
+% Can we construct such a \(j\)?
+
+% Langevin dynamics might be a tractable approach.
+% Given \(\vrv{z}\sim\mathcal{N}(0,\mm{I}_{d})\) and a step size \(\epsilon\), an Euler-Maruyama approximation to a Langevin move is
+% \begin{align*}
+% j(\vv{x})
+% &:= \vv{x}
+% + \epsilon \nabla_{\vv{x}} \log p_{\vrv{x}}(\vv{x})
+% + \sqrt{2\epsilon}~\vrv{z},\text{ and}\\
+% \nabla_{\vv{x}} \log p_{\vrv{x}}(\vv{x})
+% &=-( \vv{x}-{m}_{\vrv{x}})^{\top}\mm{K}_{\vrv{x}\vrv{x}}^{-1}
+% \end{align*}
+% thus
+% \begin{align*}
+% \Delta\vv{x} - \sqrt{2\epsilon}~ \vrv{z}
+% &=\epsilon ( \vv{x}-{m}_{\vrv{x}})^{\top}\mm{K}_{\vrv{x}\vrv{x}}^{-1} \\
+% (\Delta\vv{x} - \sqrt{2\epsilon}~ \vrv{z})\mm{K}_{\vrv{x}\vrv{x}}
+% &=\epsilon ( \vv{x}-{m}_{\vrv{x}})^{\top}.
+% \end{align*}
+% Can we find any cool simplifications by plugging in ensemble deviations?
+% Let us try:
+% \begin{align*}
+% \Delta\vv{x} - \sqrt{2\epsilon}~ \vrv{z}
+% &=\epsilon ( \vv{x}-{m}_{\vrv{x}})^{\top}(\breve{\mm{X}} \breve{\mm{X}}^{\top})^{-1} \\
+% (\Delta\vv{x} - \sqrt{2\epsilon}~ \vrv{z})\breve{\mm{X}} \breve{\mm{X}}^{\top}
+% &=\epsilon ( \vv{x}-{m}_{\vrv{x}})^{\top} \\
+% \Delta\vv{x}
+% &=\epsilon ( \vv{x}-{m}_{\vrv{x}})^{\top}(\breve{\mm{X}} \breve{\mm{X}}^{\top})^{-1} + \sqrt{2\epsilon}~ \vrv{z}
+% \end{align*}
+% We can batch this, in which case
+% \begin{align*}
+% \Delta\mm{X}
+% &=\epsilon (N-1) \breve{\mm{X}}^{\top}(\breve{\mm{X}} \breve{\mm{X}}^{\top})^{-1} + \sqrt{2\epsilon}~ \vrv{Z}\\
+% \Delta\mm{X}  - \sqrt{2\epsilon}~ \vrv{Z} &=\epsilon (N-1) \breve{\mm{X}}^{\top}(\breve{\mm{X}} \breve{\mm{X}}^{\top})^{-1}
+% \end{align*}
+
+% This Euler-Maruyama approximation will clearly be bad if \(\epsilon\) is not tiny; we could consider implicit steps or Metropolis adjustment?
+% Both those look expensive.
+
+% We expect that iterating such steps will not be truly stationary; in the end the posterior covariance will drift.
+
+% \section{Epistemic uncertainty in the ensemble posterior}\label{sec:u-uncertainty}
+
+% Consider a jointly Gaussian ensemble covariance which includes a term to inflate the uncertainty of  our estimate of the posterior, because, e.g., we would like to decrease the confidence of our estimate convinced that it is \emph{truly} Gaussian, and quantifying that by adding Gaussian noise is the laziest option that might work.
+% (Student-t distributions look hard and boring).
+% This model looks similar to \eqref{eq:discrete_joint_enkf_sim} but with the uncertainty term moved:
+% \begin{align*}
+% \left.\left[\begin{array}{c}
+%     \state_{t} \\
+%     \forcing
+% \end{array}\right]\right|\state_{\tm}
+% &\simeq\dist{N}\left(
+%     \left[\begin{array}{c}
+%         \overline{\statest}\\
+%         \overline{\forcingst}
+%     \end{array}\right],
+%     \left[\begin{array}{cc}
+%         \breve{\mm{Z}}\breve{\mm{Z}}^{\top}
+%         & \breve{\mm{U}}\breve{\mm{Z}}^{\top} \\\ % 3 backslashes or it breaks for some reason
+%         \breve{\mm{Z}}\breve{\mm{U}}^{\top}
+%         & \breve{\mm{U}}\breve{\mm{U}}^{\top} +\mm{K}_{\xi}
+%     \end{array}\right]\numberthis\label{eq:discrete_joint_enkf_sim_misfit}
+% \right).
+% \end{align*}
+% % What does that look like in ensemble inference?
+
+% % \subsection{Adding independent noise to the samples}
+
+% Simplest options:
+% We can add some noise to each of the samples \(\forcingst^{(i)}\gets\vrv{\xi}^{(i)}\sim\mathcal{N}(0,\mm{K}_{\xi}).\)
+% Is this well posed?
+% How about if \(\mm{K}_{\xi}=\tau^2\mm{I}\)?
+% Connection to Langevin sampling above.
+
+% \subsection{Inflating posterior covariance}
+
+% According to \citep{RothEnsemble2017} this is called variance inflation and is discussed in the literature.
+
+% Alternatively, suppose the posterior ensemble has covariance  \(\breve{\mm{U}}\breve{\mm{U}}^{\top}\) but we wish it had covariance \(\breve{\mm{U}}'\breve{\mm{U}}'{}^{\top} \succ\breve{\mm{U}}\breve{\mm{U}}^{\top}\).
+%
+% We could change that by scaling the ensemble, possibly randomly, about the mean by some scalar (?) inflation factor \(\rv{s}\), \(\Ex\rv{s}>1\),
+% \(\forcingst^{(i)}\gets\rv{s}(\forcingst^{(i)}-m_{\forcing})\) or even
+% \(\forcingst^{(i)}\gets\vrv{S}(\forcingst^{(i)}-m_{\forcing})\) from some matrix-valued \(\vrv{S}\).
+
+% Hmm, products of RVs is a complicated world to be in; I think I vote for deterministic scaling, or additive Gaussian noise, now that I think about it.
+
+% \section{Ensemble Bayesian inversion 1: by pathwise GP sampling and error propagation}
+% Here is a bad way of solving this problem because NN people always need to try the Jacobian first.
+
+% Rather than assuming a jointly Gaussian distribution for all variables as in \eqref{eq:gaussian_approx_proc}, we make the weaker assumption that \emph{conditional on some fixed sample \(\state_{\tm}{=}\statest_{\tm}\), \(\state_{t}{=}\statest_{t}\) and \(\forcing\)} are jointly Gaussian with a conditional variance given by a local first-order Taylor expansion about \(\forcing{=}\forcingst\).
+% That is, at pair \((\forcing, \state_{\tm})=(\forcingst, \statest_{\tm})\), the linearised joint distribution is
+% \begin{align*}
+%     {m}_{\forcing}
+%         &=\proj_{\vv{X}}\forcing \numberthis\label{eq:mvn-m-inp}\\
+%     {m}_{\state_{t}}
+%         &=\proj_{\vv{S}}[\op{P}(\statest_{\tm},\forcingst)]\numberthis\label{eq:mvn-m-state}\\
+%     \mm{K}_{\state_{t}\state_{t}}
+%          &=J_{\forcingst}\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} +\sigma^2\mm{I}\numberthis \label{eq:discrete_pred_cov_taylor_local}\\
+%     \mm{K}_{\state_{t}\forcing}
+%     %     &= [\vv{k}_{\state_{t}\forcing}(s_i,x_j)]_{ij} \\
+%     % \mm{K}_{\statest\forcingst}{}
+%         &=\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top}\numberthis
+% \end{align*}
+% where \(J_{\forcingst}:=\nabla_{\forcingst'}\proj_{\vv{S}}\op{P}(\statest_{\tm},\forcingst)\in\mathbb{R}^{|S|}\times\mathbb{R}^{|X|}\) is the Jacobian matrix of the projection of the forward predictor at this point.
+% This rule gives us a different update \emph{for each sample} based on a different local linearisation.
+
+% The Matheron update analog to \eqref{eq:pathwise-update} in such a model is thus
+% \begin{align*}
+% &(\tilde{{\forcing}} \gvn \state_{t}{=}\statest_{t},\state_{\tm}) \\
+% &\disteq
+% \tilde{{\forcing}}+\mm{K}_{\state_{t}\forcing} \mm{K}_{\state_{t}\state_{t}}^{-1}\left(\statest_{t}-{m}_{\state_{t}}\right)\\
+% &=\tilde{{\forcing}}+\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} (J_{\forcingst}\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} +\sigma^2\mm{I})^{-1}\left(\statest_{t}-{m}_{\state_{t}}\right).\numberthis\label{pathwise-update-mc}
+% \end{align*}
+% This method has various apparent difficulties.
+% % For one, the matrix inversion required by the update step \eqref{eq:pathwise-update} is an \(\mathcal{O}(|X||S|^3)\) operation.
+% Under the discretisation \eqref{eq:discrete_joint_naive}, calculating the update \eqref{eq:discrete_pred_cov_taylor_local} naively is a \(\mathcal{O}(|X|^3|S|)\) operation since we need to invert  \(\mm{K}_{\forcing\forcing})\) to calculate it.
+% Although this method has relaxed some assumptions of the Gaussian variational posterior approximation, it is even less computationally tractable; each sample update requires both the covariance inversion and the calculation of a different local Jacobian matrix.
+
+% Ensemble Kalman methods~\cite{EvensenData2009} empirically approximate intractably large covariance matrices \(\mm{K}_{\forcing\forcing}\), e.g.\ in \eqref{eq:pathwise-update} where we need to find an update.
+
+% Then,
+% \begin{align*}
+% &\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} (
+%     J_{\forcingst}\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top}
+%     +\sigma^2\mm{I}
+%     )^{-1}\\
+% % &=\frac{1}{\sigma^2}(
+% %     \mm{K}_{\forcing\forcing}^{-1} + \frac{1}{\sigma^2} J_{\forcingst}^{\top}J_{\forcingst}
+% %     )^{-1}J_{\forcingst}^{\top}\\
+% &\simeq\breve{\mm{U}}\breve{\mm{U}}^{\top}J_{\forcingst}^{\top} (
+%     J_{\forcingst}\breve{\mm{U}}\breve{\mm{U}}^{\top}J_{\forcingst}^{\top}
+%     +\sigma^2\mm{I}
+%     )^{-1}\\
+% &=\underbrace{\breve{\mm{U}}}_{|X|\times N} \left(
+%         \underbrace{\breve{\mm{U}}^{\top}}_{N\times |X|}
+%         \underbrace{J_{\forcingst}^{\top}}_{|X|\times |S|}
+%         \underbrace{J_{\forcingst}}_{|S|\times |X|}
+%         \underbrace{\breve{\mm{U}}}_{|X|\times N}
+%         +\frac{1}{\sigma^2}\mm{I}
+%     \right)^{-1}
+%     \underbrace{\breve{\mm{U}}^{\top}}_{N\times |X|}
+%     \underbrace{J_{\forcingst}^{\top}}_{|X|\times |S|}
+% \end{align*}
+% Another useful one is the Kalman gain,
+% \begin{align*}
+% \mm{G} &:=\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} (J_{\forcingst}\mm{K}_{\forcing\forcing}J_{\forcingst}^{\top} +\sigma^2\mm{I})^{-1}\\
+% \underbrace{\mm{G}}_{|X|\times |S|} &:=
+%     \underbrace{\breve{\mm{U}}}_{|X|\times N}
+%     \underbrace{J_{\forcingst}^{\top}}_{|X|\times |S|}
+%     \left(
+%         \underbrace{J_{\forcingst}}_{|S|\times |X|}
+%         \underbrace{\breve{\mm{U}}}_{|X|\times N}
+%         \underbrace{\breve{\mm{U}}^{\top}}_{N \times |X|}
+%         \underbrace{J_{\forcingst}^{\top}}_{|X| \times |S|}
+%         +\sigma^2\mm{I}
+%     \right)^{-1}
+% \end{align*}
+% which we can calculate by solving for
+% \begin{align*}
+% \mm{G}\left(J_{\forcingst}\breve{\mm{U}}\breve{\mm{U}}^{\top}J_{\forcingst}^{\top} +\sigma^2\mm{I}\right) &:=\breve{\mm{U}}\breve{\mm{U}}^{\top} J_{\forcingst}^{\top}
+% \end{align*}
+% % or using Welling's variant Woodbury:
+% % If \(\mathbf{P}, \mathbf{R}\) are positive definite, then
+% % \begin{align*}
+% %     \mathbf{P} \mathbf{B}^{\top}\left(\mathbf{B} \mathbf{P} \mathbf{B}^{\top}+\mathbf{R}\right)^{-1}
+% %     =\left(\mathbf{P}^{-1}+\mathbf{B}^{\top} \mathbf{R}^{-1} \mathbf{B}\right)^{-1} \mathbf{B}^{\top} \mathbf{R}^{-1}
+% % \end{align*} from which
+% % \begin{align*}
+% %     &(\breve{\mm{U}}^{\top}\breve{\mm{U}}) J_{\forcingst}^{\top}\left(J_{\forcingst} (\breve{\mm{U}}^{\top}\breve{\mm{U}}) J_{\forcingst}^{\top}+(\sigma^2\mm{I})\right)^{-1}\\
+% %     &=\frac{1}{\sigma^2}\left((\breve{\mm{U}}^{\top}\breve{\mm{U}})^{-1}+\frac{1}{\sigma^2}J_{\forcingst}^{\top}  J_{\forcingst}\right)^{-1} J_{\forcingst}^{\top}
+% % \end{align*}
+% which is not \emph{prima facie} a huge saving, although we can group the \(\underbrace{J_{\forcingst}}_{|S|\times |X|}\underbrace{\breve{\mm{U}}}_{|X|\times N}\) terms.
+
+% \section{Design}
+% a.k.a. choosing projections.
+
+% We largely ignore the question of optimal placement of observation in the current work.
+% Optimal \(\set{S}\)~\cite{AlexanderianOptimal2021}?
+% Optimal \(\Phi\)~\cite{LassasDiscretizationinvariant2009}?
+
+% What do we actually converge to if we try to update th whole thing using low-dim projections?
+
+% The unfavourable scaling is in the output observation term, so we now have a question about how big to make that. There are some results in subsampling covariance observations that we possibly need to digest to manage this term \cite{ChenStochastic2020,MinhFinite2022}.
+
+% \section{Offcut: Posterior updates by random projections}
+
+% Can we make site updates of posterior fields cheaper by updating random projections of the field in some sense?
+
+% As seen in sliced Fisher score matching.
+% Is that a way of doing partial updates?
+
+% \section{Offcut: inversion by Newton methods}
+% \cite{WilkinsonBayesNewton2021}
+
+% \subsubsection{by that weird Laplace-on-a-graph trick the opposition uses}
+% \cite{MagnaniApproximate2022}
+
+% \subsection{Robust losses}
+
+% \cite{DavisonFutureMapping2019,DonohoHigh2013}
+\fi
+
+\iffalse
+\russ{Is this still in progress?}\danm{yes, omg, I just realised it doesn't make sens for the linearised case for one thing.}
+\russ{I can't find the definition of $\vrv{\nu}_t$ or $\hat{p}$.}\danm{  $\vrv{\nu}_t$ is \eqref{eq:ts-sem-stoch}, $\hat{p}$ needs a do-over for new notation. what do we call an estiamte of a realisation lieklihood now?}
+\russ{There is an object $\rho(\forcingst \gvn \mathcal{D}_{t-1})$ which is the evaluation of the likelihood conditioned on the observations. Is that what you are looking for? Or are you looking for something like $\rho(\forcingst \gvn \mathcal{D}_t, \state_t)$? Not sure what ``estimate'' means or ``realisation'' in this context}
+\russ{ Do we really want to compute an expectation over $\forcing$?}
+\danm{yes, as it stands, but these is a weirdness in the problem framing that leads to that yes; we are using the true prior as the generating process for the data here. Generally in stats want to randomise over all data-generating processes, but not over all realisations from the prior. There are two things wrong there; 1) knowing the true prior distribution fro everything is sus 2) in fact we want to average over all possible inference steps, which includes taking expectations over all possible posterior updates to all possible priors, which is a hard integral and in any case does not do quite what we want, since a given inference step does not ``know'' if it is early or late in the inference process.}
+We have free hyperparameters in both the linearised and ensemble methods.
+In the evidence framework, we would like to choose hyperparameters \(\sigma^2\) and \(\tau^2\) to maximise some notion of the expected quality of inference over all data.
+For example, for a given inference method, operator \(\op{P}\) and distributions \(\Law(\forcing),\Law(\state_{0}),\{\Law(\vrv{\nu}_{t}\}_t\), we might maximise the expected likelihood of observations drawn from these distributions,
+\begin{align*}
+    &\Ex_{\forcing, \state_{0}, \{\vrv{\nu}_t\}_t} [\widehat{p}(\forcing\gvn \state_{0},\dots\state_{T})]\\
+\end{align*}
+The deficiency of solving this problem directly is that it requires us to estimate high-dimensionalintegrals at potentially high computational cost.
+
+In practice we have a cheaper approximate alternative:
+Maximum likelihood over residuals is consistent for estimating the model noise terms~\citep{MitchellAdaptive2000} and the maximum likelihood estimate of both \(\sigma^2\) and \(\tau^2\) is simply the variance of the model residuals which does not require calculating or optimising over the model density directly.
+In practice we estimate both of these terms by evaluating the method over artificial data from simulator runs with new random seeds.
+\fi
+
+
+% Addressing the difficulties this imposes is studied in the Ensemble Kalman literature (see e.g.~\cite{FearnheadParticle2018} and references therein).
+% One pragmatic means of allowing the model to span a wider space, which we exploit in this work, is to inject additional element-wise i.i.d. noise to each member of the ensemble, \(\forcing_{t}^{(i)}{}'=\forcing_{t}^{(i)}+\dist{N}(\vv{0},\kappa^2\mm{I})\).
+% \danm{In fact the optimal \(\kappa\) is 0 by the obvious methods; could delete?}
+
+% Plugging in sample covariances of~\eqref{eq:discrete_joint_enkf_sim} to the  Matheron update~\eqref{eq:pathwise-update}, we need to solve an inner problem
+% \begin{align*}
+% &(\tilde{{\forcing}}^{(i)} \gvn \state_{t}{=}\statest_{t},\state_{\tm}) \\
+% &\disteq
+% \tilde{{\forcing}}^{(i)}+\mm{K}_{\state_{t}\forcing} \mm{K}_{\state_{t}^{(i)}\state_{t}^{(i)}}^{-1}\left(\statest^{(i)}-\statest_{t}\right)\\
+% &=\tilde{{\forcing}}^{(i)}+\breve{\mm{U}}\breve{\mm{Z}}^{\top}(\breve{\mm{Z}}\breve{\mm{Z}}^{\top} + \sigma^2\mm{I})^{-1}\left(\statest^{(i)}-\statest_{t}\right)
+% \numberthis\label{eq:pathwise-update-ensemble-sim}\\
+% &=\tilde{{\forcing}}^{(i)}
+% +\underbrace{\breve{\mm{U}}}_{|X|\times N}
+% \underbrace{\breve{\mm{Z}}^{\top}}_{N\times |S|}{(
+%   \underbrace{\breve{\mm{Z}}}_{|S|\times N}
+%   \underbrace{\breve{\mm{Z}}^{\top}}_{N\times |S|} + \sigma^2\mm{I}
+% )}^{-1}\left(\statest^{(i)}-\statest_{t}\right).
+% \end{align*}
+
+% At first glance, this method still requires an intractably expensive \(\mathcal{O}(D_{\vrv{\state}}^3)\) cost when solving systems involving the  covariance \((\breve{\mm{Z}}\breve{\mm{Z}}^{\top} + \sigma^2\mm{I})\) in \eqref{eq:pathwise-update-ensemble-sim}.
+% However, the empirical representation has structure we can exploit to approximate its solution efficiently via Lanczos decomposition.
+% That trick is known in the Gaussian process literature in the context of Lanczos Variance Estimates (LOVE)~\citep{PleissConstantTime2018}, %\nb{TODO; check if this is well known in EnKF? Surely. what do they call it?}
+% although we exploit it in a different manner.
+
+% Given some rank \(k\) and an arbitrary starting vector \(\vv{b}\), the Lanczos algorithm iteratively approximates  \(\mm{A} \in\mathbb{R}^{n \times n}\) by a low rank factorisation \(\mm{A}\approx \mm{Q} \mm{T} \mm{Q}^{\top}\), where \(\mm{T} \in \mathbb{R}^{k \times k}\) is tridiagonal and \(\mm{Q} \in \mathbb{R}^{n \times k}\) has orthogonal columns.
+% Crucially, we do not need to form \(\mm{A}\) to evaluate matrix vector products \(\mm{A}\vv{b}\) for arbitrary vector \(\vv{b}\).
+% \nb{accuracy of this update? Depends on condition number}
+% Moreover, with a given Lanczos approximand \(\mm{Q},\mm{T}\) we may estimate
+% \begin{align*}
+% \mm{A}^{-1}\vv{c}\approx \mm{Q}\mm{T}^{-1}\mm{Q}^{\top}\vv{c}.\numberthis\label{eq:lanczos-inv}
+% \end{align*}
+% even for \(\vv{b}\neq\vv{c}\).\nb{citation chase for bounds on this approx quality.}
+
+% In \eqref{eq:pathwise-update-ensemble-sim} we must calculate
+% %\nb{Dan M to fix this bit - I think it was supposed to be Zs and also we agreed that this needs rewording - I was confused what you were "solving" here}
+% \(\left(\breve{\mm{Z}} \breve{\mm{Z}}+\sigma^2 \mm{I}\right)^{-1}\left(\statest^{(i)}-\statest_{t}\right)\).
+% We approximate the solution to this linear system using the partial Lanczos decomposition starting with probe vector \(\vv{b}=\tilde{m}_{\statest}\) and \(\mm{A}=\left(\breve{\mm{U}} \breve{\mm{U}}+\sigma^2 \mm{I}\right)\).
+% % Applying the approximation in an ensemble  context in \meth{} exploits the square-root decomposition of the variance in terms of deviance matrices.
+% This requires \(k\) matrix vector products of the form %\nb{this should be two equations - not two equal signs on the same line.}
+% \begin{align*}
+% \underbrace{\left(\underbrace{\breve{\mm{U}} \breve{\mm{U}}^{\top}}_{\mathcal{O}(ND_{\vrv{\state}}^2)}+\sigma^2 \mm{I}\right)\vv{b}}_{\mathcal{O}(D_{\vrv{\state}}^2)}
+% =\underbrace{\breve{\mm{U}} \underbrace{(\breve{\mm{U}}^{\top}\vv{b})}_{\mathcal{O}(ND_{\vrv{\state}})}}_{\mathcal{O}(ND_{\vrv{\state}})} +\sigma^2 \vv{b}.
+% \end{align*}
+% Using the latter representation, the required matrix-vector product may be found with a time complexity cost of \(\mathcal{O}(ND_{\vrv{\state}})\).
+% Space complexity is also \(\mathcal{O}(ND_{\vrv{\state}})\).
+% The output of the Lanczos decomposition is \(\mm{Q},\mm{T}\) such that \(\left(\tilde{\mm{K}} +\sigma^2 \mm{I}\right)\vv{b}\approx \mm{Q} \mm{T} \mm{Q}^{\top}\vv{b}\), i.e. a low rank approximation of the covariance-matrix-vector product.
+% Then, by~\eqref{eq:lanczos-inv}, the solution to the inverse-covariance-matrix-vector product may be approximated by
+% \(\left(\tilde{\mm{K}} +\sigma^2 \mm{I}\right)^{-1}\left(\statest^{(i)}-\statest_{t}\right)\approx \mm{Q}\mm{T}^{-1}\mm{Q}^{\top}\left(\statest^{(i)}-\statest_{t}\right)\), requiring the solution in \(\mm{x}\) of the much smaller linear system \(\mm{X}\mm{T}=\mm{Q}\).
+% Exploiting the positive-definiteness of \(\mm{T}\) we may use the Cholesky decomposition of \(\mm{T}=\mm{L}^{\top}\mm{L}\) for a constant speedup over solving an arbitrary linear system.
+% The time cost of the solution is \(\mathcal{O}(D_{\vrv{\state}}k^3)\), for an overall cost to the matrix inversions of \(\mathcal{O}(ND_{\vrv{\state}}k+D_{\vrv{\state}}k^3)\).
+% \nb{make more precise; i think we have missed some multiplies and Lanczos overhead, plus deviation calcs; also if we use iterative matheron, how many steps do we take in general?}
+
+
+\iffalse
+The Matheron update maps marginal Gaussian samples to conditional Gaussian samples.
+In particular, if  \begin{align*}
+    \begin{bmatrix}\vrv{y}\\ \vrv{w}
+\end{bmatrix}\sim\mathcal{N}\left(\begin{bmatrix}
+    m_{\vrv{y}}\\ m_{\vrv{w}}
+\end{bmatrix},\begin{bmatrix}
+    \mm{K}_{\vrv{y}\vrv{y}} & \mm{K}_{\vrv{y}\vrv{w}} \\
+    \mm{K}_{\vrv{w}\vrv{y}} & \mm{K}_{\vrv{w}\vrv{w}}
+\end{bmatrix}\right),
+\end{align*}
+then
+\begin{align*}
+\vrv{y}+\mm{K}_{\vrv{w}\vrv{y}} \mm{K}_{\vrv{w}\vrv{w}}^{-1}\left[\vrv{w}-{m}_{\vrv{w}}\right]\disteq
+    \left(\vrv{y}\gvn \vrv{w}=\vv{w}\right),
+\end{align*}
+and this update may be applied sample-wise to the members of the ensemble.
+%For further details see Appendix~\ref{app:matheron}.
+In \meth{}, we substitute the empirical moments into the Matheron update formula to construct sample-wise updates to the ensemble members as
+\fi
+
+\iffalse
+\begin{align*}\left.
+\left[\begin{array}{c}
+    \statest_{t}^{(i)} \\
+    \forcingst^{(i)}
+\end{array}\right] \right| \mathcal{D}_{t-1}
+    &\sim \dist{N}\left(
+    \left[\begin{array}{c}
+        \overline{\mm{Z}}_{t}\\
+        \overline{\mm{U}}_{\tm}
+    \end{array}\right],
+    \left[\begin{array}{cc}
+        \breve{\mm{Z}}_{t}\breve{\mm{Z}}_{t}^{\top} +\sigma^2\mm{I}
+        & \breve{\mm{U}}_{\tm}\breve{\mm{Z}}^{\top}_{t} \\\ % 3 backslashes or it breaks for some reason
+        \breve{\mm{Z}}_{t}\breve{\mm{U}}_{\tm}^{\top}
+        & \breve{\mm{U}}_{\tm}\breve{\mm{U}}_{\tm}^{\top} + \tau^2\mm{I}
+    \end{array}\right]\right)\numberthis\label{eq:discrete_joint_enkf_sim}%\\
+    % &=:\dist{N}\left(
+    % \left[\begin{array}{c}
+    %     \overline{\mm{Z}}_{t}\\
+    %     \overline{\mm{U}}_{\tm}
+    % \end{array}\right],
+    % \left[\begin{array}{cc}
+    %     \mm{K}_{\mm{ZZ},t}
+    %     & \mm{K}_{\mm{UZ},t} \\
+    %     \mm{K}_{\mm{ZZU},t}
+    %     & \mm{K}_{\mm{UU},\t}
+    % \end{array}\right]\right).
+\end{align*}
+\fi
 
 
 \end{document}
