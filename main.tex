@@ -1,5 +1,3 @@
-%%%%%%%% ICML 2023 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
-
 \documentclass{article}
 \input{preamble.tex}
 % Recommended, but optional, packages for figures and better typesetting:
@@ -386,25 +384,25 @@ The forward operator $\op{P}$ applies incompressible Navier-Stokes fluid flow fo
 The state $\state_t$ of the system is by assumption completely characterised by a discretisation of the problem into a locally-constant \(256\times 256\) lattice of cells, each of which possesses a density (\ref{fig:states}) and two-dimensional velocity (not shown) for an overall state dimension of \(D_{\state}=256\times 256 \times (1+2)\).
 The latent parameter $\forcing$, a discretised 2-vector field, is characterised completely by a vector of dimension \(D_{\forcing}=256\times 256 \times 2\).
 
-\begin{figure*}[h!t]
-     \centering
-    \begin{subfigure}{0.7\textwidth}
-        \centering
-        \includegraphics[scale=0.35]{ns_p_trim.pdf}
-         \caption{From left to right, states (in this case, density fields) $\state_{0}, \state_{1}, \state_{2}$ evolving through time.}
-         \label{fig:states}
-     \end{subfigure}
-     \begin{subfigure}{0.25\textwidth}
-         \centering
-        \includegraphics[scale=0.25]{ns_force_trim.pdf}
-         \caption{Unobserved parameter $\forcing$.}
-         \label{fig:forcing}
-     \end{subfigure}
-     \hfill
-    \centering
-    \caption{An example Navier-Stokes fluid flow system, used as a case study in this work. State and velocity vectors are projected into the original space representing the evolutions of a physical system.}
-    \label{fig:dynamicalsystem}
-\end{figure*}
+% \begin{figure*}[h!t]
+%      \centering
+%     \begin{subfigure}{0.7\textwidth}
+%         \centering
+%         \includegraphics[scale=0.35]{ns_p_trim.pdf}
+%          \caption{From left to right, states (in this case, density fields) $\state_{0}, \state_{1}, \state_{2}$ evolving through time.}
+%          \label{fig:states}
+%      \end{subfigure}
+%      \begin{subfigure}{0.25\textwidth}
+%          \centering
+%         \includegraphics[scale=0.25]{ns_force_trim.pdf}
+%          \caption{Unobserved parameter $\forcing$.}
+%          \label{fig:forcing}
+%      \end{subfigure}
+%      \hfill
+%     \centering
+%     \caption{An example Navier-Stokes fluid flow system, used as a case study in this work. State and velocity vectors are projected into the original space representing the evolutions of a physical system.}
+%     \label{fig:dynamicalsystem}
+% \end{figure*}
 
 
 % \section{Deterministic operator inversion}
@@ -545,31 +543,31 @@ In the next section we attempt to address these problems simultaneously using an
 
 \subsection{Our solution: ensemble inversion via \meth{}}\label{sec:EnsembleInversion}
 
-\begin{figure*}[h!t]
-     % \centering
-    \begin{subfigure}{0.3\textwidth}
-         % \centering
-        \includegraphics[scale=0.35]{meth_ex_guess_0.pdf}
-         \caption{Prior samples of \(\forcing\)}
-         \label{fig:meth_ex_0}
-    \end{subfigure}
-    \begin{subfigure}{0.3\textwidth}
-         % \centering
-        \includegraphics[scale=0.35]{meth_ex_guess_1.pdf}
-         \caption{\meth{} samples \(\forcing\gvn \state_0,\state_1\).}
-         \label{fig:meth_ex_1}
-    \end{subfigure}
-    \begin{subfigure}{0.3\textwidth}
-         % \centering
-        \includegraphics[scale=0.35]{meth_ex_guess_4.pdf}
-         \caption{\meth{} samples \(\forcing\gvn \state_0,\cdots\state_5\).}
-         \label{fig:meth_ex_4}
-     \end{subfigure}
-     \hfill
-    \centering
-    \caption{A slice along the \(x\) spatial  axis of  \(N=400\) sampled solutions computed via \meth{}. The solid red line shows ground truth, and each transparent grey line is one sample from the solution space.}
-    \label{fig:inverse-slices}
-\end{figure*}
+% \begin{figure*}[h!t]
+%      % \centering
+%     \begin{subfigure}{0.3\textwidth}
+%          % \centering
+%         \includegraphics[scale=0.35]{meth_ex_guess_0.pdf}
+%          \caption{Prior samples of \(\forcing\)}
+%          \label{fig:meth_ex_0}
+%     \end{subfigure}
+%     \begin{subfigure}{0.3\textwidth}
+%          % \centering
+%         \includegraphics[scale=0.35]{meth_ex_guess_1.pdf}
+%          \caption{\meth{} samples \(\forcing\gvn \state_0,\state_1\).}
+%          \label{fig:meth_ex_1}
+%     \end{subfigure}
+%     \begin{subfigure}{0.3\textwidth}
+%          % \centering
+%         \includegraphics[scale=0.35]{meth_ex_guess_4.pdf}
+%          \caption{\meth{} samples \(\forcing\gvn \state_0,\cdots\state_5\).}
+%          \label{fig:meth_ex_4}
+%      \end{subfigure}
+%      \hfill
+%     \centering
+%     \caption{A slice along the \(x\) spatial  axis of  \(N=400\) sampled solutions computed via \meth{}. The solid red line shows ground truth, and each transparent grey line is one sample from the solution space.}
+%     \label{fig:inverse-slices}
+% \end{figure*}
 
 
 The aforementioned limitations of the linearised propagation of errors can be eased by moving to Monte Carlo inference, wherein distributions are no longer summarised by their moments but  by samples drawn from those distributions.
@@ -735,13 +733,13 @@ This cost is favourable in comparison with $\mathcal{O}(D_{\state})$ when $N < D
 
 
 \subsection{Deterministic Navier-Stokes}
-\begin{figure}[h!t]
-    \centering
-    \includegraphics[scale=1]{linear_vs_metho_large.pdf}
-    \centering
-    \caption{Recovery of latent forcing in a Navier-stoke inversion problem. The plotted RMSE is unweighted \(\ell_2\) distance between MAP estimate \(\argmax \rho(\forcingst \gvn \mathcal{D}_t)\) and ground truth \(\forcingst\). Colored region denotes 90\% band over 80 realisations.}
-    \label{fig:linear_vs_metho}
-\end{figure}
+% \begin{figure}[h!t]
+%     \centering
+%     \includegraphics[scale=1]{linear_vs_metho_large.pdf}
+%     \centering
+%     \caption{Recovery of latent forcing in a Navier-stoke inversion problem. The plotted RMSE is unweighted \(\ell_2\) distance between MAP estimate \(\argmax \rho(\forcingst \gvn \mathcal{D}_t)\) and ground truth \(\forcingst\). Colored region denotes 90\% band over 80 realisations.}
+%     \label{fig:linear_vs_metho}
+% \end{figure}
 
 We use a Navier-Stokes flow model on a 2-dimensional square domain with Neumann boundary conditions and inhomogenous forcing as depicted in Figure~\ref{fig:dynamicalsystem}.
 The solver in this case has an heterogeneous acceleration term representing an external driving term \(\vrv{\forcing}\).
@@ -778,13 +776,13 @@ In Figure~\ref{fig:n_ens} we plot $\rho(\forcingst^\ast \gvn \mathcal{D}_t)$ as 
 We see a gradual improvement then plateau in all metrics as the size of the ensemble grows, although selecting the precise trade-off is problem-dependent.
 
 
-\begin{figure}[h!t]
-    \centering
-     \includegraphics[scale=1]{meth_ex_ens_5.pdf}
-    \centering
-    \caption{Effect of ensemble size on model RMSE and estimated likelihood. 80 replicates of 5 observations, i.e. \(T=4\). Shaded region shows empirical 90\% range, dark line shows median.}
-    \label{fig:n_ens}
-\end{figure}
+% \begin{figure}[h!t]
+%     \centering
+%      \includegraphics[scale=1]{meth_ex_ens_5.pdf}
+%     \centering
+%     \caption{Effect of ensemble size on model RMSE and estimated likelihood. 80 replicates of 5 observations, i.e. \(T=4\). Shaded region shows empirical 90\% range, dark line shows median.}
+%     \label{fig:n_ens}
+% \end{figure}
 
 
 \section{Conclusion}
