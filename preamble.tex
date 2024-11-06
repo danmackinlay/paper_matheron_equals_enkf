@@ -1,9 +1,6 @@
 \usepackage{arxiv}
 
 % THEOREMS
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
 
 
 %\usepackage[utf8]{inputenc} % allow utf-8 input
@@ -13,6 +10,7 @@
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsmath}
 \usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsthm}         % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{cleveref}       % smart cross-referencing
@@ -114,3 +112,8 @@
 \newcommand{\meth}{{\sc Metho}}
 \DeclareRobustCommand{\russ}[1]{\textcolor{blue}{{#1}}}
 \DeclareRobustCommand{\danm}[1]{\textcolor{orange}{{#1}}}
+
+
+% \theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}

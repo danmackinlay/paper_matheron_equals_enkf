@@ -1,56 +1,28 @@
 \documentclass{article}
 \input{preamble.tex}
-% Recommended, but optional, packages for figures and better typesetting:
-\usepackage{microtype}
-\usepackage{graphicx}
-\usepackage{booktabs} % for professional tables
 
-% hyperref makes hyperlinks in the resulting PDF.
-\usepackage{hyperref}
+% Authors and affiliations
+\title{The Ensemble Kalman Update is an Empirical Matheron Update}
 
-% Attempt to make hyperref and algorithmic work together better:
-\newcommand{\theHalgorithm}{\arabic{algorithm}}
+\author{
+  Firstname1 Lastname1 \\
+  Department of X \\
+  University of Y \\
+  City, Country \\
+  \texttt{email1@university.edu} \\
+  \and
+  Firstname2 Lastname2 \\
+  Department of X \\
+  University of Y \\
+  City, Country \\
+  \texttt{email2@university.edu} \\
+}
 
-% Use the following line for the initial blind version submitted for review:
-\usepackage{icml2023}
-
-% For theorems and such
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{mathtools}
-\usepackage{amsthm}
-
-% THEOREMS
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-
-% The \icmltitle you define below is probably too long as a header.
-% Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{The Ensemble Kalman Update as an Empirical Matheron Update}
+% You may provide any keywords that you find helpful for describing your paper
+\date{}
 
 \begin{document}
 
-\twocolumn[
-\icmltitle{The Ensemble Kalman Update is an Empirical Matheron Update}
-
-% It is OKAY to include author information, even for blind submissions:
-\begin{icmlauthorlist}
-\icmlauthor{Firstname1 Lastname1}{affiliation}
-\icmlauthor{Firstname2 Lastname2}{affiliation}
-\end{icmlauthorlist}
-
-\icmlaffiliation{affiliation}{Department, University, City, Country}
-
-\icmlcorrespondingauthor{Firstname1 Lastname1}{email@domain.com}
-
-% You may provide any keywords that you find helpful for describing your paper
-\icmlkeywords{Ensemble Kalman Filter, Matheron Update, Data Assimilation, Gaussian Processes}
-
-\vskip 0.3in
-]
-
-\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
 
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. By explicitly representing the ensemble mean and covariance using empirical approximations, we establish this equivalence. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
@@ -81,7 +53,7 @@ At each assimilation step, the ensemble members are propagated through the model
     \mmdev{X} &= \frac{1}{\sqrt{N-1}} \left( \mathbf{X} - \mmmean{X} \mathbf{1}^\top \right), \label{eq:deviation_matrix} \\
     \mathbf{C}_{xx} &\approx \mmdev{X} \mmdev{X}^\top, \label{eq:ensemble_covariance}
 \end{align}
-where $\mathbf{X} = [\mathbf{x}^{(1)}, \mathbf{x}^{(2)}, \dots, \mathbf{x}^{(N)}]$ is the state ensemble matrix, and $\mathbf{1}^\top$ is a row vector of ones.
+where $\mathbf{X} = [\mathbf{x}^{(1)}, \mathbf{x}^{(2)}, \dots, \mathbf{x}^{(N)}]$ is the state ensemble matrix, and $\mathbf{1}^\top$ is a row vector of $N$ ones.
 
 Similarly, the prior ensemble of representing observations is
 \begin{equation}
@@ -171,7 +143,7 @@ We have demonstrated that the ensemble update step in the EnKF is equivalent to 
 
 % Acknowledgments can be added here.
 
-\bibliographystyle{icml2023}
+\bibliographystyle{plainnat}
 \bibliography{refs}
 
 \end{document}
