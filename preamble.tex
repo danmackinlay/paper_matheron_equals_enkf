@@ -1,4 +1,10 @@
-%\usepackage{arxiv}
+\usepackage{arxiv}
+
+% THEOREMS
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
 
 %\usepackage[utf8]{inputenc} % allow utf-8 input
 %\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -35,7 +41,7 @@
 % \usepackage{bbm}
 % \usepackage{bbold}
 \usepackage{mathrsfs}       % mathscr
-\usepackage{bm} 
+\usepackage{bm}
 \usepackage{latexsym}
 \usepackage{amssymb}
 \usepackage{caption}
@@ -87,6 +93,8 @@
 \newcommand{\bb}[1]{\mathbb{#1}}
 \newcommand{\vv}[1]{\boldsymbol{#1}}
 \newcommand{\mm}[1]{\mathrm{#1}}
+\newcommand{\mmmean}[1]{\bar{\mathrm{#1}}}
+\newcommand{\mmdev}[1]{\breve{\mathrm{#1}}}
 \newcommand{\rv}[1]{\mathsf{#1}}
 \newcommand{\vrv}[1]{\vv{\rv{#1}}}
 \newcommand{\dist}[1]{\mathcal{#1}}
@@ -98,30 +106,6 @@
 \newcommand{\gvn}{\mid}
 \renewcommand{\Pr}{\mathbb{P}}
 \newcommand{\solop}{\mathcal{G}^{\dagger}}
-% \newcommand{\lat}{\vrv{b}}   % Kept changing the symbol for latent state
-% \newcommand{\latst}{b}       % so now it is a macro
-% \newcommand{\latsp}{\mathcal{B}}
-\newcommand{\forcing}{\vrv{u}}   
-% \newcommand{\forcing}{\tilde{\forcing}}   
-\newcommand{\forcingst}{\vv{u}}
-% \newcommand{\forcingst}{\tilde{\forcingst}} % discretized state space 
-\newcommand{\forcingsp}{\mathcal{U}}
-\newcommand{\state}{\vrv{z}}   
-% \newcommand{\state}{\tilde{\state}}   % discretized state rv
-\newcommand{\statest}{\vv{z}}
-% \newcommand{\statest}{\tilde{\statest}}    % discretized state space
-\newcommand{\statesp}{\mathcal{Z}}
-\newcommand{\outp}{\vrv{y}}   
-\newcommand{\outpst}{\vv{y}}      
-\newcommand{\outpsp}{\mathcal{Y}}
-\newcommand{\latwt}{\vrv{w}}
-\newcommand{\latwtst}{\vv{w}}
-\newcommand{\param}{\vrv{\theta}}  % misc param
-\newcommand{\paramst}{\vv{\theta}}
-\newcommand{\seenstate}{\proj_{\state}}
-\newcommand{\seeninp}{\proj_{\forcing}}
-\newcommand{\netparamsp}{\boldsymbol{\Theta}}
-\newcommand{\netparamst}{\boldsymbol{\theta}}
 \newcommand{\Law}{\operatorname{Law}}
 \newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}} % indep symbol
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
@@ -130,13 +114,3 @@
 \newcommand{\meth}{{\sc Metho}}
 \DeclareRobustCommand{\russ}[1]{\textcolor{blue}{{#1}}}
 \DeclareRobustCommand{\danm}[1]{\textcolor{orange}{{#1}}}
-
-% \newcommand{\hatlatents}{\widehat{\lat}_{\boldsymbol{\kappa}}}
-
-% Title
-
-% Your title must be in mixed case, not sentence case.
-% That means all verbs (including short verbs like be, is, using,and go),
-% nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
-% articles, conjunctions, and prepositions are lower case unless they
-% directly follow a colon or long dash

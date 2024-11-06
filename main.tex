@@ -54,14 +54,20 @@
 
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. By explicitly representing the ensemble mean and covariance using empirical approximations, we establish this equivalence. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
+
+While this connection is simple, it seems not to be whidely known; this note exists to provide a short note expanding on the connection between these facts.
 \end{abstract}
 
 \section{Introduction}
-The Ensemble Kalman Filter (EnKF) \citep{Evensen2009Data} has become a cornerstone in data assimilation for large-scale dynamical systems due to its computational efficiency and scalability. The EnKF approximates the state estimation problem by evolving an ensemble of state vectors through the model dynamics and updating them using observational data. Despite its widespread application, the theoretical underpinnings of the EnKF are not fully understood, especially regarding its probabilistic interpretation.
+The Ensemble Kalman Filter (EnKF) \citep{Evensen2003Ensemble,Evensen2009Data} is a cornerstone in data assimilation for large-scale dynamical systems due to its computational efficiency and scalability.
+The EnKF approximates the state estimation problem by evolving an ensemble of state vectors through the model dynamics and updating them using observational data.
 
-Separately, the Matheron update provides a sample-based method for conditioning Gaussian random variables on observations without explicitly computing covariance matrices \citep{Doucet2010Note,Wilson2020Efficiently,Wilson2021Pathwise}. This approach is well-established in geostatistics and spatial statistics but has not been widely connected to ensemble methods in data assimilation.
+Separately, the Matheron update provides a sample-based method for conditioning Gaussian random variables on observations without explicitly computing covariance matrices \citep{Doucet2010Note,Wilson2020Efficiently,Wilson2021Pathwise}.
+This approach is well-established in geostatistics and spatial statistics but has not been widely connected to ensemble methods in data assimilation.
 
-In this paper, we establish that the ensemble update step in the EnKF is equivalent to an empirical Matheron update. By explicitly representing the ensemble mean and covariance using empirical approximations, we demonstrate this equivalence. Recognizing this connection provides a probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
+In this paper, we establish that the ensemble update step in the EnKF is equivalent to an empirical Matheron update.
+By explicitly representing the ensemble mean and covariance using empirical approximations, we demonstrate this equivalence.
+Recognizing this connection provides a probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
 
 \section{Background}
 
@@ -69,41 +75,41 @@ In this paper, we establish that the ensemble update step in the EnKF is equival
 
 The EnKF is an extension of the classical Kalman Filter designed for nonlinear, high-dimensional systems. It uses an ensemble of $N$ state vectors $\{\mathbf{x}^{(i)}\}_{i=1}^N$ to represent the probability distribution of the state.
 
-At each assimilation step, the ensemble members are propagated through the model dynamics and then updated using the observational data. The empirical mean $\bar{\mathbf{x}}$ and the empirical covariance $\mathbf{C}_{xx}$ of the ensemble are computed as:
+At each assimilation step, the ensemble members are propagated through the model dynamics and then updated using the observational data. The prior empirical mean $\mmmean{X}$ and the priot empirical covariance $\mathbf{C}_{xx}$ of the ensemble are computed as
 \begin{align}
-    \bar{\mathbf{x}} &= \frac{1}{N} \sum_{i=1}^N \mathbf{x}^{(i)}, \label{eq:ensemble_mean} \\
-    \breve{\mathbf{X}} &= \frac{1}{\sqrt{N-1}} \left( \mathbf{X} - \bar{\mathbf{x}} \mathbf{1}^\top \right), \label{eq:deviation_matrix} \\
-    \mathbf{C}_{xx} &\approx \breve{\mathbf{X}} \breve{\mathbf{X}}^\top, \label{eq:ensemble_covariance}
+    \mmmean{X} &= \frac{1}{N} \sum_{i=1}^N \mathbf{x}^{(i)}, \label{eq:ensemble_mean} \\
+    \mmdev{X} &= \frac{1}{\sqrt{N-1}} \left( \mathbf{X} - \mmmean{X} \mathbf{1}^\top \right), \label{eq:deviation_matrix} \\
+    \mathbf{C}_{xx} &\approx \mmdev{X} \mmdev{X}^\top, \label{eq:ensemble_covariance}
 \end{align}
-where $\mathbf{X} = [\mathbf{x}^{(1)}, \mathbf{x}^{(2)}, \dots, \mathbf{x}^{(N)}]$ is the state ensemble matrix, and $\mathbf{1}$ is a row vector of ones.
+where $\mathbf{X} = [\mathbf{x}^{(1)}, \mathbf{x}^{(2)}, \dots, \mathbf{x}^{(N)}]$ is the state ensemble matrix, and $\mathbf{1}^\top$ is a row vector of ones.
 
-Similarly, the ensemble of observations is:
+Similarly, the prior ensemble of representing observations is
 \begin{equation}
     \mathbf{Z} = [\mathbf{z}^{(1)}, \mathbf{z}^{(2)}, \dots, \mathbf{z}^{(N)}],
 \end{equation}
-with ensemble mean and deviations:
+with ensemble mean and deviations
 \begin{align}
-    \bar{\mathbf{z}} &= \frac{1}{N} \sum_{i=1}^N \mathbf{z}^{(i)}, \\
-    \breve{\mathbf{Z}} &= \frac{1}{\sqrt{N-1}} \left( \mathbf{Z} - \bar{\mathbf{z}} \mathbf{1}^\top \right).
+    \mmdev{Z} &= \frac{1}{N} \sum_{i=1}^N \mathbf{z}^{(i)}, \\
+    \mmdev{X} &= \frac{1}{\sqrt{N-1}} \left( \mathbf{Z} - \mmdev{Z} \mathbf{1}^\top \right).
 \end{align}
-The empirical covariance is then:
+The empirical covariance is then
 \begin{equation}
-    \mathbf{C}_{zz} \approx \breve{\mathbf{Z}} \breve{\mathbf{Z}}^\top.
+    \mathbf{C}_{zz} \approx \mmdev{X} \mmdev{X}^\top.
 \end{equation}
 
-The cross-covariance between the state and the observations is approximated by:
+The cross-covariance between the state and the observations is approximated by
 \begin{equation}
-    \mathbf{C}_{xz} \approx \breve{\mathbf{X}} \breve{\mathbf{Z}}^\top.
+    \mathbf{C}_{xz} \approx \mmdev{X} \mmdev{X}^\top.
 \end{equation}
 
-The Kalman gain $\mathbf{K}$ is then computed as:
+The Kalman gain $\mathbf{K}$ is then computed as
 \begin{equation}
     \mathbf{K} = \mathbf{C}_{xz} \left( \mathbf{C}_{zz} + \mathbf{R} \right)^{-1},
     \label{eq:kalman_gain}
 \end{equation}
 where $\mathbf{R}$ is the observation error covariance matrix.
 
-Each ensemble member is updated according to:
+Each ensemble member is updated according to
 \begin{equation}
     \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{K} \left( \mathbf{y} + \boldsymbol{\varepsilon}^{(i)} - \mathbf{z}^{(i)} \right),
     \label{eq:enkf_update}
@@ -114,7 +120,7 @@ where $\mathbf{y}$ is the observation vector, and $\boldsymbol{\varepsilon}^{(i)
 
 The Matheron update is a technique for sampling from the conditional distribution of a Gaussian random variable given observations, without explicitly computing the posterior covariance \citep{Doucet2010Note,Wilson2020Efficiently,Wilson2021Pathwise}.
 
-Given a jointly Gaussian vector $\begin{bmatrix} \mathbf{x} \\ \mathbf{z} \end{bmatrix}$ with mean $\begin{bmatrix} \boldsymbol{\mu}_x \\ \boldsymbol{\mu}_z \end{bmatrix}$ and covariance $\begin{bmatrix} \mathbf{C}_{xx} & \mathbf{C}_{xz} \\ \mathbf{C}_{zx} & \mathbf{C}_{zz} \end{bmatrix}$, a sample from the conditional distribution $p(\mathbf{x} | \mathbf{z} = \mathbf{z}^*)$ can be obtained by:
+Given a jointly Gaussian vector $\begin{bmatrix} \mathbf{x} \\ \mathbf{z} \end{bmatrix}$ with mean $\begin{bmatrix} \boldsymbol{\mu}_x \\ \boldsymbol{\mu}_z \end{bmatrix}$ and covariance $\begin{bmatrix} \mathbf{C}_{xx} & \mathbf{C}_{xz} \\ \mathbf{C}_{zx} & \mathbf{C}_{zz} \end{bmatrix}$, a sample from the conditional distribution $p(\mathbf{x} | \mathbf{z} = \mathbf{z}^*)$ can be obtained by
 \begin{equation}
     \mathbf{x} = \mathbf{x}_0 + \mathbf{C}_{xz} \mathbf{C}_{zz}^{-1} \left( \mathbf{z}^* - \mathbf{z}_0 \right),
     \label{eq:matheron_update}
@@ -127,18 +133,18 @@ This update uses the prior samples and adjusts them based on the observation to 
 
 \subsection{Derivation}
 
-Consider the EnKF update in Equation~\eqref{eq:enkf_update}. Substituting the expression for the Kalman gain from Equation~\eqref{eq:kalman_gain}, we have:
+Consider the EnKF update in Equation~\eqref{eq:enkf_update}. Substituting the expression for the Kalman gain from Equation~\eqref{eq:kalman_gain}, we have
 \begin{equation}
     \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{C}_{xz} \left( \mathbf{C}_{zz} + \mathbf{R} \right)^{-1} \left( \mathbf{y} + \boldsymbol{\varepsilon}^{(i)} - \mathbf{z}^{(i)} \right).
     \label{eq:enkf_update_substituted}
 \end{equation}
 
-Assuming that $\mathbf{z}^{(i)} = \mathbf{H} \mathbf{x}^{(i)}$, and that $\boldsymbol{\varepsilon}^{(i)}$ is the observational noise, we can combine $\mathbf{z}^{(i)}$ and $\boldsymbol{\varepsilon}^{(i)}$ into the perturbed observations:
+Assuming that $\mathbf{z}^{(i)} = \mathbf{H} \mathbf{x}^{(i)}$, and that $\boldsymbol{\varepsilon}^{(i)}$ is the observational noise, we can combine $\mathbf{z}^{(i)}$ and $\boldsymbol{\varepsilon}^{(i)}$ into the perturbed observations
 \begin{equation}
     \mathbf{y}^{(i)} = \mathbf{y} + \boldsymbol{\varepsilon}^{(i)}.
 \end{equation}
 
-Then the update becomes:
+Then the update becomes
 \begin{equation}
     \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{C}_{xz} \left( \mathbf{C}_{zz} + \mathbf{R} \right)^{-1} \left( \mathbf{y}^{(i)} - \mathbf{z}^{(i)} \right).
     \label{eq:enkf_matheron}
@@ -148,7 +154,7 @@ This is exactly the form of the Matheron update in Equation~\eqref{eq:matheron_u
 
 \section{Implications for Data Assimilation}
 
-Understanding the EnKF as an empirical Matheron update opens up several possibilities:
+Understanding the EnKF as an empirical Matheron update opens up several possibilities
 
 \begin{itemize}
     \item \textbf{Improved Covariance Estimation}: Techniques from geostatistics for better covariance estimation can be applied to enhance the EnKF performance.
