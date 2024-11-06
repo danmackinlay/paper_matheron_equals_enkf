@@ -1,123 +1,131 @@
 \documentclass{article}
-
-\usepackage{amsmath, amssymb, mathtools, amsthm}
+\input{preamble.tex}
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
 \usepackage{graphicx}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
 \usepackage{hyperref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
 \usepackage{icml2023}
+
+% For theorems and such
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
 
 % THEOREMS
 \theoremstyle{plain}
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
 \icmltitlerunning{The Ensemble Kalman Update as an Empirical Matheron Update}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{The Ensemble Kalman Update as an Empirical Matheron Update}
+\icmltitle{The Ensemble Kalman Update is an Empirical Matheron Update}
 
-\icmlsetsymbol{equal}{*}
-
+% It is OKAY to include author information, even for blind submissions:
 \begin{icmlauthorlist}
-\icmlauthor{Firstname1 Lastname1}{equal,yyy}
-\icmlauthor{Firstname2 Lastname2}{equal,yyy,comp}
-% Additional authors omitted for brevity
+\icmlauthor{Firstname1 Lastname1}{affiliation}
+\icmlauthor{Firstname2 Lastname2}{affiliation}
 \end{icmlauthorlist}
 
-\icmlaffiliation{yyy}{Department of XXX, University of YYY, Location, Country}
-\icmlaffiliation{comp}{Company Name, Location, Country}
+\icmlaffiliation{affiliation}{Department, University, City, Country}
 
-\icmlcorrespondingauthor{Firstname1 Lastname1}{first1.last1@xxx.edu}
+\icmlcorrespondingauthor{Firstname1 Lastname1}{email@domain.com}
+
+% You may provide any keywords that you find helpful for describing your paper
+\icmlkeywords{Ensemble Kalman Filter, Matheron Update, Data Assimilation, Gaussian Processes}
 
 \vskip 0.3in
 ]
 
-\printAffiliationsAndNotice{}
+\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
 
 \begin{abstract}
-We show that the ensemble update in the Ensemble Kalman Filter (EnKF) can be interpreted as an empirical Matheron update for Gaussian conditioning. This connection provides a new perspective on the EnKF and suggests potential improvements by leveraging properties of the Matheron update.
+The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
 \end{abstract}
 
 \section{Introduction}
+The Ensemble Kalman Filter (EnKF) \citep{evensen2009data} has become a cornerstone in data assimilation for large-scale dynamical systems due to its computational efficiency and scalability. The EnKF approximates the state estimation problem by evolving an ensemble of state vectors through the model dynamics and updating them using observational data. Despite its widespread application, the theoretical underpinnings of the EnKF are not fully understood, especially regarding its probabilistic interpretation.
 
-The Ensemble Kalman Filter (EnKF) is a widely used method for state estimation and data assimilation in high-dimensional systems, particularly in geosciences and meteorology \cite{EvensenData2009}. Despite its popularity, the theoretical understanding of the EnKF remains an active area of research.
+Separately, the Matheron update provides a sample-based method for conditioning Gaussian random variables on observations without explicitly computing covariance matrices \citep{matheron1963principles}. This approach is well-established in geostatistics and spatial statistics but has not been widely connected to ensemble methods in data assimilation.
 
-In this paper, we provide a new perspective on the EnKF by showing that the ensemble update step is equivalent to an empirical Matheron update. The Matheron update is a pathwise conditioning method for Gaussian random variables \cite{Matheron1962,DoucetNote2010,WilsonPathwise2021}. By interpreting the EnKF update in terms of the Matheron update, we gain new insights into its properties and potential areas for improvement.
+In this paper, we establish that the ensemble update step in the EnKF is an empirical implementation of the Matheron update. By recognizing this equivalence, we provide a probabilistic foundation for the EnKF and suggest potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
 
-\section{Preliminaries}
-
-\subsection{Gaussian Conditioning and the Matheron Update}
-
-Let $\mathbf{y}$ and $\mathbf{w}$ be jointly Gaussian random variables with
-\begin{align}
-\begin{bmatrix} \mathbf{y} \\ \mathbf{w} \end{bmatrix} \sim \mathcal{N} \left( \begin{bmatrix} \mathbf{m}_{\mathbf{y}} \\ \mathbf{m}_{\mathbf{w}} \end{bmatrix}, \begin{bmatrix} \mathbf{K}_{\mathbf{y}\mathbf{y}} & \mathbf{K}_{\mathbf{y}\mathbf{w}} \\ \mathbf{K}_{\mathbf{w}\mathbf{y}} & \mathbf{K}_{\mathbf{w}\mathbf{w}} \end{bmatrix} \right).
-\end{align}
-
-The conditional distribution of $\mathbf{y}$ given $\mathbf{w} = \mathbf{w}^\ast$ is Gaussian with mean and covariance:
-\begin{align}
-\hat{\mathbf{m}} &= \mathbf{m}_{\mathbf{y}} + \mathbf{K}_{\mathbf{y}\mathbf{w}} \mathbf{K}_{\mathbf{w}\mathbf{w}}^{-1} (\mathbf{w}^\ast - \mathbf{m}_{\mathbf{w}}), \label{eq:cond_mean} \\
-\hat{\mathbf{K}} &= \mathbf{K}_{\mathbf{y}\mathbf{y}} - \mathbf{K}_{\mathbf{y}\mathbf{w}} \mathbf{K}_{\mathbf{w}\mathbf{w}}^{-1} \mathbf{K}_{\mathbf{w}\mathbf{y}}. \label{eq:cond_cov}
-\end{align}
-
-An alternative way to sample from the conditional distribution is via the \emph{Matheron update} \cite{DoucetNote2010}:
-\begin{align}
-\mathbf{y} \mid \mathbf{w} = \mathbf{w}^\ast \stackrel{d}{=} \mathbf{y} + \mathbf{K}_{\mathbf{y}\mathbf{w}} \mathbf{K}_{\mathbf{w}\mathbf{w}}^{-1} (\mathbf{w}^\ast - \mathbf{w}). \label{eq:matheron_update}
-\end{align}
-
-Here, $\mathbf{y}$ and $\mathbf{w}$ on the right-hand side are jointly distributed as in the prior, and the update adjusts $\mathbf{y}$ to be consistent with the observation $\mathbf{w}^\ast$.
+\section{Background}
 
 \subsection{Ensemble Kalman Filter}
+The EnKF is an extension of the classical Kalman Filter designed for nonlinear, high-dimensional systems. It uses an ensemble of $N$ state vectors $\{\mathbf{x}^{(i)}\}_{i=1}^N$ to represent the probability distribution of the state.
 
-The EnKF uses an ensemble of particles to represent the state distribution and updates the ensemble members using Kalman filter equations \cite{EvensenData2009}. For each ensemble member, the update is:
-\begin{align}
-\mathbf{y}^{(i)} \leftarrow \mathbf{y}^{(i)} + \mathbf{K}_{\mathbf{y}\mathbf{w}} \mathbf{K}_{\mathbf{w}\mathbf{w}}^{-1} (\mathbf{w}^\ast - \mathbf{w}^{(i)}), \label{eq:enkf_update}
-\end{align}
-where $\mathbf{y}^{(i)}$ and $\mathbf{w}^{(i)}$ are the $i$-th ensemble members of the state and observation variables, respectively.
+At each assimilation step, the ensemble members are updated according to:
+\begin{equation}
+    \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{K} \left( \mathbf{y} + \boldsymbol{\varepsilon}^{(i)} - \mathbf{H} \mathbf{x}^{(i)} \right),
+    \label{eq:enkf_update}
+\end{equation}
+where $\mathbf{y}$ is the observation vector, $\mathbf{H}$ is the observation operator, $\boldsymbol{\varepsilon}^{(i)}$ is the observational noise for the $i$-th ensemble member, and $\mathbf{K}$ is the Kalman gain computed from the ensemble covariance matrices.
 
-\section{Ensemble Update as Empirical Matheron Update}
+\subsection{Matheron Update}
+The Matheron update is a technique for sampling from the conditional distribution of a Gaussian random variable given observations. Given a jointly Gaussian vector $\begin{bmatrix} \mathbf{x} \\ \mathbf{z} \end{bmatrix}$ with mean $\begin{bmatrix} \boldsymbol{\mu}_x \\ \boldsymbol{\mu}_z \end{bmatrix}$ and covariance $\begin{bmatrix} \mathbf{C}_{xx} & \mathbf{C}_{xz} \\ \mathbf{C}_{zx} & \mathbf{C}_{zz} \end{bmatrix}$, a sample from the conditional distribution $p(\mathbf{x} | \mathbf{z} = \mathbf{z}^*)$ can be obtained by:
+\begin{equation}
+    \mathbf{x} = \mathbf{x}_0 + \mathbf{C}_{xz} \mathbf{C}_{zz}^{-1} \left( \mathbf{z}^* - \mathbf{z}_0 \right),
+    \label{eq:matheron_update}
+\end{equation}
+where $\mathbf{x}_0$ and $\mathbf{z}_0$ are samples from the prior distributions of $\mathbf{x}$ and $\mathbf{z}$, respectively.
 
-We now show that the ensemble update in the EnKF is an empirical version of the Matheron update.
+\section{Equivalence of the EnKF Update and the Matheron Update}
 
-\subsection{Empirical Covariances}
+\subsection{Derivation}
 
-In the EnKF, the sample covariances are used to approximate the true covariances:
-\begin{align}
-\mathbf{K}_{\mathbf{y}\mathbf{w}} &\approx \frac{1}{N - 1} \sum_{i=1}^N (\mathbf{y}^{(i)} - \bar{\mathbf{y}}) (\mathbf{w}^{(i)} - \bar{\mathbf{w}})^\top, \\
-\mathbf{K}_{\mathbf{w}\mathbf{w}} &\approx \frac{1}{N - 1} \sum_{i=1}^N (\mathbf{w}^{(i)} - \bar{\mathbf{w}}) (\mathbf{w}^{(i)} - \bar{\mathbf{w}})^\top,
-\end{align}
-where $\bar{\mathbf{y}}$ and $\bar{\mathbf{w}}$ are the sample means:
-\begin{align}
-\bar{\mathbf{y}} = \frac{1}{N} \sum_{i=1}^N \mathbf{y}^{(i)}, \quad \bar{\mathbf{w}} = \frac{1}{N} \sum_{i=1}^N \mathbf{w}^{(i)}.
-\end{align}
+Consider the EnKF update in Equation~\eqref{eq:enkf_update}. The Kalman gain $\mathbf{K}$ is computed as:
+\begin{equation}
+    \mathbf{K} = \mathbf{C}_{xy} \mathbf{C}_{yy}^{-1},
+    \label{eq:kalman_gain}
+\end{equation}
+where $\mathbf{C}_{xy}$ is the cross-covariance between the state and the observations, and $\mathbf{C}_{yy}$ is the covariance of the observations, both estimated from the ensemble.
 
-\subsection{Ensemble Update Derivation}
+Substituting Equation~\eqref{eq:kalman_gain} into Equation~\eqref{eq:enkf_update}, we have:
+\begin{equation}
+    \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{C}_{xy} \mathbf{C}_{yy}^{-1} \left( \mathbf{y} + \boldsymbol{\varepsilon}^{(i)} - \mathbf{H} \mathbf{x}^{(i)} \right).
+\end{equation}
 
-Substituting the empirical covariances into the Kalman gain and the update equation \eqref{eq:enkf_update}, we have:
-\begin{align}
-\mathbf{y}^{(i)} &\leftarrow \mathbf{y}^{(i)} + \mathbf{C}_{\mathbf{y}\mathbf{w}} \mathbf{C}_{\mathbf{w}\mathbf{w}}^{-1} (\mathbf{w}^\ast - \mathbf{w}^{(i)}), \label{eq:ensemble_update}
-\end{align}
-where $\mathbf{C}_{\mathbf{y}\mathbf{w}}$ and $\mathbf{C}_{\mathbf{w}\mathbf{w}}$ are the empirical covariances computed from the ensemble.
+Noting that $\mathbf{z}^{(i)} = \mathbf{H} \mathbf{x}^{(i)} + \boldsymbol{\varepsilon}^{(i)}$ represents the model counterpart of the observations for each ensemble member, we can rewrite the update as:
+\begin{equation}
+    \mathbf{x}^{(i)} = \mathbf{x}^{(i)} + \mathbf{C}_{xz} \mathbf{C}_{zz}^{-1} \left( \mathbf{y} - \mathbf{z}^{(i)} \right).
+    \label{eq:enkf_matheron}
+\end{equation}
 
-This update is equivalent to applying the Matheron update \eqref{eq:matheron_update} to each ensemble member using the empirical covariances.
+This is exactly the form of the Matheron update in Equation~\eqref{eq:matheron_update}, where $\mathbf{x}^{(i)}$ and $\mathbf{z}^{(i)}$ are samples from the prior distributions of $\mathbf{x}$ and $\mathbf{z}$, respectively. Therefore, the EnKF update is an empirical Matheron update.
 
 \subsection{Interpretation}
 
-The Matheron update adjusts the prior samples $\mathbf{y}$ to obtain samples from the conditional distribution given the observation $\mathbf{w}^\ast$. In the EnKF, the ensemble update adjusts each ensemble member in a way that reflects this conditioning, using the empirical covariances.
+The equivalence implies that the EnKF performs an approximate Bayesian update by applying the Matheron update to the ensemble members. The ensemble covariances $\mathbf{C}_{xz}$ and $\mathbf{C}_{zz}$ serve as empirical estimates of the true covariances. This perspective provides a probabilistic interpretation of the EnKF and explains its effectiveness in assimilating data in high-dimensional systems.
 
-\section{Implications and Discussion}
+\section{Implications for Data Assimilation}
 
-\subsection{Understanding the EnKF}
+Understanding the EnKF as an empirical Matheron update opens up several possibilities:
 
-Interpreting the EnKF update as an empirical Matheron update explains why the EnKF works well even in nonlinear and non-Gaussian settings. The Matheron update relies on sample paths rather than explicit distributional assumptions, making it robust to deviations from Gaussianity.
-
-\subsection{Potential Improvements}
-
-This connection suggests that improvements in sampling from conditional distributions, such as using better estimates of covariances or incorporating higher-order statistics, could enhance the performance of the EnKF.
+\begin{itemize}
+    \item \textbf{Improved Covariance Estimation}: Techniques from geostatistics for better covariance estimation can be applied to enhance the EnKF performance.
+    \item \textbf{Sampling Methods}: Advanced sampling strategies used in Gaussian process modeling can be integrated into the EnKF framework.
+    \item \textbf{Error Characterization}: The probabilistic foundation allows for a better characterization of the errors and uncertainties associated with the EnKF estimates.
+\end{itemize}
 
 \section{Conclusion}
 
-We have shown that the ensemble update in the EnKF is equivalent to an empirical Matheron update. This insight provides a new perspective on the EnKF and opens avenues for further research and potential improvements in ensemble-based data assimilation methods.
+We have demonstrated that the ensemble update step in the EnKF is equivalent to the empirical Matheron update for Gaussian random variables. This connection provides a deeper probabilistic understanding of the EnKF and suggests avenues for enhancing ensemble-based data assimilation methods by leveraging the properties of the Matheron update.
+
+% Acknowledgements and references can be added here
 
 \bibliographystyle{icml2023}
 \bibliography{refs}
