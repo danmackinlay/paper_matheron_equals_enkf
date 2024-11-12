@@ -82,36 +82,36 @@ the conditional $\vrv{x} | \vrv{y} {=} \vv{y}^*$ is equal in distribution to
     with moments
     \begin{align}
         \vv{m}_{\vrv{x}|\vrv{y}}
-            &=\Ex [\vrv{x} \gvn \vrv{y} {=} \vv{y}^*]\\
-            &= \vv{m}_{\vrv{x}} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \left( \vv{y}^* - \vv{m}_{\vrv{y}} \right), \\
+            &=\Ex [\vrv{x} \gvn \vrv{y} {=} \vv{y}^*] \notag\\
+            &= \vv{m}_{\vrv{x}} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \left( \vv{y}^* - \vv{m}_{\vrv{y}} \right), \label{eq:conditional-mean}\\
         \mm{C}_{\vrv{x}|\vrv{y}}
-            &= \var \left(\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right)\\
-            &= \mm{C}_{\vrv{xx}} - \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \mm{C}_{\vrv{yx}}.
+            &= \var \left(\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right) \notag\\
+            &= \mm{C}_{\vrv{xx}} - \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \mm{C}_{\vrv{yx}}. \label{eq:conditional-cov}
     \end{align}
     % The sample $\vv{x}$ is drawn from $\Normal(\vv{m}_{\vrv{x}|\vrv{y}}, \mm{C}_{\vrv{x}|\vrv{y}})$.
-Taking moments of teh right hand side of \eqref{eq:matheron-update}
+Taking moments of the right hand side of \eqref{eq:matheron-update}
 \begin{align}
-\Ex\left[\vrv{x}+\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-\vrv{y})\right]
-&=m_{\vrv{x}} +\mm{C}_{\vrv{yx}}\mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-m_{\vrv{y}})\\
+\Ex\left[\vrv{x}+\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})\right]
+&=\vv{m}_{\vrv{x}} +\mm{C}_{\vrv{xy}}\mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vv{m}_{\vrv{y}})\\
 &=\vv{m}_{\vrv{x}|\vrv{y}}\\
-\var\left[\vrv{x}+\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-\vrv{y})\right]
+\var\left[\vrv{x}+\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})\right]
 &=
-    \var[\vrv{x}]+\var[\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-\vrv{y})] \notag \\
-    &\hspace{2em} +\var(\vrv{x},\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-\vrv{y}))
-    +\var(\vrv{x},\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}(\vv{y}^*-\vrv{y}))^{\top}\\
-&=\mm{C}_{\vrv{x}\vrv{x}} +\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}\mm{C}_{\vrv{xx}} \mm{C}_{\vrv{xx}}^{-1}\mm{C}_{\vrv{xy}}
--  2\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{xx}}^{-1}\mm{C}_{\vrv{yx}}\\
-&=\mm{C}_{\vrv{x}\vrv{x}} -\mm{C}_{\vrv{yx}} \mm{C}_{\vrv{xx}}^{-1}\mm{C}_{\vrv{xy}}\\
+    \var[\vrv{x}]+\var[\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})] \notag \\
+    &\hspace{2em} +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))
+    +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))^{\top}\\
+&=\mm{C}_{\vrv{x}\vrv{x}} +\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}
+-  2\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}\\
+&=\mm{C}_{\vrv{x}\vrv{x}} -\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}\\
 &=\mm{C}_{\vrv{x}|\vrv{y}}
 \end{align}
 we see that both first and second moments match.
 Since $\Law\left(\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right)$ and
-$\Normal(\vv{m}_{\vrv{x}|\vrv{y}}, \mm{C}_{\vrv{x}|\vrv{y}})$ are Gaussian distributions with the same parameters, they define the same distribution.
+$\Normal(\vv{m}_{\vrv{x}|\vrv{y}}, \mm{C}_{\vrv{x}|\vrv{y}})$ are Gaussian distributions with the same moments, they define the same distribution.
 \end{proof}
 % Note that this update does not require us to calculate \(\mm{C}_{\vrv{x}\vrv{x}} \)
 % and further, may be conducted without needing to evaluate the density of the observation.
 
-This \emph{pathwise} approach to conditioning Gaussian variates has gained currency in machine learning as a tool for sampling and inference in Gaussian proccesses \citep{Wilson2020Efficiently,Wilson2021Pathwise}, notably generalising to challenging domains such as Riemannian Manifolds~\citep{Borovitskiy2020Matern}.
+This \emph{pathwise} approach to conditioning Gaussian variates has gained currency in machine learning as a tool for sampling and inference in Gaussian proccesses \citep{Wilson2020Efficiently,Wilson2021Pathwise}, notably generalising to challenging domains such as Riemannian manifolds~\citep{Borovitskiy2020Matern}.
 
 \subsection{Ensemble Kalman Filter}
 
@@ -122,111 +122,187 @@ Since we are not concerned with the time dynamics in this note but only the obve
 
 The state is typically a spatial field. We represent the values of the field as a one-dimensional finite vector w.l.o.g. by for example representing the field in terms of the weights of some functional basis decomposition.
 
-We assume a known observation operator $\op{M}$ such that observations $\vrv{y}$ are a priori related to state by $\vrv{y}=\op{M}(\vrv{x}\vrv)$; Thus there is a notional joint law
+We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$ are a priori related to state by $\vrv{y}=\op{H}(\vrv{x}\vrv)$; Thus there is a notional joint law
 \begin{align}
     \begin{bmatrix}
         \vrv{x}\\
         \vrv{y}
     \end{bmatrix} &\sim\Law \left( \begin{bmatrix}
         \vrv{x}\\
-        \op{M}(\vrv{x})
+        \op{H}(\vrv{x})
     \end{bmatrix}\right)
+    % =:\Law \left( \begin{bmatrix}
+    %     \vrv{x}\\
+    %     \vrv{y}
+    % \end{bmatrix}\right)
 \end{align}
 
-At each \emph{analysis} step, we receive an observation $\vv{y}\sim\vrv{y}$;
-Our goal is then to characterise the observation-conditional
+In the Ensemble Kalman Filter (EnKF), the **analysis update** is the process of incorporating new observational data into the prior estimate of the system state to obtain an updated, or posterior, estimate. Let \(\vv{y}^*\) represent the observation vector, and let \( \mm{X} \) denote the ensemble of model states whose statistical moments (mean and covariance) form the prior estimate of the state. The goal is to update this ensemble \( \mm{X} \) to a posterior ensemble conditioned on the observation \(\vv{y}^*\).
+
+**Analysis Update Procedure:**
+
+1. **Compute Prior Ensemble Statistics:**
+   - **Ensemble Mean:** \( \bar{x} = \frac{1}{N} \sum_{i=1}^{N} x_i \)
+   - **Ensemble Covariance:** \( \mm{C}_{\vrv{xx}} = \frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})(x_i - \bar{x})^\top \)
+
+2. **Compute Kalman Gain:**
+   The Kalman gain \( K \) determines how much the observations influence the update:
+   \[
+   K = \mm{C}_{\vrv{xx}} \op{H}^\top (\op{H} \mm{C}_{\vrv{xx}} \op{H}^\top + R)^{-1}
+   \]
+   where:
+   - \( \op{H} \) is the observation operator linearized around the ensemble mean.
+   - \( R \) is the observation error covariance matrix.
+
+3. **Update Ensemble Members:**
+   For each ensemble member \( x_i \), the updated (posterior) state \( x_i^\text{post} \) is:
+   \[
+   x_i^\text{post} = x_i + K \left(\vv{y}^*- \op{H} x_i \right)
+   \]
+
+**Justification via Conditioning a Gaussian Variate:**
+
+Assuming that both the prior state and observation errors are Gaussian distributed:
+
+- **Prior State Distribution:** \( x \sim \mathcal{N}(\bar{x},  \mm{C}_{\vrv{xx}} ) \)
+- **Observation Model:** \(\vv{y}^*= \op{H} x + \varepsilon \), where \( \varepsilon \sim \mathcal{N}(0, R) \)
+
+The **joint distribution** of the state and observation is Gaussian:
+\[
+\begin{bmatrix}
+x \\
+y
+\end{bmatrix}
+\sim \mathcal{N}\left(
+\begin{bmatrix}
+\bar{x} \\
+\op{H} \bar{x}
+\end{bmatrix},
+\begin{bmatrix}
+ \mm{C}_{\vrv{xx}}  & \mm{C}_{\vrv{xx}} \op{H}^\top \\
+\op{H} \mm{C}_{\vrv{xx}} & \op{H} \mm{C}_{\vrv{xx}} \op{H}^\top + R
+\end{bmatrix}
+\right)
+\]
+
+The **conditional distribution** of \( x \) given \(\vv{y}^*\) is also Gaussian. The mean and covariance of this conditional distribution are given by:
+- **Posterior Mean:**
+  \[
+  \bar{x}^\text{post} = \bar{x} + K \left(\vv{y}^*- \op{H} \bar{x} \right)
+  \]
+- **Posterior Covariance:**
+  \[
+   \mm{C}_{\vrv{xx}} ^\text{post} = \mm{C}_{\vrv{xx}} - K \op{H}  \mm{C}_{\vrv{xx}}
+  \]
+
+This means that updating each ensemble member using the Kalman gain \( K \) adjusts the prior estimate towards the observations in a way that is consistent with the Gaussian assumption.
+
+**Updated Posterior Ensemble:**
+
+By applying the above update to each ensemble member, the posterior ensemble \( X^\text{post} \) conditioned on the observation \(\vv{y}^*\) is:
+\[
+X^\text{post} = \mm{X} + K \left(\vv{y}^*\mathbf{1}^\top - \op{H} \mm{X} \right)
+\]
+where \( \mathbf{1} \) is a vector of ones corresponding to the ensemble size.
+
+**Conclusion:**
+
+The analysis update in the EnKF effectively "weights" the prior ensemble members according to how well they agree with the new observations, adjusted by the uncertainties in both the model and the observations. This method leverages the properties of Gaussian distributions to ensure that the posterior ensemble accurately reflects the updated state estimate after conditioning on \(\vv{y}^*\).
+
+\section{Equivalence of the EnKF Analysis and the Matheron Update}
+
+
+In the state filter analysis step, we receive an observation $\vrv{y}=\vv{y}^*$;
+Our goal is to characterise the observation-conditional
 \begin{align}
-    \Law(\tilde{\vrv{x}})&:=\Law(\vrv{x}\gvn \vrv{y}{=}\vv{y})
+    \Law(\vrv{x}^{\text{post}})&:=\Law(\vrv{x}\gvn \vrv{y}{=}\vv{y})
 \end{align}
 i.e. to find the posterior law given a partial observtion of this joint distribution.
 
-The EnKF introduces two assumptions to make the state filtering problem tractable.
-Firstly, we assume that all variates are jointly Gaussian, i.e.
+The EnKF introduces two assumptions.
+Firstly, that all variates are jointly Gaussian, i.e.
 \begin{align}
     \Law \left( \begin{bmatrix}
         \vrv{x}\\
-        \op{M}(\vrv{x})
-    \end{bmatrix}\right) &\sim \Normal\left(
-        \begin{bmatrix}
-            \vv{m}_{\vrv{x}}\\
-            \vv{m}_{\vrv{y}}
-        \end{bmatrix},
-        \begin{bmatrix}
-            \mm{C}_{\vrv{x}}\\
-            \mm{C}_{\vrv{y}}
-        \end{bmatrix}
-    \right)
+        \vrv{y}
+    \end{bmatrix}\right) &\sim \Normal\left(\begin{bmatrix} \vv{m}_{\vrv{x}} \\ \vv{m}_{\vrv{y}} \end{bmatrix}, \begin{bmatrix} \mm{C}_{\vrv{xx}} & \mm{C}_{\vrv{xy}} \\ \mm{C}_{\vrv{yx}} & \mm{C}_{\vrv{yy}} \end{bmatrix}\right)
 \end{align}
-Secondly, we represent all these Gaussian distributions in terms of the empirical moments of some ensemble.
+Secondly, that these Gaussian distributions may be well approximated by the empirical moments of some ensemble.
+We introduce notation for this.
+
 Suppose the $D$-dimensional variate $\vrv{z}$ is distributed as
 $\vrv{z}\sim\Normal(\vv{m}_{\vrv{z}},\mm{C}_{\vrv{yy}})$.
-Define empirical mean $\mmmean{Z}$ and the prior empirical covariance $\mm{C}_{\vrv{yy}}$ of the ensemble  $\mm{Z} = [\vv{z}^{(1)}, \vv{z}^{(2)}, \dots, \vv{z}^{(N)}]$ as
+Define empirical mean $\mmmean{Z}$ and the prior empirical covariance $\mm{C}_{\vrv{yy}}$ of the ensemble of $N$ stacked column $D$-vectors  $\mm{Z} = \begin{bmatrix}\vv{z}^{(1)}& \vv{z}^{(2)}& \dots& \vv{z}^{(N)}\end{bmatrix}$ as
 \begin{align}
     \mmmean{Z} &= \frac{1}{N} \sum_{i=1}^N \vv{z}^{(i)}, \label{eq:ensemble_mean} & \text{ ensemble mean} \\
     \mmdev{Z} &= \frac{1}{\sqrt{N-1}} \left( \mm{Z} - \mmmean{Z} \vv{1}^\top \right) &\text{ deviation}  \label{eq:deviation_matrix} \\
-    \mm{C}_{\vrv{yy}} &= \mmdev{Z} \mmdev{Z}^\top + \diag(\vv{\sigma}^2)&\text{ ensemble covariance}  \label{eq:ensemble-covariance}
+    \hat{\mm{C}}_{\mm{ZZ}} &= \mmdev{Z} \mmdev{Z}^\top + \diag(\vv{\sigma}_{\mm{Z}}^2)&\text{ ensemble covariance}  \label{eq:ensemble-covariance}
 \end{align}
-where is the state ensemble matrix, $\vv{1}^\top$ is a row vector of $N$ ones and $\vv{\sigma}^2$ is $D$-dimensional vector.
-
+where is the state ensemble matrix, $\vv{1}^\top$ is a row vector of $N$ ones and $\vv{\sigma}_{\mm{Z}}^2$ is some $D$-dimensional vector which introduces a regularisation to the empirical covariance.
 Overloading notation, we associate a distribution with $\mm{Z}$,
-$\Law(\mm{Z}) := \Normal(\mmmean{Z}, \mmdev{Z} \mmdev{Z}^\top + \diag(\vv{\sigma}^2))$.
+$\Law(\mm{Z}) := \Normal(\mmmean{Z}, \mmdev{Z} \mmdev{Z}^\top + \diag(\vv{\sigma}_{\mm{Z}}^2))$.
 
+If $\Law(\mm{Z})=\Law(\vrv{z})$ then we say they define the same distribution.
 
-Similarly, the ensemble representing the prior belief about our observations (before we incorporate those) representing observations is
-\begin{equation}
-    \mm{Y} = [\vv{y}^{(1)}, \vv{y}^{(2)}, \dots, \vv{y}^{(N)}],
-\end{equation}
-with ensemble mean and deviations
+In the EnKF, the ensemble representing the prior distribution of observations is
 \begin{align}
-    \mmdev{Y} &= \frac{1}{N} \sum_{i=1}^N \vv{y}^{(i)}, \\
-    \mmdev{X} &= \frac{1}{\sqrt{N-1}} \left( \mm{Y} - \mmdev{Y} \vv{1}^\top \right).
+    \mm{Y} &=: \begin{bmatrix}\op{H}(\vv{x}^{(1)}) & \op{H}(\vv{x}^{(2)})& \dots& \op{H}(\vv{x}^{(N)})\end{bmatrix}\\
+    &=: \begin{bmatrix}\vv{y}^{(1)}& \vv{y}^{(2)}& \dots& \vv{y}^{(N)}\end{bmatrix}
 \end{align}
-The empirical covariance is then
-\begin{equation}
-    \mm{C}_{\vrv{yy}} \approx \mmdev{X} \mmdev{X}^\top.
-\end{equation}
 
-The cross-covariance between the state and the observations is approximated by
-\begin{equation}
-    \mm{C}_{\vrv{xy}} \approx \mmdev{X} \mmdev{X}^\top.
-\end{equation}
 
-The Kalman gain $\mm{K}$ is then computed as
-\begin{equation}
-    \mm{K} = \mm{C}_{\vrv{xy}} \left( \mm{C}_{\vrv{yy}} + \mm{R} \right)^{-1},
+The associated empirical joint distribution is
+\begin{align}
+    \Law\left(\begin{bmatrix}
+        \mm{X}\\
+        \mm{Y}
+    \end{bmatrix}\right) &:= \Normal\left(\begin{bmatrix}
+        \mmmean{X}\\
+        \mmmean{Y}
+    \end{bmatrix},
+    \begin{bmatrix}
+        \mmdev{X} \mmdev{X}^\top + \diag(\vv{\sigma}_\mm{X}^2) & \mmdev{X} \mmdev{Y}^\top \\
+        \mmdev{Y} \mmdev{X}^\top  & \mmdev{Y} \mmdev{Y}^\top + \diag(\vv{\sigma}_\mm{Y}^2)
+    \end{bmatrix}
+    \right).
+\end{align}
+
+For compactness we define the  Kalman gain,
+\begin{align}
+    \mm{K}
+    &= \hat{\mm{C}}_{\mm{XY}} \hat{\mm{C}}_{\mm{YY}}^{-1}\\
+    &=\mmdev{X}\mmdev{Y}^\top  \left(
+        \mmdev{Y}\mmdev{Y}^\top+\diag(\vv{\sigma}^2_{\mm{Y}})^{-1}
+    \right)^{-1}
     \label{eq:kalman_gain}
-\end{equation}
-where $\mm{R}$ is the observation error covariance matrix.
+\end{align}
+Suppose we have received the observeration $\vrv{y}=\vv{y}^*$.
+Recalling posterior update equations \eqref{eq:conditional-mean} and \eqref{eq:conditional-cov}, and applying these updates in terms of empirical statistics, we recover a posterior
+\begin{align}
+    \Law\left(\vrv{x}^{\text{post}}\right)
+    &=\Law\left(\vrv{x}|\vrv{y}{=}\vv{y}^*\right)\\
+    &=\Law\left(\mm{X}|\mm{Y}{=}\vv{y}^*\right)\\
+    &= \Normal\left(
+        \mmmean{X} +
+        \mm{K}\left( \vv{y}^* - \mmmean{Y}\right),
+        \hat{\mm{C}}_{\mm{XX}} + \mm{K}\hat{\mm{C}}_{\mm{YX}}
+        \right)
+\end{align}
+Note, however, that it is relatively easy to construct an ensemble with precisely he same covariance by application of the Matheron update~eqref{eq:matheron-update} using \emph{empirical} moments, to wit,
+\begin{align}
+    \Law\left(\mm{X}^{\text{post}}\right)
+    &=\Law\left(\mm{X}|\mm{Y}{=}\vv{y}^*\right)\\
+    &=\Law\left(\mm{X} + \hat{\mm{C}}_{\mm{XY}} \hat{\mm{C}}_{\mm{YY}}^{-1} \left( \vv{y}^*\vv{1} - \mm{Y} \right)\right)\\
+    &=\Law\left(\mm{X} -\sqrt{N{-}1\;} \mmdev{X}\mmdev{Y}^\top (\mmdev{Y}\mmdev{Y}^\top+\diag(\vv{\sigma}^2_{\mm{Y}}))^{-1} \mmdev{Y}\right)
+\end{align}
+Note that $\mm{X}^{\text{post}}$ is once again an $D \times N$ ensemble.
 
-Each ensemble member is updated according to
-\begin{equation}
-    \vv{x}^{(i)} = \vv{x}^{(i)} + \mm{K} \left( \vv{y} + \boldsymbol{\varepsilon}^{(i)} - \vv{y}^{(i)} \right),
-    \label{eq:enkf_update}
-\end{equation}
-where $\vv{y}$ is the observation vector, and $\boldsymbol{\varepsilon}^{(i)}$ is a sample of the observational noise for the $i$-th ensemble member.
+In practice, we would not calculate the distribution niavely, but apply a Woodbury identity TODO
 
-\section{Equivalence of the EnKF Update and the Matheron Update}
+In general, for some distribution where the ensemble size is less than the dimension of the variates, i.e. $N< D$ it is possible that we cannot attain strict equality in distribution.
+Then, we may TODO
+\citep{Sriperumbudur2010Hilbert}
 
-\subsection{Derivation}
-
-Consider the EnKF update in Equation~\eqref{eq:enkf_update}. Substituting the expression for the Kalman gain from Equation~\eqref{eq:kalman_gain}, we have
-\begin{equation}
-    \vv{x}^{(i)} = \vv{x}^{(i)} + \mm{C}_{\vrv{xy}} \left( \mm{C}_{\vrv{yy}} + \mm{R} \right)^{-1} \left( \vv{y} + \boldsymbol{\varepsilon}^{(i)} - \vv{y}^{(i)} \right).
-    \label{eq:enkf_update_substituted}
-\end{equation}
-
-Assuming that $\vv{y}^{(i)} = \mm{H} \vv{x}^{(i)}$, and that $\boldsymbol{\varepsilon}^{(i)}$ is the observational noise, we can combine $\vv{y}^{(i)}$ and $\boldsymbol{\varepsilon}^{(i)}$ into the perturbed observations
-\begin{equation}
-    \vv{y}^{(i)} = \vv{y} + \boldsymbol{\varepsilon}^{(i)}.
-\end{equation}
-
-Then the update becomes
-\begin{equation}
-    \vv{x}^{(i)} = \vv{x}^{(i)} + \mm{C}_{\vrv{xy}} \left( \mm{C}_{\vrv{yy}} + \mm{R} \right)^{-1} \left( \vv{y}^{(i)} - \vv{y}^{(i)} \right).
-    \label{eq:enkf_matheron}
-\end{equation}
-
-This is exactly the form of the Matheron update in Equation~\eqref{eq:matheron_update}, where $\vv{x}^{(i)}$ and $\vv{y}^{(i)}$ are samples from the prior distributions of $\vv{x}$ and $\vv{y}$, respectively, and $\vv{y}^{(i)}$ serves as the observed value $\vv{y}^*$. Therefore, the EnKF update is an empirical Matheron update.
 
 \section{Computational complexity}
 
