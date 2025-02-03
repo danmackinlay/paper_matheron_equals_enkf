@@ -139,77 +139,67 @@ We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$
     % \end{bmatrix}\right)
 \end{align}
 
-In the Ensemble Kalman Filter (EnKF), the **analysis update** is the process of incorporating new observational data into the prior estimate of the system state to obtain an updated, or posterior, estimate. Let \(\vv{y}^*\) represent the observation vector, and let \( \mm{X} \) denote the ensemble of model states whose statistical moments (mean and covariance) form the prior estimate of the state. The goal is to update this ensemble \( \mm{X} \) to a posterior ensemble conditioned on the observation \(\vv{y}^*\).
+In the Ensemble Kalman Filter (EnKF), the \emph{analysis update} is the process of incorporating new observational data likelihood into the prior estimate of the system state to obtain an updated, or posterior, estimate.
 
-**Analysis Update Procedure:**
+where \( \mm{H}:= \left. \nabla_{\vv{x}} \op{H}(\vv{x})\right|_{\vv{x}=\ \) is the observation operator linearized around the ensemble mean, and
 
-1. **Compute Prior Ensemble Statistics:**
-   - **Ensemble Mean:** \( \bar{x} = \frac{1}{N} \sum_{i=1}^{N} x_i \)
-   - **Ensemble Covariance:** \( \mm{C}_{\vrv{xx}} = \frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})(x_i - \bar{x})^\top \)
+Let \(\vv{y}^*\) represent the observation vector, and let \( \mm{X} \) denote the ensemble of model states whose statistical moments (mean and covariance) form the prior estimate of the state. The goal is to update this ensemble \( \mm{X} \) to a posterior ensemble conditioned on the observation \(\vv{y}^*\).
+We begin by describing an analysis update procedure in the context of the Ensemble Kalman Filter. First, the prior ensemble statistics are computed. The ensemble mean is given by
+\[
+\bar{x} = \frac{1}{N} \sum_{i=1}^{N} x_i,
+\]
+and the ensemble covariance is calculated as
+\[
+\mm{C}_{\vrv{xx}} = \frac{1}{N-1} \sum_{i=1}^{N} \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)^\top.
+\]
 
-2. **Compute Kalman Gain:**
-   The Kalman gain \( K \) determines how much the observations influence the update:
-   \[
-   K = \mm{C}_{\vrv{xx}} \op{H}^\top (\op{H} \mm{C}_{\vrv{xx}} \op{H}^\top + R)^{-1}
-   \]
-   where:
-   - \( \op{H} \) is the observation operator linearized around the ensemble mean.
-   - \( R \) is the observation error covariance matrix.
+Next, we compute the Kalman gain, which determines the influence of the observations on the update. The Kalman gain \( K \) is defined by
+\[
+K = \mm{C}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\, \mm{C}_{\vrv{xx}}\, \op{H}^\top + R\right)^{-1},
+\]
+where \( \op{H} \) is the observation operator linearized around the ensemble mean, and \( R \) is the observation error covariance matrix.
 
-3. **Update Ensemble Members:**
-   For each ensemble member \( x_i \), the updated (posterior) state \( x_i^\text{post} \) is:
-   \[
-   x_i^\text{post} = x_i + K \left(\vv{y}^*- \op{H} x_i \right)
-   \]
+After calculating the Kalman gain, each ensemble member is updated. For every member \( x_i \), the updated (posterior) state \( x_i^{\text{post}} \) is obtained via
+\[
+x_i^{\text{post}} = x_i + K \left(\vv{y}^* - \op{H}\, x_i\right).
+\]
 
-**Justification via Conditioning a Gaussian Variate:**
-
-Assuming that both the prior state and observation errors are Gaussian distributed:
-
-- **Prior State Distribution:** \( x \sim \mathcal{N}(\bar{x},  \mm{C}_{\vrv{xx}} ) \)
-- **Observation Model:** \(\vv{y}^*= \op{H} x + \varepsilon \), where \( \varepsilon \sim \mathcal{N}(0, R) \)
-
-The **joint distribution** of the state and observation is Gaussian:
+The justification for this procedure comes from the conditioning of a Gaussian variate. It is assumed that both the prior state and the observation errors are Gaussian distributed. Specifically, the prior state follows
+\[
+x \sim \mathcal{N}\!\left(\bar{x},\, \mm{C}_{\vrv{xx}}\right),
+\]
+and the observation model is given by
+\[
+\vv{y}^* = \op{H}\, x + \varepsilon, \quad \text{with} \quad \varepsilon \sim \mathcal{N}(0, R).
+\]
+Thus, the joint distribution of the state and the observation is
 \[
 \begin{bmatrix}
 x \\
 y
 \end{bmatrix}
-\sim \mathcal{N}\left(
+\sim \mathcal{N}\!\left(
 \begin{bmatrix}
 \bar{x} \\
-\op{H} \bar{x}
+\op{H}\, \bar{x}
 \end{bmatrix},
 \begin{bmatrix}
- \mm{C}_{\vrv{xx}}  & \mm{C}_{\vrv{xx}} \op{H}^\top \\
-\op{H} \mm{C}_{\vrv{xx}} & \op{H} \mm{C}_{\vrv{xx}} \op{H}^\top + R
+\mm{C}_{\vrv{xx}} & \mm{C}_{\vrv{xx}}\, \op{H}^\top \\
+\op{H}\, \mm{C}_{\vrv{xx}} & \op{H}\, \mm{C}_{\vrv{xx}}\, \op{H}^\top + R
 \end{bmatrix}
-\right)
+\right).
 \]
-
-The **conditional distribution** of \( x \) given \(\vv{y}^*\) is also Gaussian. The mean and covariance of this conditional distribution are given by:
-- **Posterior Mean:**
-  \[
-  \bar{x}^\text{post} = \bar{x} + K \left(\vv{y}^*- \op{H} \bar{x} \right)
-  \]
-- **Posterior Covariance:**
-  \[
-   \mm{C}_{\vrv{xx}} ^\text{post} = \mm{C}_{\vrv{xx}} - K \op{H}  \mm{C}_{\vrv{xx}}
-  \]
-
-This means that updating each ensemble member using the Kalman gain \( K \) adjusts the prior estimate towards the observations in a way that is consistent with the Gaussian assumption.
-
-**Updated Posterior Ensemble:**
-
-By applying the above update to each ensemble member, the posterior ensemble \( X^\text{post} \) conditioned on the observation \(\vv{y}^*\) is:
+Consequently, the conditional distribution of \( x \) given \( \vv{y}^* \) is also Gaussian, with the posterior mean
 \[
-X^\text{post} = \mm{X} + K \left(\vv{y}^*\mathbf{1}^\top - \op{H} \mm{X} \right)
+\bar{x}^{\text{post}} = \bar{x} + K \left(\vv{y}^* - \op{H}\, \bar{x}\right),
 \]
-where \( \mathbf{1} \) is a vector of ones corresponding to the ensemble size.
+and the posterior covariance
+\[
+\mm{C}_{\vrv{xx}}^{\text{post}} = \mm{C}_{\vrv{xx}} - K\, \op{H}\, \mm{C}_{\vrv{xx}}.
+\]
+This demonstrates that updating each ensemble member using the Kalman gain \( K \) adjusts the prior estimate towards the observations in a manner consistent with the Gaussian assumptions.
 
-**Conclusion:**
-
-The analysis update in the EnKF effectively "weights" the prior ensemble members according to how well they agree with the new observations, adjusted by the uncertainties in both the model and the observations. This method leverages the properties of Gaussian distributions to ensure that the posterior ensemble accurately reflects the updated state estimate after conditioning on \(\vv{y}^*\).
+Finally, by applying the above update to each ensemble member, the posterior ensemble \( X^{\text{post}} \) conditione
 
 \section{Equivalence of the EnKF Analysis and the Matheron Update}
 
