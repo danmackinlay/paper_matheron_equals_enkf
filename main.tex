@@ -27,7 +27,7 @@
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. By explicitly representing the ensemble mean and covariance using empirical approximations, we establish this equivalence. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
 
-While this connection is simple, it seems not to be whidely known; this note exists to provide a short note expanding on the connection between these facts.
+While this connection is simple, it seems not to be widely known; this note exists to provide a short note expanding on the connection between these facts, together with the necessary definitions so that it is intelligible to a wider audience.
 \end{abstract}
 
 \section{Introduction}
@@ -112,6 +112,8 @@ $\Normal(\vv{m}_{\vrv{x}|\vrv{y}}, \mm{C}_{\vrv{x}|\vrv{y}})$ are Gaussian distr
 % and further, may be conducted without needing to evaluate the density of the observation.
 
 This \emph{pathwise} approach to conditioning Gaussian variates has gained currency in machine learning as a tool for sampling and inference in Gaussian proccesses \citep{Wilson2020Efficiently,Wilson2021Pathwise}, notably generalising to challenging domains such as Riemannian manifolds~\citep{Borovitskiy2020Matern}.
+
+where \( \mm{H}:= \left. \nabla_{\vv{x}} \op{H}(\vv{x})\right|_{\vv{x}=\ \) is the observation operator linearized around the ensemble mean, and
 
 \subsection{Ensemble Kalman Filter}
 
@@ -288,7 +290,7 @@ Recalling posterior update equations \eqref{eq:conditional-mean} and \eqref{eq:c
         \hat{\mm{C}}_{\mm{XX}} + \mm{K}\hat{\mm{C}}_{\mm{YX}}
         \right)
 \end{align}
-Note, however, that it is relatively easy to construct an ensemble with precisely he same covariance by application of the Matheron update~eqref{eq:matheron-update} using \emph{empirical} moments, to wit,
+Note, however, that it is relatively easy to construct an ensemble with precisely the same covariance by application of the Matheron update~\eqref{eq:matheron-update} via \emph{empirical} moments, to wit,
 \begin{align}
     \Law\left(\mm{X}^{\text{post}}\right)
     &=\Law\left(\mm{X}|\mm{Y}{=}\vv{y}^*\right)\\
