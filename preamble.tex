@@ -108,7 +108,25 @@
 \newcommand{\gvn}{\mid}
 \renewcommand{\Pr}{\mathbb{P}}
 \newcommand{\solop}{\mathcal{G}^{\dagger}}
-\newcommand{\Law}{\operatorname{Law}}
+\newcommand{\Law}[1][]{%
+  %\operatorname{Law}
+  \mu%
+  \if\relax\detokenize{#1}\relax
+    % no argument: do nothing
+  \else
+    _{#1}%
+  \fi
+}
+\newcommand{\ELaw}[1][]{%
+  %\operatorname{Law}
+  \widehat{\mu}%
+  \if\relax\detokenize{#1}\relax
+    % no argument: do nothing
+  \else
+    _{#1}%
+  \fi
+}
+
 \newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}} % indep symbol
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
 % \newcommand{\one}{\mathbb{1}}
