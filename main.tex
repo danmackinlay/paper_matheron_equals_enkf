@@ -5,21 +5,13 @@
 \title{The Ensemble Kalman Update is an Empirical Matheron Update}
 
 \author{
-  Firstname1 Lastname1 \\
-  Department of X \\
-  University of Y \\
-  City, Country \\
-  \texttt{email1@university.edu} \\
-  \and
-  Firstname2 Lastname2 \\
-  Department of X \\
-  University of Y \\
-  City, Country \\
-  \texttt{email2@university.edu} \\
+  Dan MacKinlay \\
+  CSIRO's Data61 \\
+  \texttt{dan@danmackinlay.name} \\
 }
 
 % You may provide any keywords that you find helpful for describing your paper
-\date{}
+\date{February 2025}
 
 \begin{document}
 
@@ -306,34 +298,51 @@ the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble
 
 \section{Computational Complexity}
 
-The computational attractiveness of the Ensemble Kalman Filter lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
+As is well iunderstood in the EnKF literature, the computational attractiveness of the Ensemble Kalman Filter lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
+In contrast, the naive Kalman update must operate directly on these full covariance matrices, which can be prohibitively expensive in high-dimensional settings.
 
 Recall that the ensemble Kalman gain is computed as
 \begin{align}
     \widehat{\mm{K}} &= \mmdev{X}\,\mmdev{Y}^\top \left(\mmdev{Y}\,\mmdev{Y}^\top + \gamma^2\mm{I}\right)^{-1},
 \end{align}
-where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization of the empirical observation covariance and the observation noise covariance.
+where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}\)) and the intrinsic observation noise (\(\rho^2\mm{I}\)).
 
-Let us now break down the computational cost of this update:
+Let us break down the cost of this ensemble update:
 
 \begin{enumerate}
     \item \textbf{Forming the Empirical Covariance:}
-    Computing \(\mmdev{Y}^\top \mmdev{Y}\) involves multiplying a \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) with its transpose (an \(N\times D_{\vrv{y}}\) matrix). This step requires \(O(D_{\vrv{y}}N^2)\) operations.
+    Multiplying the \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) by its transpose (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{y}}N^2)\) operations.
 
     \item \textbf{Inversion of the \(N\times N\) Matrix:}
-    The inversion of \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}\) costs \(O(N^3)\) operations.
+    Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}\) costs \(O(N^3)\) operations.
 
     \item \textbf{Matrix Multiplications to Form the Gain:}
-    Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix and \(\mmdev{Y}\) contribute a cost on the order of \(O(D_{\vrv{y}}N^2)\).
+    Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix contribute a further \(O(D_{\vrv{y}}N^2)\) operations.
 \end{enumerate}
 
 Summing these contributions, the overall computational cost of the ensemble update is approximately
 \[
     O\bigl(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\bigr).
 \]
-Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the standard Kalman filter, which involves inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix at a cost of \(O(D_{\vrv{y}}^3)\).
+Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update.
 
 By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
+
+% \paragraph{Cost of the Naive Kalman Update:}
+In a traditional Kalman filter, one computes the Kalman gain as
+\[
+\mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}\Bigr)^{-1}.
+\]
+Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
+
+% \paragraph{Summary:}
+The ensemble-based approach reduces the expensive inversion from an \(O(D_{\vrv{y}}^3)\) operation to one involving an \(N\times N\) matrix (costing \(O(N^3)\)), with additional costs \(O(D_{\vrv{y}}N^2)\) and \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) from matrix multiplications. In contrast, the naive Kalman update requires inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix, which is significantly costlier when \(N \ll D_{\vrv{y}}\).
+
+By exploiting the ensemble structure, we achieve an overall computational cost of
+\[
+    O\bigl(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\bigr),
+\]
+which is much more scalable for high-dimensional problems compared to the \(O(D_{\vrv{y}}^3 + D_{\vrv{x}}D_{\vrv{y}}^2)\) cost of the naive Kalman update.
 
 \section{Conclusion and Implications}
 
