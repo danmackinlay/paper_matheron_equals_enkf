@@ -241,15 +241,7 @@ We overload the observation operator to apply to ensemble matrices, writing
 This also induces an empirical estimate of the observation prior measure $\Law[\vrv{y}]$,
 \begin{align}
     \ELaw[\mm{Y}]
-        % &\coloneq \ELaw[{
-        % \begin{bmatrix}
-        %     \op{H}(\vv{x}^{(1)}) %
-        %     & \op{H}(\vv{x}^{(2)})
-        %     & \dots %
-        %     & \op{H}(\vv{x}^{(N)})
-        % \end{bmatrix}
-        % }]\\
-    &\coloneq \Normal(\mmmean{Y}, \mmdev{Y} \mmdev{Y}^\top + (\upsilon^2\mm{I}))
+    \coloneq \Normal(\mmmean{Y}, \mmdev{Y} \mmdev{Y}^\top + (\upsilon^2\mm{I})).
 \end{align}
 and in fact an empirical joint
 \begin{align}
@@ -266,6 +258,7 @@ and in fact an empirical joint
     \end{bmatrix}
     \right).\label{eq:ensemble-joint}
 \end{align}
+Here the regularisation term $(\upsilon^2\mm{I})$ is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when $D_{\vrv{y}}>N$.
 
 When a new observation \(\vv{y}^*\) is available, we form a corresponding observation ensemble.
 This is achieved by setting
@@ -275,9 +268,15 @@ This is achieved by setting
 so that each column of \(\mm{Y}^*\) equals \(\vv{y}^*\).
 The Kalman gain in the ensemble setting is constructed by plugging in the empirical ensemble estimates \eqref{eq:ensemble-joint} to \eqref{eq:kalman-gain} obtaining
 \begin{align}
-\widehat{\mm{K}}= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \xi^2\mm{I} + \rho^2\mm{I}\right)^{-1}\label{eq:ensemble-kalman-gain}
+\widehat{\mm{K}}= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \upsilon^2\mm{I} + \rho^2\mm{I}\right)^{-1}\label{eq:ensemble-kalman-gain}
 \end{align}
-where \(R\) is the observation error covariance matrix.
+where \(\rho^2\mm{I}\) is the observation error covariance matrix.
+The term
+$\upsilon^2\mm{I}$ comes from the regularization of the empirical observation covariance (as defined by the ensemble of
+$\mm{Y}$), while $\rho^2\mm{I}$ represents the known covariance of the observation noise.
+Combining these two gives the effective covariance in the observation space.
+For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}\).
+
 Finally, the analysis update for the ensemble is performed by
 \begin{align}
     \mm{X}' &= \mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\mm{X}\right).\label{eq:ensemble-update}
@@ -300,43 +299,41 @@ In this setting we now have a trivial equivalence of the Matheron update and the
 Under the substitution
 \begin{align}
     \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I},\\
-    \vv{m}_{\vrv{y}} &\to \mmmean{Y}, & \mm{C}_{\vrv{yy}} &\to \mmdev{Y} \mmdev{Y}^\top + \upsilon^2\mm{I} + \rho^2\mm{I},\\
+    \vv{m}_{\vrv{y}} &\to \mmmean{Y}, & \mm{C}_{\vrv{yy}} &\to \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I},\\
     \mm{C}_{\vrv{xy}} &\to \mmdev{X} \mmdev{Y}^\top, & \mm{C}_{\vrv{yx}} &\to \mmdev{Y} \mmdev{X}^\top,
 \end{align}
 the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble update~\eqref{eq:ensemble-update}.
 
-\section{Computational complexity}
+\section{Computational Complexity}
 
-The Ensemble Kalman method is favoured both for its robustness and also its effiency.
-The computational attractiveness of the method is that the empirical Kalman gain \(\widehat{\mm{K}}\) needed in the ensemble update~\eqref{eq:ensemble-kalman-gain} can be written using only the empirical ensemble statistics, without the need to compute the full covariance matrix \(\mm{C}_{\vrv{xx}}\) by using the empirical moments from~\eqref{eq:ensemble-joint}, so that
+The computational attractiveness of the Ensemble Kalman Filter lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
+
+Recall that the ensemble Kalman gain is computed as
 \begin{align}
-    \widehat{\mm{K}}&= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \rho^2\mm{I} + \xi^2\mm{I}\right)^{-1}\\
-    &= \mmdev{X} \mmdev{Y}^\top   \left(
-        \mmdev{Y} \mmdev{Y}^\top + \gamma^2 \mm{I}
-    \right)^{-1}\\
-    % &= \gamma^{-2}\mm{I}
-    % - \gamma^{-2}\mm{I}\mmdev{Y}
-    % \left(
-    %     \mm{I} + \mmdev{Y}^\top(\gamma^{-2}\mm{I})\mmdev{Y}
-    % \right)^{-1}
-    % \mmdev{Y}^\top\mm{I}\gamma^{-2}\\
-    &= \gamma^{-2}\mm{I}
-    - \gamma^{-4}\mmdev{Y}
-    \left(
-        \mm{I} + \gamma^{-2}\mmdev{Y}^\top\mmdev{Y}
-    \right)^{-1}
-    \mmdev{Y}^\top
+    \widehat{\mm{K}} &= \mmdev{X}\,\mmdev{Y}^\top \left(\mmdev{Y}\,\mmdev{Y}^\top + \gamma^2\mm{I}\right)^{-1},
 \end{align}
-Here we defined \(\gamma^2 =\upsilon^2 + \rho^2\) for brevity, and the last line follows from the application of a Woodbury matrix identity.
+where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization of the empirical observation covariance and the observation noise covariance.
 
-In the naive Kalman update the computationally dominating cost comes from the solution of the \(D_{\vrv{y}}\times\) system. in the Kalman gain calcuation, where here reduces to   \(\left(
-    \mm{I} + \gamma^{-2}\mmdev{Y}^\top\mmdev{Y}
-\right)^{-1}
-\mmdev{Y}^\top\) requiring the solution of an \(N\times N\) linear system, which if the ensemble size is much smaller than the dimension $N\ll D_{\vrv{y}}$ can be much more efficient, scaling as \(O(D_{\vrv{y}}N^3)\) rather than \(O(D_{\vrv{y}}^3)\).
+Let us now break down the computational cost of this update:
 
-By careful ordering of operations we can avoid entirely the need to construct any \(D_{\vrv{y}}\times D_{\vrv{y}}\) or \(D_{\vrv{x}}\times D_{\vrv{x}}\) matrices
-The cost of the ensemble update is \(O(D_{\vrv{x}}D_{\vrv{y}}N^2)\), which is linear in the dimension of the state space and the ensemble size.
+\begin{enumerate}
+    \item \textbf{Forming the Empirical Covariance:}
+    Computing \(\mmdev{Y}^\top \mmdev{Y}\) involves multiplying a \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) with its transpose (an \(N\times D_{\vrv{y}}\) matrix). This step requires \(O(D_{\vrv{y}}N^2)\) operations.
 
+    \item \textbf{Inversion of the \(N\times N\) Matrix:}
+    The inversion of \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}\) costs \(O(N^3)\) operations.
+
+    \item \textbf{Matrix Multiplications to Form the Gain:}
+    Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix and \(\mmdev{Y}\) contribute a cost on the order of \(O(D_{\vrv{y}}N^2)\).
+\end{enumerate}
+
+Summing these contributions, the overall computational cost of the ensemble update is approximately
+\[
+    O\bigl(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\bigr).
+\]
+Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the standard Kalman filter, which involves inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix at a cost of \(O(D_{\vrv{y}}^3)\).
+
+By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
 
 \section{Conclusion and Implications}
 
@@ -367,47 +364,62 @@ In many machine learning and data assimilation applications, probability measure
     \Pr\left(\vrv{x} \in A\right)
     = \int_A p_{\vrv{x}}(\vv{x})\,\mathrm{d}\vv{x}.
 \end{equation}
-
 The expectation of any measurable function \(f:\mathbb{R}^{D_{\vrv{x}}}\to\mathbb{R}\) is given by
 \begin{equation}
     \Ex[f(\vrv{x})] = \int_{\mathbb{R}^{D_{\vrv{x}}}} f(\vv{x})\,p_{\vrv{x}}(\vv{x})\,\mathrm{d}\vv{x}.
 \end{equation}
 
-In practice, when using an ensemble of \(N\) samples \(\{\vv{x}^{(i)}\}_{i=1}^N\), the empirical measure can be represented as a sum of Dirac delta functions:
+We can write out the results of this paper in terms of densities, but since the primary object of our interst is the empirical measure and the moments of the theoretical and empirical measures, densities are not strictly necessary and result in a rather longer exposition.
+Instead, we hope to reassure machine-learners that the two are equivalent in this appendix.
+
+\subsection*{Dirac Functionals and Empirical Measures}
+
+In many practical settings, we work with a finite sample \(\{\vv{x}^{(i)}\}_{i=1}^N\) drawn from the true distribution \(p_{\vrv{x}}(\vv{x})\). The empirical measure associated with this sample is defined as
+\begin{equation}
+    \widehat{P}_{\vrv{x}}(A) = \frac{1}{N} \sum_{i=1}^N \mathbf{1}_A(\vv{x}^{(i)}),
+\end{equation}
+where \(\mathbf{1}_A\) is the indicator function for the set \(A\). When we wish to express the empirical measure in density notation (with respect to the Lebesgue measure), we represent it as a sum of Dirac delta functions:
 \begin{equation}
     p_{\text{emp}}(\vv{x}) = \frac{1}{N} \sum_{i=1}^N \delta(\vv{x}-\vv{x}^{(i)}).
 \end{equation}
-Using the sifting property of the Dirac delta, the empirical expectation of \(f\) is
+
+Note that the \emph{Dirac delta} is not a function in the classical sense but a \emph{distribution} (or generalized function). In functional analysis, a Dirac delta centered at \(\vv{x}^{(i)}\) is defined as a linear functional \(\delta_{\vv{x}^{(i)}}\) on a space of test functions (typically smooth functions with compact support) such that
+\begin{equation}
+    \langle \delta_{\vv{x}^{(i)}}, f \rangle = f(\vv{x}^{(i)}),
+\end{equation}
+for any test function \(f\). Here, the angle brackets \(\langle \cdot,\cdot \rangle\) denote the action of the distribution on \(f\). This \emph{sifting property} ensures that when integrating a test function against the empirical density, we recover the sample average:
 \begin{equation}
     \int_{\mathbb{R}^{D_{\vrv{x}}}} f(\vv{x})\,p_{\text{emp}}(\vv{x})\,\mathrm{d}\vv{x}
+    = \frac{1}{N} \sum_{i=1}^N \langle \delta_{\vv{x}^{(i)}}, f \rangle
     = \frac{1}{N} \sum_{i=1}^N f(\vv{x}^{(i)}).
 \end{equation}
 
-Similarly, if the true prior for \(\vrv{x}\) is given by aGaussian density \(p_{\vrv{x}}(\vv{x})\)
+In this sense, the empirical measure is exactly the sum of Dirac functionals centered at each sample point, and the “density” \(p_{\text{emp}}\) should be understood in the distributional sense. This formulation is particularly useful when comparing the empirical measure to the true measure \(p_{\vrv{x}}\). Although the empirical measure is singular with respect to the Lebesgue measure (since it concentrates mass on a finite set of points), many operations (such as taking expectations of smooth functions) remain well-defined.
+
+\subsection*{From Measures to Densities in Gaussian Conditioning}
+
+For example, suppose the true prior for \(\vrv{x}\) is given by a density \(p_{\vrv{x}}(\vv{x})\) (say, a Gaussian)
 \[
     p_{\vrv{x}}(\vv{x}) = \frac{1}{(2\pi)^{D_{\vrv{x}}/2} \,|\mm{C}_{\vrv{xx}}|^{1/2}} \exp\!\left(-\tfrac{1}{2}(\vv{x}-\vv{m}_{\vrv{x}})^\top \mm{C}_{\vrv{xx}}^{-1} (\vv{x}-\vv{m}_{\vrv{x}})\right),
-\] then the joint density for \(\begin{bmatrix}\vrv{x}\\\vrv{y}\end{bmatrix}\) is written as
+\]
+and the likelihood \(p_{\vrv{y}|\vrv{x}}(\vv{y}|\vv{x})\) is similarly specified. Then the joint density is
 \begin{equation}
     p_{\vrv{x},\vrv{y}}(\vv{x},\vv{y})
     = p_{\vrv{x}}(\vv{x})\,p_{\vrv{y}|\vrv{x}}(\vv{y}|\vv{x}),
 \end{equation}
-and the conditional density is defined by
+and the conditional density is given by
 \begin{equation}
     p_{\vrv{x}|\vrv{y}}(\vv{x}|\vv{y}^*)
-    = \frac{p_{\vrv{x},\vrv{y}}(\vv{x},\vv{y}^*)}{p_{\vrv{y}}(\vv{y}^*)}
     = \frac{p_{\vrv{x}}(\vv{x})\,p_{\vrv{y}|\vrv{x}}(\vv{y}^*|\vv{x})}{\int_{\mathbb{R}^{D_{\vrv{x}}}} p_{\vrv{x}}(\vv{x}')\,p_{\vrv{y}|\vrv{x}}(\vv{y}^*|\vv{x}')\,\mathrm{d}\vv{x}'}.
 \end{equation}
 
-Thus, while our earlier sections framed the discussion in terms of probability measures \(\Law[\cdot]\), the corresponding density formulation is fully compatible. For instance, the Matheron update in density form implies that if \(\vrv{x}\) and \(\vrv{y}\) are jointly Gaussian with densities as above, then the conditional density \(p_{\vrv{x}|\vrv{y}}(\vv{x}|\vv{y}^*)\) is given by
+In our work, while we initially denote measures by \(\Law[\cdot]\) (which emphasizes their abstract nature), one can equivalently work with the densities described above. When the empirical measure \(\ELaw[\mm{X}]\) is used to represent a sample of state vectors, its density is formally written as
 \begin{equation}
-    p_{\vrv{x}|\vrv{y}}(\vv{x}|\vv{y}^*)
-    = \frac{1}{(2\pi)^{D_{\vrv{x}}/2} \,|\mm{C}_{\vrv{x}|\vrv{y}}|^{1/2}} \exp\!\Biggl(-\tfrac{1}{2}\Bigl(\vv{x} - \Bigl[\vv{m}_{\vrv{x}} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} (\vv{y}^*-\vv{m}_{\vrv{y}})\Bigr]\Bigr)^\top \mm{C}_{\vrv{x}|\vrv{y}}^{-1}\Bigl(\vv{x} - \Bigl[\vv{m}_{\vrv{x}} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} (\vv{y}^*-\vv{m}_{\vrv{y}})\Bigr]\Bigr)\Biggr),
+    p_{\text{emp}}(\vv{x}) = \frac{1}{N} \sum_{i=1}^N \delta(\vv{x}-\vv{x}^{(i)}).
 \end{equation}
-which is equivalent to saying that the random variable
-\begin{equation}
-    \vv{x} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} (\vv{y}^*-\vv{y})
-\end{equation}
-has density \(p_{\vrv{x}|\vrv{y}}(\cdot|\vv{y}^*)\), where the randomness is inherited from \(\vv{x}\) and \(\vv{y}\) distributed according to \(p_{\vrv{x},\vrv{y}}(\vv{x},\vv{y})\).
+Thus, updating the ensemble according to the empirical version of the Kalman or Matheron update can be seen as operating directly on these Dirac-based representations. In practical implementations, one does not manipulate the Dirac deltas directly; instead, one works with the sample values and their empirical moments, which—as shown earlier—are equivalent (in the limit of large \(N\)) to the full probabilistic update based on the density.
+
+This density-based view, incorporating Dirac functionals to represent empirical measures, is particularly common in machine learning, where it provides an intuitive bridge between abstract measure-theoretic probability and the concrete computations performed with finite samples.
 
 
 
