@@ -181,7 +181,7 @@ where
 &\coloneq \mm{C}_{\vrv{xx}}\,\mm{H}^\top \left(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \mm{R}\right)^{-1},
 \end{align}
 is the \emph{Kalman gain}.
-Herafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\mm{R}=\rho^2\mm{I}\).
+Herafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\mm{R}=\rho^2\mm{I}_{D_{\vrv{y}}}\).
 
 \section{Ensemble Kalman Filter}
 
@@ -207,16 +207,16 @@ The ensemble mean~\eqref{eq:ensemble_mean} and covariance~\eqref{eq:ensemble-cov
 &=\mmmean{X}\label{eq:ensemble_mean} \\
 % &\coloneq \frac{1}{N} \sum_{i=1}^{N} \vv{x}^{(i)},\\
 \widehat{\var}(\vrv{x}) \coloneq\var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x})=\widehat{\mm{C}}_{\vrv{xx}} &\coloneq \frac{1}{N-1} \sum_{i=1}^{N} \left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)\left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)^\top  \\
-&=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}),\label{eq:ensemble-covariance}
+&=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}_{D_{\vrv{x}}}),\label{eq:ensemble-covariance}
 \end{align}
 $\vv{\sigma}_{\mm{X}}^2$ is some scalar constant introduces a regularisation to the empirical covariance to ensure it is invertible.
 Abusing notation somewhat, we associate a Gaussian distribution with the empirical measure
 \begin{align}
-\ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}).
+\ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}}).
 \end{align}
 This association should be understood as a mnemonic device;
 Rigorous convergence of the convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
-For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that, approximately in some unspeficied sense, its empirical moments match the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
+For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that, approximately in some unspeficed sense, its empirical moments match the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
 \begin{align}
     \Ex_{\vrv{x}\sim \ELaw[\mm{X}']}[ \vrv{x}] &\approx \Ex_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} [\vrv{x}]\\
     \var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x}) &\approx \var_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} (\vrv{x})
@@ -241,23 +241,23 @@ This also induces an empirical estimate of the %observation prior measure $\Law[
         \mmmean{Y}
     \end{bmatrix},
     \begin{bmatrix}
-        \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I} & \mmdev{X} \mmdev{Y}^\top \\
-        \mmdev{Y} \mmdev{X}^\top  & \mmdev{Y} \mmdev{Y}^\top + \upsilon^2\mm{I}
+        \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}} & \mmdev{X} \mmdev{Y}^\top \\
+        \mmdev{Y} \mmdev{X}^\top  & \mmdev{Y} \mmdev{Y}^\top + \upsilon^2\mm{I}_{D_{\vrv{y}}}
     \end{bmatrix}
     \right).\label{eq:ensemble-joint}
 \end{align}
-Here the regularisation term $(\upsilon^2\mm{I})$ is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when $D_{\vrv{y}}>N$.
+Here the regularisation term \((\upsilon^2\mm{I}_{D_{\vrv{y}}})\) is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when \(D_{\vrv{y}}>N\).
 
 The Kalman gain in the ensemble setting is constructed by plugging in the empirical ensemble estimates \eqref{eq:ensemble-joint} to \eqref{eq:kalman-gain} obtaining
 \begin{align}
-\widehat{\mm{K}}= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \upsilon^2\mm{I} + \rho^2\mm{I}\right)^{-1}\label{eq:ensemble-kalman-gain}
+\widehat{\mm{K}}= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\,\op{H}^\top + \upsilon^2\mm{I}_{D_{\vrv{y}}} + \rho^2\mm{I}_{D_{\vrv{y}}}\right)^{-1}\label{eq:ensemble-kalman-gain}
 \end{align}
-where \(\rho^2\mm{I}\) is the observation error covariance matrix.
+where \(\rho^2\mm{I}_{D_{\vrv{y}}}\) is the observation error covariance matrix.
 The term
-$\upsilon^2\mm{I}$ comes from the regularization of the empirical observation covariance (as defined by the ensemble of
-$\mm{Y}$), while $\rho^2\mm{I}$ represents the known covariance of the observation noise.
+\(\upsilon^2\mm{I}_{D_{\vrv{y}}}\) comes from the regularization of the empirical observation covariance (as defined by the ensemble of
+\(\mm{Y}\)), while \(\rho^2\mm{I}_{D_{\vrv{y}}}\) represents the known covariance of the observation noise.
 Combining these two gives the effective covariance in the observation space.
-For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}\).
+For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\).
 We also define
 $\mm{Y}^* = \vv{y}^* \mathbf{1}^\top,$
 so that each column of \(\mm{Y}^*\) equals the observation \(\vv{y}^*\). Then, the analysis update for the ensemble is
@@ -265,19 +265,19 @@ so that each column of \(\mm{Y}^*\) equals the observation \(\vv{y}^*\). Then, t
     \mm{X}' &= \mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\mm{X}\right).\label{eq:ensemble-update}
 \end{align}
 i.e. each ensemble member is updated
-$\vv{x}^{(i)}{}' \gets \vv{x}^{(i)} + \widehat{\mm{K}} \left(\vv{y}^* - \op{H}\,\vv{x}^{(i)}\right).$
+\(\vv{x}^{(i)}{}' \gets \vv{x}^{(i)} + \widehat{\mm{K}} \left(\vv{y}^* - \op{H}\,\vv{x}^{(i)}\right).\)
 Equating moments, we see that
-$\ELaw[\vrv{x}\sim \mm{X}']
+\(\ELaw[\vrv{x}\sim \mm{X}']
 % \Law\left\{\mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\,\mm{X}\right)\right\}.
-\approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*]$ as desired.
+\approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*] \) as desired.
 That is, the EnKF analysis equations \eqref{eq:ensemble-kalman-gain} and \eqref{eq:ensemble-update} can be justified in terms of an empirical approximation to the Gaussian posterior update.
 
 \section{Empirical Matheron Update is equvalent to Ensemble Kalman Update}
 We now have a trivial equivalence of the Matheron update and the EnKF analysis step.
 Under the substitution
 \begin{align}
-    \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I},\\
-    \vv{m}_{\vrv{y}} &\to \mmmean{Y}, & \mm{C}_{\vrv{yy}} &\to \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I},\\
+    \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}},\\
+    \vv{m}_{\vrv{y}} &\to \mmmean{Y}, & \mm{C}_{\vrv{yy}} &\to \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}},\\
     \mm{C}_{\vrv{xy}} &\to \mmdev{X} \mmdev{Y}^\top, & \mm{C}_{\vrv{yx}} &\to \mmdev{Y} \mmdev{X}^\top,
 \end{align}
 the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble update~\eqref{eq:ensemble-update}.
@@ -287,24 +287,18 @@ As is well understood in the EnKF literature, part of the  utility  of the EnKF 
 In contrast, the naive Kalman update must operate directly on these full covariance matrices, which can be prohibitively expensive in high-dimensional settings.
 This is uneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensemble-kalman-gain} as
 \begin{align}
-    \widehat{\mm{K}}&= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \gamma^2\mm{I}\right)^{-1}\\
+    \widehat{\mm{K}}&= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\,\op{H}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\right)^{-1}\\
     &= \mmdev{X} \mmdev{Y}^\top   \left(
-        \mmdev{Y} \mmdev{Y}^\top + \gamma^2 \mm{I}
+        \mmdev{Y} \mmdev{Y}^\top + \gamma^2 \mm{I}_{D_{\vrv{y}}}
     \right)^{-1}\\
-    % &= \gamma^{-2}\mm{I}
-    % - \gamma^{-2}\mm{I}\mmdev{Y}
-    % \left(
-    %     \mm{I} + \mmdev{Y}^\top(\gamma^{-2}\mm{I})\mmdev{Y}
-    % \right)^{-1}
-    % \mmdev{Y}^\top\mm{I}\gamma^{-2}\\
-    &= \gamma^{-2}\mm{I}
+    &= \gamma^{-2}\mm{I}_{D_{\vrv{y}}}
     - \gamma^{-4}\mmdev{Y}
     \left(
-        \mm{I} + \gamma^{-2}\mmdev{Y}^\top\mmdev{Y}
+        \mm{I}_N + \gamma^{-2}\mmdev{Y}^\top\mmdev{Y}
     \right)^{-1}
     \mmdev{Y}^\top
 \end{align}
-where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}\)) and the intrinsic observation noise (\(\rho^2\mm{I}\)).
+where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}_{D_{\vrv{y}}}\)) and the intrinsic observation noise (\(\rho^2\mm{I}_{D_{\vrv{y}}}\)).
 
 Let us break down the cost of this ensemble update:
 
@@ -313,7 +307,7 @@ Let us break down the cost of this ensemble update:
     Multiplying the \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) by its transpose (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{y}}N^2)\) operations.
 
     \item \textbf{Inversion of the \(N\times N\) Matrix:}
-    Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}\) costs \(O(N^3)\) operations.
+    Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}_N\) costs \(O(N^3)\) operations.
 
     \item \textbf{Matrix Multiplications to Form the Gain:}
     Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix contribute a further \(O(D_{\vrv{y}}N^2)\) operations.
@@ -330,9 +324,9 @@ By carefully ordering operations to work with the \(N\times N\) system, we thus 
 % \paragraph{Cost of the Naive Kalman Update:}
 In a traditional Kalman filter, one computes the Kalman gain as
 \[
-\mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}\Bigr)^{-1}.
+\mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\Bigr)^{-1}.
 \]
-Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
+Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
 
 % \paragraph{Summary:}
 The ensemble-based approach reduces the expensive inversion from an \(O(D_{\vrv{y}}^3)\) operation to one involving an \(N\times N\) matrix (costing \(O(N^3)\)), with additional costs \(O(D_{\vrv{y}}N^2)\) and \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) from matrix multiplications. In contrast, the naive Kalman update requires inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix, which is significantly costlier when \(N \ll D_{\vrv{y}}\).
