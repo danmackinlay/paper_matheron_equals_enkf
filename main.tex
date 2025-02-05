@@ -339,7 +339,9 @@ If we understand the pathwise update of the Matheron in the setting of the empir
 The literature of the EnKF is vast, and we have only scratched the surface of the many variants and extensions that have been proposed.
 Man of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
 For example, it provides a clear probabilistic interpretation of the ensemble update that may inspire improved regularization and localization strategies.
-For example the Local Ensemble Transform Klaman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional fitlering an system identification settings, and could be adapted to the Matheron update.
+For one example, the Local Ensemble Transform Kalman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional fitlering an system identification settings, and could be adapted to the Matheron update.
+
+By recasting the EnKF update as an empirical Matheron update, we’ve exposed a straightforward, unifying mechanism behind two seemingly different approaches. This connection cuts through the usual complexity and suggests that many of the practical tricks developed for the EnKF—like improved regularization—could be reinterpreted and possibly enhanced when applied to Gaussian process problems. It’s a reminder that sometimes a simple change in perspective can open up entirely new avenues for improvement.
 
 
 \bibliography{refs}
@@ -365,7 +367,7 @@ Instead, we hope to reassure machine-learners that the two are equivalent in thi
 
 In many practical settings, we work with a finite sample \(\{\vv{x}^{(i)}\}_{i=1}^N\) drawn from the true distribution \(p_{\vrv{x}}(\vv{x})\). The empirical measure associated with this sample is defined as
 \begin{equation}
-    \widehat{P}_{\vrv{x}}(A) = \frac{1}{N} \sum_{i=1}^N \mathbf{1}_A(\vv{x}^{(i)}),
+    \ELaw[\mm{X}](A) = \frac{1}{N} \sum_{i=1}^N \mathbf{1}_A(\vv{x}^{(i)}),
 \end{equation}
 where \(\mathbf{1}_A\) is the indicator function for the set \(A\). When we wish to express the empirical measure in density notation (with respect to the Lebesgue measure), we represent it as a sum of Dirac delta functions:
 \begin{equation}
@@ -402,14 +404,17 @@ and the conditional density is given by
     = \frac{p_{\vrv{x}}(\vv{x})\,p_{\vrv{y}|\vrv{x}}(\vv{y}^*|\vv{x})}{\int_{\mathbb{R}^{D_{\vrv{x}}}} p_{\vrv{x}}(\vv{x}')\,p_{\vrv{y}|\vrv{x}}(\vv{y}^*|\vv{x}')\,\mathrm{d}\vv{x}'}.
 \end{equation}
 
-In our work, while we initially denote measures by \(\Law[\cdot]\) (which emphasizes their abstract nature), one can equivalently work with the densities described above. When the empirical measure \(\ELaw[\mm{X}]\) is used to represent a sample of state vectors, its density is formally written as
-\begin{equation}
-    p_{\text{emp}}(\vv{x}) = \frac{1}{N} \sum_{i=1}^N \delta(\vv{x}-\vv{x}^{(i)}).
-\end{equation}
-Thus, updating the ensemble according to the empirical version of the Kalman or Matheron update can be seen as operating directly on these Dirac-based representations. In practical implementations, one does not manipulate the Dirac deltas directly; instead, one works with the sample values and their empirical moments, which—as shown earlier—are equivalent (in the limit of large \(N\)) to the full probabilistic update based on the density.
+In our work, while we initially denote measures by \(\Law[\cdot]\) (which emphasizes their abstract nature), one can equivalently work with the densities described above.
+% When the empirical measure \(\ELaw[\mm{X}]\) is used to represent a sample of state vectors, its density is formally written as
+% \begin{equation}
+%     p_{\text{emp}}(\vv{x}) = \frac{1}{N} \sum_{i=1}^N \delta(\vv{x}-\vv{x}^{(i)}).
+% \end{equation}
+Thus, updating the ensemble according to the empirical version of the Kalman or Matheron update can be seen as operating directly on these Dirac-based representations.
+In practical implementations, one does not manipulate the Dirac deltas directly; instead, one works with the sample values and their empirical moments, which—as shown earlier—are equivalent (in the limit of large \(N\)) to the full probabilistic update based on the density.
 
 This density-based view, incorporating Dirac functionals to represent empirical measures, is particularly common in machine learning, where it provides an intuitive bridge between abstract measure-theoretic probability and the concrete computations performed with finite samples.
 
+The need to throw around integrals, introduce  and worry about density normalisation and so on, we find a little distracting and thus it is not used in the main text.
 
 
 \end{document}
