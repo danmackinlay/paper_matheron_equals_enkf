@@ -188,9 +188,9 @@ The Ensemble Kalman Filter (EnKF) addresses this issue by representing the belie
 \begin{align}
     \mm{X} = \begin{bmatrix} \vv{x}^{(1)} & \vv{x}^{(2)} & \cdots & \vv{x}^{(N)} \end{bmatrix},
 \end{align}
-and substituting the empirical measure $\ELaw[\mm{X}]\approx \Law$.
+and working with the empirical measure $\ELaw[\mm{X}]\approx \Law$.
 
-In the Gaussian setting a measure is specified entirely by its first two moments, so we aim to construct empirical measures which match the desired target in terms of these moments.
+Gaussian measures are specified entirely by their first two moments, so we aim to construct empirical measures which match the desired target in terms of these moments.
 For convenience, we introduce notation for respectivel matrix mean and deviations,
 \begin{align}
     \mmmean{X} \coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i),}
@@ -208,13 +208,13 @@ The ensemble mean~\eqref{eq:ensemble_mean} and covariance~\eqref{eq:ensemble-cov
 &=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}_{D_{\vrv{x}}}),\label{eq:ensemble-covariance}
 \end{align}
 $\vv{\sigma}_{\mm{X}}^2$ is some scalar constant introduces a regularisation to the empirical covariance to ensure it is invertible.
-Abusing notation somewhat, we associate a Gaussian distribution with the empirical measure
+Abusing notation, we associate a Gaussian distribution with the empirical measure
 \begin{align}
 \ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}}).
 \end{align}
 This association should be understood as a mnemonic device;
 Rigorous convergence of the convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
-For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that, approximately in some unspeficed sense, its empirical moments match the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
+For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that its empirical moments approximate the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
 \begin{align}
     \Ex_{\vrv{x}\sim \ELaw[\mm{X}']}[ \vrv{x}] &\approx \Ex_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} [\vrv{x}]\\
     \var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x}) &\approx \var_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} (\vrv{x})
