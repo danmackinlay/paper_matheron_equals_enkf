@@ -17,9 +17,9 @@
 
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems.
-In this paper, we show that the ensemble update step of the EnKF is equivalent to a an empirical version of the Matheron update for popular in the study of Gaussian process regression.
+In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical version of the Matheron update popular in the study of Gaussian process regression.
 
-While this connection is simple, it seems not to be widely known,  the literature about each technique seems distinct, and connections between the methods are not exploited.
+While this connection is simple, it seems not to be widely known, the literature about each technique seems distinct, and connections between the methods are not exploited.
 This paper exists to provide an informal introduction to the connection, with the necessary definitions so that it is intelligible to as broad an audience as possible.
 \end{abstract}
 
@@ -41,7 +41,7 @@ We write random variates sans serif, $\vrv{x}$.
 Equality in distribution is $\disteq$.
 The law, or measure, of a random variate $\vrv{x}$ is denoted $\Law[\vrv{x}]$,
 so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
-Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law$.
+Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law[\vrv[x]]$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
 When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).\footnote{This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts where densities are usually implied.
 We include a translation in Appendix~\ref{sec:densities-please}.}
@@ -79,7 +79,6 @@ the conditional $\vrv{x} | \vrv{y} {=} \vv{y}^*$ is equal in distribution to
             &= \var \left(\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right) \\
             &= \mm{C}_{\vrv{xx}} - \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \mm{C}_{\vrv{yx}}. \label{eq:conditional-cov}
     \end{align}
-    % The sample $\vv{x}$ is drawn from $\Normal(\vv{m}_{\vrv{x}\gvn\vrv{y}}, \mm{C}_{\vrv{x}\gvn\vrv{y}})$.
 Taking moments of the right hand side of \eqref{eq:matheron-update}
 \begin{align}
 \Ex\left[\vrv{x}+\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})\right]
@@ -98,11 +97,8 @@ we see that both first and second moments match.
 Since $\Law\left\{\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right\}$ and
 $\Normal(\vv{m}_{\vrv{x}\gvn\vrv{y}}, \mm{C}_{\vrv{x}\gvn\vrv{y}})$ are Gaussian distributions with the same moments, they define the same distribution.
 \end{proof}
-% Note that this update does not require us to calculate \(\mm{C}_{\vrv{x}\vrv{x}} \)
-% and further, may be conducted without needing to evaluate the density of the observation.
 
-This \emph{pathwise} approach to conditioning Gaussian variates has gained currency in machine learning as a tool for sampling and inference in Gaussian proccesses \citep{Wilson2020Efficiently,Wilson2021Pathwise}, notably in generalising to challenging domains such as Riemannian manifolds~\citep{Borovitskiy2020Matern}.
-
+This \emph{pathwise} approach to conditioning Gaussian variates has gained currency in machine learning as a tool for sampling and inference in Gaussian processes \citep{Wilson2020Efficiently,Wilson2021Pathwise}, notably in generalising to challenging domains such as Riemannian manifolds~\citep{Borovitskiy2020Matern}.
 
 \section{Kalman Filter}
 We begin by recalling that in state filtering the goal is to update our estimate of the system state when a new observation becomes available. In a general filtering problem the objective is to form the posterior distribution \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t, \vv{y}^*]\) from the prior \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t]\) by incorporating the new information in the observation \(\vv{y}^*\).
@@ -116,10 +112,6 @@ We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$
         \vrv{x}\\
         \op{H}(\vrv{x})
     \end{bmatrix}\label{eq:joint-law}
-    % \eqcolon\Law \left( \begin{bmatrix}
-    %     \vrv{x}\\
-    %     \vrv{y}
-    % \end{bmatrix}\right)
 \end{align}
 which is determined by the prior state distribution $\Law[\vrv{x}]$ and the observation operator $\op{H}$.
 The  \emph {analysis} step, in state filtering parlance, is the update at time $t$ of  \(\Law[\vrv{x}_{t}]\), into the posterior \( \Law[\vrv{x}_t \gvn (\vrv{y}_t{=}\vv{y}_t^*)]\)
@@ -184,14 +176,14 @@ Herafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\m
 \section{Ensemble Kalman Filter}
 
 In high-dimensional or nonlinear settings, directly computing these posterior updates is often intractable.
-The Ensemble Kalman Filter (EnKF) addresses this issue by representing the belief about the state empirically,  via an ensemble of \(N\) state vectors sampled from the prior distribution,
+The Ensemble Kalman Filter (EnKF) addresses this issue by representing the belief about the state empirically, via an ensemble of \(N\) state vectors sampled from the prior distribution,
 \begin{align}
     \mm{X} = \begin{bmatrix} \vv{x}^{(1)} & \vv{x}^{(2)} & \cdots & \vv{x}^{(N)} \end{bmatrix},
 \end{align}
 and working with the empirical measure $\ELaw[\mm{X}]\approx \Law$.
 
 Gaussian measures are specified entirely by their first two moments, so we aim to construct empirical measures which match the desired target in terms of these moments.
-For convenience, we introduce notation for respectivel matrix mean and deviations,
+For convenience, we introduce notation for, respectively, matrix mean and deviations,
 \begin{align}
     \mmmean{X} \coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i),}
     \quad\quad
@@ -199,22 +191,21 @@ For convenience, we introduce notation for respectivel matrix mean and deviation
      \label{eq:deviation_matrix}
 \end{align}
 where \(\vv{1}^\top\) is a row vector of \(N\) ones.
-The ensemble mean~\eqref{eq:ensemble_mean} and covariance~\eqref{eq:ensemble-covariance}  are computed from the empirical measure,
+The ensemble mean~\eqref{eq:ensemble_mean} and covariance~\eqref{eq:ensemble-covariance} are computed from the empirical measure,
 \begin{align}
     \widehat{\Ex}[\vrv{x}]\coloneq \Ex_{\vrv{x}\sim \ELaw[\mm{X}]}[ \vrv{x}] =\widehat{\vv{m}}_{\vrv{x}}
 &=\mmmean{X}\label{eq:ensemble_mean} \\
-% &\coloneq \frac{1}{N} \sum_{i=1}^{N} \vv{x}^{(i)},\\
 \widehat{\var}(\vrv{x}) \coloneq\var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x})=\widehat{\mm{C}}_{\vrv{xx}} &\coloneq \frac{1}{N-1} \sum_{i=1}^{N} \left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)\left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)^\top  \\
 &=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}_{D_{\vrv{x}}}),\label{eq:ensemble-covariance}
 \end{align}
-$\vv{\sigma}_{\mm{X}}^2$ is some scalar constant introduces a regularisation to the empirical covariance to ensure it is invertible.
+where \(\xi^2\) is a scalar constant that introduces a regularisation to the empirical covariance to ensure it is invertible.
 Abusing notation, we associate a Gaussian distribution with the empirical measure
 \begin{align}
 \ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}}).
 \end{align}
 This association should be understood as a mnemonic device;
-Rigorous convergence of the convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
-For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that its empirical moments approximate the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
+rigorous convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
+For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find a new ensemble $\mm{X}'$ such that its empirical moments approximate the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
 \begin{align}
     \Ex_{\vrv{x}\sim \ELaw[\mm{X}']}[ \vrv{x}] &\approx \Ex_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} [\vrv{x}]\\
     \var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x}) &\approx \var_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} (\vrv{x})
@@ -223,13 +214,7 @@ We overload the observation operator to apply to ensemble matrices, writing
 \begin{align}
     \mm{Y}\coloneq\op{H}\mm{X} &\coloneq \begin{bmatrix}\op{H}(\vv{x}^{(1)}) & \op{H}(\vv{x}^{(2)})& \dots& \op{H}(\vv{x}^{(N)})\end{bmatrix}.
 \end{align}
-This also induces an empirical estimate of the %observation prior measure $\Law[\vrv{y}]$,
-% \begin{align}
-    % \ELaw[\mm{Y}]
-    % \coloneq \Normal(\mmmean{Y}, \mmdev{Y} \mmdev{Y}^\top + (\upsilon^2\mm{I})).
-% \end{align}
-% and in fact an
- empirical joint
+This also induces an empirical joint
 \begin{align}
     \ELaw[{\left[\begin{smallmatrix}
         \mm{X}\\
@@ -244,7 +229,7 @@ This also induces an empirical estimate of the %observation prior measure $\Law[
     \end{bmatrix}
     \right).\label{eq:ensemble-joint}
 \end{align}
-Here the regularisation term \((\upsilon^2\mm{I}_{D_{\vrv{y}}})\) is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when \(D_{\vrv{y}}>N\).
+Here the regularisation term \(\upsilon^2\mm{I}_{D_{\vrv{y}}}\) is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when \(D_{\vrv{y}}>N\).
 
 The Kalman gain in the ensemble setting is constructed by plugging in the empirical ensemble estimates \eqref{eq:ensemble-joint} to \eqref{eq:kalman-gain} obtaining
 \begin{align}
@@ -266,11 +251,10 @@ i.e. each ensemble member is updated
 \(\vv{x}^{(i)}{}' \gets \vv{x}^{(i)} + \widehat{\mm{K}} \left(\vv{y}^* - \op{H}\,\vv{x}^{(i)}\right).\)
 Equating moments, we see that
 \(\ELaw[\vrv{x}\sim \mm{X}']
-% \Law\left\{\mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\,\mm{X}\right)\right\}.
 \approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*] \) as desired.
 That is, the EnKF analysis equations \eqref{eq:ensemble-kalman-gain} and \eqref{eq:ensemble-update} can be justified in terms of an empirical approximation to the Gaussian posterior update.
 
-\section{Empirical Matheron Update is equvalent to Ensemble Kalman Update}
+\section{Empirical Matheron Update is equivalent to Ensemble Kalman Update}
 Under the substitution
 \begin{align}
     \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}},\\
@@ -282,7 +266,7 @@ the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble
 \section{Computational Complexity}
 As is well understood in the EnKF literature, part of the  utility  of the EnKF lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
 In contrast, the naive Kalman update must operate directly on these full covariance matrices, which can be prohibitively expensive in high-dimensional settings.
-This is uneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensemble-kalman-gain} as
+This is unneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensemble-kalman-gain} as
 \begin{align}
     \widehat{\mm{K}}&= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\,\op{H}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\right)^{-1}\\
     &= \mmdev{X} \mmdev{Y}^\top   \left(
@@ -297,37 +281,12 @@ This is uneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensembl
 \end{align}
 where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}_{D_{\vrv{y}}}\)) and the intrinsic observation noise (\(\rho^2\mm{I}_{D_{\vrv{y}}}\)).
 %
-% Let us break down the cost of this ensemble update:
-
-% \begin{enumerate}
-%     \item \textbf{Forming the Empirical Covariance:}
-%     Multiplying the \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) by its transpose (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{y}}N^2)\) operations.
-
-%     \item \textbf{Inversion of the \(N\times N\) Matrix:}
-%     Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}_N\) costs \(O(N^3)\) operations.
-
-%     \item \textbf{Matrix Multiplications to Form the Gain:}
-%     Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix contribute a further \(O(D_{\vrv{y}}N^2)\) operations.
-% \end{enumerate}
-%
-% Summing these contributions, the overall computational cost of the ensemble update is
 The overall computational cost of the ensemble update is thus
 \[
     \mathcal{O}\left(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\right).
 \]
 Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update which is dominated by \(\mathcal{O}(D_{\vrv{y}}^3)\) operations.
 By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
-
-% % \paragraph{Cost of the Naive Kalman Update:}
-% In a traditional Kalman filter, one computes the Kalman gain as
-% \[
-% \mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\Bigr)^{-1}.
-% \]
-% Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
-
-% % \paragraph{Summary:}
-% The ensemble-based approach reduces the expensive inversion from an \(O(D_{\vrv{y}}^3)\) operation to one involving an \(N\times N\) matrix (costing \(O(N^3)\)), with additional costs \(O(D_{\vrv{y}}N^2)\) and \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) from matrix multiplications. In contrast, the naive Kalman update requires inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix, which is significantly costlier when \(N \ll D_{\vrv{y}}\).
-
 
 \section{Conclusion and Implications}
 
@@ -337,12 +296,11 @@ Both have witnessed many developments in the Bayesian Machine learning setting
 If we understand the pathwise update of the Matheron in the setting of the empirical measures used in Ensemble Kalman filters, this suggests the potential to import developments from each of these to the other.
 
 The literature of the EnKF is vast, and we have only scratched the surface of the many variants and extensions that have been proposed.
-Man of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
+Many of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
 For example, it provides a clear probabilistic interpretation of the ensemble update that may inspire improved regularization and localization strategies.
-For one example, the Local Ensemble Transform Kalman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional fitlering an system identification settings, and could be adapted to the Matheron update.
+For one example, the Local Ensemble Transform Kalman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional filtering and system identification settings, and could be adapted to the Matheron update.
 
 By recasting the EnKF update as an empirical Matheron update, we’ve exposed a straightforward, unifying mechanism behind two seemingly different approaches. This connection cuts through the usual complexity and suggests that many of the practical tricks developed for the EnKF—like improved regularization—could be reinterpreted and possibly enhanced when applied to Gaussian process problems. It’s a reminder that sometimes a simple change in perspective can open up entirely new avenues for improvement.
-
 
 \bibliography{refs}
 
@@ -360,7 +318,7 @@ The expectation of any measurable function \(f:\mathbb{R}^{D_{\vrv{x}}}\to\mathb
     \Ex[f(\vrv{x})] = \int_{\mathbb{R}^{D_{\vrv{x}}}} f(\vv{x})\,p_{\vrv{x}}(\vv{x})\,\mathrm{d}\vv{x}.
 \end{equation}
 
-We can write out the results of this paper in terms of densities, but since the primary object of our interst is the empirical measure and the moments of the theoretical and empirical measures, densities are not strictly necessary and result in a rather longer exposition.
+We can write out the results of this paper in terms of densities, but since the primary object of our interest is the empirical measure and the moments of the theoretical and empirical measures, densities are not strictly necessary and result in a rather longer exposition.
 Instead, we hope to reassure machine-learners that the two are equivalent in this appendix.
 
 \subsection*{Dirac Functionals and Empirical Measures}
@@ -405,16 +363,11 @@ and the conditional density is given by
 \end{equation}
 
 In our work, while we initially denote measures by \(\Law[\cdot]\) (which emphasizes their abstract nature), one can equivalently work with the densities described above.
-% When the empirical measure \(\ELaw[\mm{X}]\) is used to represent a sample of state vectors, its density is formally written as
-% \begin{equation}
-%     p_{\text{emp}}(\vv{x}) = \frac{1}{N} \sum_{i=1}^N \delta(\vv{x}-\vv{x}^{(i)}).
-% \end{equation}
 Thus, updating the ensemble according to the empirical version of the Kalman or Matheron update can be seen as operating directly on these Dirac-based representations.
 In practical implementations, one does not manipulate the Dirac deltas directly; instead, one works with the sample values and their empirical moments, which—as shown earlier—are equivalent (in the limit of large \(N\)) to the full probabilistic update based on the density.
 
 This density-based view, incorporating Dirac functionals to represent empirical measures, is particularly common in machine learning, where it provides an intuitive bridge between abstract measure-theoretic probability and the concrete computations performed with finite samples.
 
-The need to throw around integrals, introduce  and worry about density normalisation and so on, we find a little distracting and thus it is not used in the main text.
-
+The need to throw around integrals, introduce and worry about density normalisation and so on, we find a little distracting and thus it is not used in the main text.
 
 \end{document}
