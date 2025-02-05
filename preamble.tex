@@ -15,6 +15,8 @@
 \usepackage{listings}       % source code listings
 \usepackage[normalem]{ulem} % underline/strikeout (remove before final submission)
 \usepackage[]{todonotes}    % inline todo notes (optional)
+\usepackage{orcidlink}
+\usepackage{xparse}
 
 % TikZ for diagrams (if needed)
 \usepackage{tikz}
@@ -51,21 +53,14 @@
 \newcommand{\solop}{\mathcal{G}^{\dagger}}
 %
 % Measure notation commands:
-\newcommand{\Law}[1][]{%
-  \mu%
-  \if\relax\detokenize{#1}\relax
-  \else
-    _{#1}%
-  \fi
-}
-\newcommand{\ELaw}[1][]{%
-  \widehat{\mu}%
-  \if\relax\detokenize{#1}\relax
-  \else
-    _{#1}%
-  \fi
+
+\NewDocumentCommand{\Law}{o}{%
+  \mu\IfValueT{#1}{_{#1}}%
 }
 
+\NewDocumentCommand{\ELaw}{o}{%
+  \widehat{\mu}\IfValueT{#1}{_{#1}}%
+}
 % Independence symbol
 \newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
