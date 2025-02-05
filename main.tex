@@ -32,7 +32,7 @@ This approach is well-established in geostatistics and spatial statistics but th
 
 In this work, we establish that the ensemble update step in the EnKF is equivalent to an empirical Matheron update, by putting them on a common probabilistic footing.
 By explicitly representing the ensemble mean and covariance using empirical approximations, we demonstrate this equivalence.
-Recognizing this connection provides an alternative  probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
+Recognizing this connection provides an alternative probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
 Conversely, the analytic Matheron updates in the literature could benefit from the many computational optimisations arising from the data assimilation community.
 
 \subsection{Notation}
@@ -40,13 +40,13 @@ Conversely, the analytic Matheron updates in the literature could benefit from t
 We write random variates sans serif, $\vrv{x}$.
 Equality in distribution is $\disteq$.
 The law, or measure, of a random variate $\vrv{x}$ is denoted $\Law[\vrv{x}]$,
-Thus $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
+so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
 Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
-Where there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).
+When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).
 
-This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts who prefer densities to be implied for all random variables.
-We attempt a translation table in apprendix~\ref{sec:densities-please}.
+This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts where densities are usually implied.
+We include a translation in Appendix~\ref{sec:densities-please}.
 
 \section{Matheron Update}
 
@@ -94,8 +94,7 @@ Taking moments of the right hand side of \eqref{eq:matheron-update}
     +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))^{\top}\\
 &=\mm{C}_{\vrv{x}\vrv{x}} +\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}
 -  2\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}\\
-&=\mm{C}_{\vrv{x}\vrv{x}} -\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}\\
-&=\mm{C}_{\vrv{x}\gvn\vrv{y}}
+&=\mm{C}_{\vrv{x}\vrv{x}} -\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}} =\mm{C}_{\vrv{x}\gvn\vrv{y}}
 \end{align}
 we see that both first and second moments match.
 Since $\Law\left\{\vrv{x} \gvn \vrv{y} {=} \vv{y}^*\right\}$ and
@@ -108,9 +107,9 @@ This \emph{pathwise} approach to conditioning Gaussian variates has gained curre
 
 
 \section{Kalman Filter}
-We begin by recalling that in state filtering the goal is to update our estimate of the system state when a new observation becomes available. In a general filtering problem the objective is to form the posterior distribution \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t, \vv{y}^*]\) from the prior \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t]\) updating with  the new information in the observation \(\vv{y}^*\).
+We begin by recalling that in state filtering the goal is to update our estimate of the system state when a new observation becomes available. In a general filtering problem the objective is to form the posterior distribution \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t, \vv{y}^*]\) from the prior \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t]\) by incorporating the new information in the observation \(\vv{y}^*\).
 
-We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$ are a priori related to state \vrv{x} by $\vrv{y}=\op{H}(\vrv{x}\vrv)$; Thus there exists a joint law for the prior random vector
+We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$ are a priori related to state $\vrv{x}$ by $\vrv{y}=\op{H}(\vrv{x}\vrv)$; Thus there exists a joint law for the prior random vector
 \begin{align}
     \begin{bmatrix}
         \vrv{x}\\
@@ -182,7 +181,6 @@ where
 &\coloneq \mm{C}_{\vrv{xx}}\,\mm{H}^\top \left(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \mm{R}\right)^{-1},
 \end{align}
 is the \emph{Kalman gain}.
-
 Herafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\mm{R}=\rho^2\mm{I}\).
 
 \section{Ensemble Kalman Filter}
@@ -194,32 +192,31 @@ The Ensemble Kalman Filter (EnKF) addresses this issue by representing the belie
 \end{align}
 and substituting the empirical measure $\ELaw[\mm{X}]\approx \Law$.
 
-In the Gaussian setting a measure is specified entirely by its first two moments, so we aim to cosntruct empirical measures which match the desired target in terms of these moments.
-For convenience, we introduce notation for matrix mean,
+In the Gaussian setting a measure is specified entirely by its first two moments, so we aim to construct empirical measures which match the desired target in terms of these moments.
+For convenience, we introduce notation for respectivel matrix mean and deviations,
 \begin{align}
-\mmmean{X} &\coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i)}
-\end{align}
-and the deviation matrix,
-\begin{align}
-\mmdev{X} &\coloneq \frac{1}{\sqrt{N-1}} \left( \mm{X} - \mmmean{X} \vv{1}^\top \right), \label{eq:deviation_matrix}
+    \mmmean{X} \coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i),}
+    \quad\quad
+    \mmdev{X} \coloneq \frac{1}{\sqrt{N-1}} \Bigl( \mm{X} - \mmmean{X}\,\vv{1}^\top \Bigr)
+     \label{eq:deviation_matrix}
 \end{align}
 where \(\vv{1}^\top\) is a row vector of \(N\) ones.
-The ensemble mean and covariance ae computed from the empirical measure,
+The ensemble mean~\eqref{eq:ensemble_mean} and covariance~\eqref{eq:ensemble-covariance}  are computed from the empirical measure,
 \begin{align}
     \widehat{\Ex}[\vrv{x}]\coloneq \Ex_{\vrv{x}\sim \ELaw[\mm{X}]}[ \vrv{x}] =\widehat{\vv{m}}_{\vrv{x}}
-&=\mmmean{X}\label{eq:ensemble_mean} & \text{ ensemble mean}\\
+&=\mmmean{X}\label{eq:ensemble_mean} \\
 % &\coloneq \frac{1}{N} \sum_{i=1}^{N} \vv{x}^{(i)},\\
 \widehat{\var}(\vrv{x}) \coloneq\var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x})=\widehat{\mm{C}}_{\vrv{xx}} &\coloneq \frac{1}{N-1} \sum_{i=1}^{N} \left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)\left(\vv{x}^{(i)} - \widehat{\vv{m}}_{\vrv{x}}\right)^\top  \\
-&=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}),&\text{ ensemble covariance}  \label{eq:ensemble-covariance}
+&=\mmdev{X} \mmdev{X}^\top + (\xi^2\mm{I}),\label{eq:ensemble-covariance}
 \end{align}
 $\vv{\sigma}_{\mm{X}}^2$ is some scalar constant introduces a regularisation to the empirical covariance to ensure it is invertible.
 Abusing notation somewhat, we associate a Gaussian distribution with the empirical measure
 \begin{align}
 \ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}).
 \end{align}
-This association should be understood purely as a mnemonic device rather than a precise claim about convergence in some metric.
-Rigorous convergence of the convergence of such empirical measures to the true distribution is beyond the scope of this short note, but much studied and rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
-For now, we regard a posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that, approximately, its empirical moments match the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
+This association should be understood as a mnemonic device;
+Rigorous convergence of the convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
+For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find  new ensemble $\mm{X}'$ such that, approximately in some unspeficied sense, its empirical moments match the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
 \begin{align}
     \Ex_{\vrv{x}\sim \ELaw[\mm{X}']}[ \vrv{x}] &\approx \Ex_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} [\vrv{x}]\\
     \var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x}) &\approx \var_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} (\vrv{x})
@@ -228,12 +225,13 @@ We overload the observation operator to apply to ensemble matrices, writing
 \begin{align}
     \mm{Y}\coloneq\op{H}\mm{X} &\coloneq \begin{bmatrix}\op{H}(\vv{x}^{(1)}) & \op{H}(\vv{x}^{(2)})& \dots& \op{H}(\vv{x}^{(N)})\end{bmatrix}.
 \end{align}
-This also induces an empirical estimate of the observation prior measure $\Law[\vrv{y}]$,
-\begin{align}
-    \ELaw[\mm{Y}]
-    \coloneq \Normal(\mmmean{Y}, \mmdev{Y} \mmdev{Y}^\top + (\upsilon^2\mm{I})).
-\end{align}
-and in fact an empirical joint
+This also induces an empirical estimate of the %observation prior measure $\Law[\vrv{y}]$,
+% \begin{align}
+    % \ELaw[\mm{Y}]
+    % \coloneq \Normal(\mmmean{Y}, \mmdev{Y} \mmdev{Y}^\top + (\upsilon^2\mm{I})).
+% \end{align}
+% and in fact an
+ empirical joint
 \begin{align}
     \ELaw[{\left[\begin{smallmatrix}
         \mm{X}\\
@@ -250,12 +248,6 @@ and in fact an empirical joint
 \end{align}
 Here the regularisation term $(\upsilon^2\mm{I})$ is introduced to ensure the empirical covariance is invertible, given that the ensemble of observations is typically rank deficient when $D_{\vrv{y}}>N$.
 
-When a new observation \(\vv{y}^*\) is available, we form a corresponding observation ensemble.
-This is achieved by setting
-\[
-\mm{Y}^* = \vv{y}^* \mathbf{1}^\top,
-\]
-so that each column of \(\mm{Y}^*\) equals \(\vv{y}^*\).
 The Kalman gain in the ensemble setting is constructed by plugging in the empirical ensemble estimates \eqref{eq:ensemble-joint} to \eqref{eq:kalman-gain} obtaining
 \begin{align}
 \widehat{\mm{K}}= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top + \upsilon^2\mm{I} + \rho^2\mm{I}\right)^{-1}\label{eq:ensemble-kalman-gain}
@@ -266,26 +258,22 @@ $\upsilon^2\mm{I}$ comes from the regularization of the empirical observation co
 $\mm{Y}$), while $\rho^2\mm{I}$ represents the known covariance of the observation noise.
 Combining these two gives the effective covariance in the observation space.
 For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}\).
-
-Finally, the analysis update for the ensemble is performed by
+We also define
+$\mm{Y}^* = \vv{y}^* \mathbf{1}^\top,$
+so that each column of \(\mm{Y}^*\) equals the observation \(\vv{y}^*\). Then, the analysis update for the ensemble is
 \begin{align}
     \mm{X}' &= \mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\mm{X}\right).\label{eq:ensemble-update}
 \end{align}
 i.e. each ensemble member is updated
-\begin{align}
-\vv{x}^{(i)}{}' \gets \vv{x}^{(i)} + \widehat{\mm{K}} \left(\vv{y}^* - \op{H}\,\vv{x}^{(i)}\right).
-\end{align}
-
+$\vv{x}^{(i)}{}' \gets \vv{x}^{(i)} + \widehat{\mm{K}} \left(\vv{y}^* - \op{H}\,\vv{x}^{(i)}\right).$
 Equating moments, we see that
-\begin{align}
-\ELaw[\vrv{x}\sim \mm{X}']
+$\ELaw[\vrv{x}\sim \mm{X}']
 % \Law\left\{\mm{X} + \widehat{\mm{K}} \left(\mm{Y}^* - \op{H}\,\mm{X}\right)\right\}.
-\approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*]
-\end{align}
+\approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*]$ as desired.
 That is, the EnKF analysis equations \eqref{eq:ensemble-kalman-gain} and \eqref{eq:ensemble-update} can be justified in terms of an empirical approximation to the Gaussian posterior update.
 
 \section{Empirical Matheron Update is equvalent to Ensemble Kalman Update}
-In this setting we now have a trivial equivalence of the Matheron update and the EnKF analysis step.
+We now have a trivial equivalence of the Matheron update and the EnKF analysis step.
 Under the substitution
 \begin{align}
     \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I},\\
@@ -295,8 +283,7 @@ Under the substitution
 the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble update~\eqref{eq:ensemble-update}.
 
 \section{Computational Complexity}
-
-As is well iunderstood in the EnKF literature, the computational attractiveness of the Ensemble Kalman Filter lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
+As is well understood in the EnKF literature, part of the  utility  of the EnKF lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
 In contrast, the naive Kalman update must operate directly on these full covariance matrices, which can be prohibitively expensive in high-dimensional settings.
 
 Recall that the ensemble Kalman gain is computed as
