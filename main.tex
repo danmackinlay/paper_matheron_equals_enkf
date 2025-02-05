@@ -16,11 +16,11 @@
 \maketitle
 
 \begin{abstract}
-The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. By explicitly representing the ensemble mean and covariance using empirical approximations, we establish this equivalence. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
+The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems.
+In this paper, we show that the ensemble update step of the EnKF is equivalent to a an empirical version of the Matheron update for popular in the study of Gaussian process regression.
 
-While this connection is simple, it seems not to be widely known. Explicit attempts to unify the literatures that gave birth to these concepts are rare, and experts in both domains do not exploit the connection.
-
-This paper exists to provide a short introduction to the connection, together with the necessary definitions so that it is intelligible to as broad an audience as possible.
+While this connection is simple, it seems not to be widely known,  the literature about each technique seems distinct, and connections between the methods are not exploited.
+This paper exists to provide an informal introduction to the connection, with the necessary definitions so that it is intelligible to as broad an audience as possible.
 \end{abstract}
 
 \section{Introduction}
@@ -43,10 +43,8 @@ The law, or measure, of a random variate $\vrv{x}$ is denoted $\Law[\vrv{x}]$,
 so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
 Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
-When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).
-
-This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts where densities are usually implied.
-We include a translation in Appendix~\ref{sec:densities-please}.
+When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).\footnote{This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts where densities are usually implied.
+We include a translation in Appendix~\ref{sec:densities-please}.}
 
 \section{Matheron Update}
 
@@ -273,7 +271,6 @@ Equating moments, we see that
 That is, the EnKF analysis equations \eqref{eq:ensemble-kalman-gain} and \eqref{eq:ensemble-update} can be justified in terms of an empirical approximation to the Gaussian posterior update.
 
 \section{Empirical Matheron Update is equvalent to Ensemble Kalman Update}
-We now have a trivial equivalence of the Matheron update and the EnKF analysis step.
 Under the substitution
 \begin{align}
     \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}},\\
@@ -299,43 +296,38 @@ This is uneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensembl
     \mmdev{Y}^\top
 \end{align}
 where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}_{D_{\vrv{y}}}\)) and the intrinsic observation noise (\(\rho^2\mm{I}_{D_{\vrv{y}}}\)).
+%
+% Let us break down the cost of this ensemble update:
 
-Let us break down the cost of this ensemble update:
+% \begin{enumerate}
+%     \item \textbf{Forming the Empirical Covariance:}
+%     Multiplying the \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) by its transpose (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{y}}N^2)\) operations.
 
-\begin{enumerate}
-    \item \textbf{Forming the Empirical Covariance:}
-    Multiplying the \(D_{\vrv{y}}\times N\) matrix \(\mmdev{Y}\) by its transpose (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{y}}N^2)\) operations.
+%     \item \textbf{Inversion of the \(N\times N\) Matrix:}
+%     Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}_N\) costs \(O(N^3)\) operations.
 
-    \item \textbf{Inversion of the \(N\times N\) Matrix:}
-    Inverting the \(N\times N\) matrix \(\mmdev{Y}^\top \mmdev{Y} + \gamma^2\mm{I}_N\) costs \(O(N^3)\) operations.
-
-    \item \textbf{Matrix Multiplications to Form the Gain:}
-    Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix contribute a further \(O(D_{\vrv{y}}N^2)\) operations.
-\end{enumerate}
-
-Summing these contributions, the overall computational cost of the ensemble update is approximately
+%     \item \textbf{Matrix Multiplications to Form the Gain:}
+%     Multiplying \(\mmdev{X}\) (a \(D_{\vrv{x}}\times N\) matrix) with \(\mmdev{Y}^\top\) (an \(N\times D_{\vrv{y}}\) matrix) requires \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) operations. Additional multiplications involving the inverted \(N\times N\) matrix contribute a further \(O(D_{\vrv{y}}N^2)\) operations.
+% \end{enumerate}
+%
+% Summing these contributions, the overall computational cost of the ensemble update is
+The overall computational cost of the ensemble update is thus
 \[
-    O\bigl(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\bigr).
+    \mathcal{O}\left(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\right).
 \]
-Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update.
-
+Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update which is dominated by \(\mathcal{O}(D_{\vrv{y}}^3)\) operations.
 By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
 
-% \paragraph{Cost of the Naive Kalman Update:}
-In a traditional Kalman filter, one computes the Kalman gain as
-\[
-\mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\Bigr)^{-1}.
-\]
-Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
+% % \paragraph{Cost of the Naive Kalman Update:}
+% In a traditional Kalman filter, one computes the Kalman gain as
+% \[
+% \mm{K} = \mm{C}_{\vrv{xx}}\,\mm{H}^\top \Bigl(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\Bigr)^{-1}.
+% \]
+% Here, the full observation covariance matrix \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \rho^2\mm{I}_{D_{\vrv{y}}}\) is of size \(D_{\vrv{y}}\times D_{\vrv{y}}\). Forming this matrix typically costs on the order of \(O(D_{\vrv{x}}D_{\vrv{y}}^2)\) (assuming that \(\mm{C}_{\vrv{xx}}\) is dense) and inverting it requires \(O(D_{\vrv{y}}^3)\) operations. Thus, the naive update's cost is dominated by \(O(D_{\vrv{y}}^3)\) (plus the cost of computing \(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top\)), which can be substantially more expensive when \(D_{\vrv{y}}\) is large.
 
-% \paragraph{Summary:}
-The ensemble-based approach reduces the expensive inversion from an \(O(D_{\vrv{y}}^3)\) operation to one involving an \(N\times N\) matrix (costing \(O(N^3)\)), with additional costs \(O(D_{\vrv{y}}N^2)\) and \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) from matrix multiplications. In contrast, the naive Kalman update requires inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix, which is significantly costlier when \(N \ll D_{\vrv{y}}\).
+% % \paragraph{Summary:}
+% The ensemble-based approach reduces the expensive inversion from an \(O(D_{\vrv{y}}^3)\) operation to one involving an \(N\times N\) matrix (costing \(O(N^3)\)), with additional costs \(O(D_{\vrv{y}}N^2)\) and \(O(D_{\vrv{x}}D_{\vrv{y}}N)\) from matrix multiplications. In contrast, the naive Kalman update requires inverting a \(D_{\vrv{y}}\times D_{\vrv{y}}\) matrix, which is significantly costlier when \(N \ll D_{\vrv{y}}\).
 
-By exploiting the ensemble structure, we achieve an overall computational cost of
-\[
-    O\bigl(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\bigr),
-\]
-which is much more scalable for high-dimensional problems compared to the \(O(D_{\vrv{y}}^3 + D_{\vrv{x}}D_{\vrv{y}}^2)\) cost of the naive Kalman update.
 
 \section{Conclusion and Implications}
 
@@ -344,15 +336,11 @@ Both have witnessed many developments in the Bayesian Machine learning setting
 \citep{Alzraiee2022Scalable,Chada2022Convergence,Chen2021Autodifferentiable,Chen2023Reducedorder,Dunbar2022Ensemble,Guth2020Ensemble,Huang2022Iterated,Kovachki2019Ensemble,MacKinlay2025Gaussian,Oliver2022Hybrid,Schillings2017Analysis,Schneider2022Ensemble,Spantini2022Coupling}.
 If we understand the pathwise update of the Matheron in the setting of the empirical measures used in Ensemble Kalman filters, this suggests the potential to import developments from each of these to the other.
 
-The equivalence between the ensemble Kalman update and the empirical Matheron update offers several exciting avenues for further research. First, it provides a clear probabilistic interpretation of the ensemble update that may inspire improved regularization and localization strategies. For instance, by leveraging recent advances in sample-based conditioning and uncertainty quantification from the machine learning community, one might develop adaptive schemes that mitigate the effects of sampling error in high-dimensional settings.
+The literature of the EnKF is vast, and we have only scratched the surface of the many variants and extensions that have been proposed.
+Man of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
+For example, it provides a clear probabilistic interpretation of the ensemble update that may inspire improved regularization and localization strategies.
+For example the Local Ensemble Transform Klaman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional fitlering an system identification settings, and could be adapted to the Matheron update.
 
-Furthermore, this connection suggests that ideas developed in the context of Gaussian process inference—such as efficient sampling on Riemannian manifolds or the use of structured covariance approximations—could be imported into ensemble-based data assimilation frameworks. In particular, exploring extensions of the Matheron update beyond the Gaussian case (or for heavy-tailed error distributions) might lead to novel robust EnKF variants.
-
-Finally, the computational benefits of the empirical formulation, notably the reduction to lower-dimensional inversions via the Woodbury identity, can be exploited in large-scale simulations. Future work will involve a systematic study of these benefits in practical applications, as well as a rigorous analysis of the approximation errors introduced by the finite ensemble size.
-
-\section*{Acknowledgments}
-
-% Acknowledgments can be added here.
 
 \bibliography{refs}
 
