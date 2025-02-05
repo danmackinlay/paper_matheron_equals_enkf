@@ -1,27 +1,26 @@
-\documentclass{article}
+\documentclass[wcp]{jmlr} % Conference proceedings class
+
 \input{preamble.tex}
 
-% Authors and affiliations
-\title{The Ensemble Kalman Update is an Empirical Matheron Update}
+% Conference info (update as needed)
+\jmlrproceedings{AABI 2025}{Proceedings of the 7th Symposium on Advances in Approximate Bayesian Inference, 2025}
 
-\author{
-  Dan MacKinlay \\
-  CSIRO's Data61 \\
-  \texttt{dan@danmackinlay.name} \\
-}
+% Title (the optional short title is used for headers)
+\title[Ensemble Kalman Update]{The Ensemble Kalman Update is an Empirical Matheron Update}
 
-% You may provide any keywords that you find helpful for describing your paper
-\date{February 2025}
+% For anonymous submissions, remove author information.
+\author{\Name{Anonymous Authors}\\
+  \addr Anonymous Institution}
 
 \begin{document}
-
+\maketitle
 
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems. In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical Matheron update for Gaussian random variables. By explicitly representing the ensemble mean and covariance using empirical approximations, we establish this equivalence. This connection provides a probabilistic interpretation of the EnKF and opens avenues for improving ensemble-based data assimilation methods by leveraging properties of the Matheron update.
 
 While this connection is simple, it seems not to be widely known. Explicit attempts to unify the literatures that gave birth to these concepts are rare, and experts in both domains do not exploit the connection.
 
-This paper exists to provide a short introduciton to the connection, together with the necessary definitions so that it is intelligible to as broad an audience as possible.
+This paper exists to provide a short introduction to the connection, together with the necessary definitions so that it is intelligible to as broad an audience as possible.
 \end{abstract}
 
 \section{Introduction}
@@ -65,7 +64,6 @@ the conditional $\vrv{x} | \vrv{y} {=} \vv{y}^*$ is equal in distribution to
     &\disteq \vrv{x} + \mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1} \left( \vv{y}^* - \vrv{y} \right).
     \label{eq:matheron-update}
 \end{align}
-% where $\vv{x}_0$ and $\vv{y}_0$ are samples from the prior distributions of $\vv{x}$ and $\vv{y}$, respectively.
 \end{lemma}
 
 \begin{proof}
@@ -361,7 +359,6 @@ Finally, the computational benefits of the empirical formulation, notably the re
 
 % Acknowledgments can be added here.
 
-\bibliographystyle{plainnat}
 \bibliography{refs}
 
 \appendix
