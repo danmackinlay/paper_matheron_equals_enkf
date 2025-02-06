@@ -240,6 +240,12 @@ The term
 \(\upsilon^2\mm{I}_{D_{\vrv{y}}}\) comes from the regularization of the empirical observation covariance (as defined by the ensemble of
 \(\mm{Y}\)), while \(\rho^2\mm{I}_{D_{\vrv{y}}}\) represents the known covariance of the observation noise.
 Combining these two gives the effective covariance in the observation space.
+
+Note that although we are still treating the ensemble as a sample from a Gaussian distribution, the predictive will in general not be Gaussian if the observation operator is nonlinear.
+Nonetheless, since the moments are by definition well-defined for any empirical distribution, the ensemble update is still well-defined in this case.
+Practitioners in the field gloss over this point, and the EnKF is widely used in nonlinear settings based on empirical effectivenes.
+Practical convergence guarantees in nonlinearity seem ellusive.
+
 For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\).
 We also define
 $\mm{Y}^* = \vv{y}^* \mathbf{1}^\top,$
