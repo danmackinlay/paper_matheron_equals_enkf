@@ -453,12 +453,11 @@ Inverse-problem analyses prove contraction and bias properties of finite-ensembl
 Treating EnKF analysis as an empirical Matheron  brings mature geophysical tool-kits—localisation, adaptive inflation, square-root variants—into scalable machine-learning while exporting automatic differentiation and sparse GP tricks back to data assimilation.
 
 % ----------------------------------------------------------------
-\section{Numerical Illustration:  One–D Kriging Three Ways}
+\section{Numerical Illustration:  One–D Kriging by Ensemble Kalman filer}
 \label{sec:numerical-demo}
 % ----------------------------------------------------------------
 
-We re-visit the classic kriging toy problem but now compare three solvers
-side-by-side:
+We re-visit the classic kriging toy problem but now compare two solvers side-by-side:
 
 \begin{quote}
 \textbf{Task.}  Recover a latent field
@@ -468,16 +467,13 @@ $y = Hx + \eta$, $\eta\!\sim\!\mathcal N(0,\tau^{2}I)$ with
 $\tau=0.05$.  The prior is
 $\mathcal N(0,K)$, $K_{ij}=\sigma^{2}\!\exp(-\lVert r_i-r_j\rVert^{2}/2\ell^{2})$
 with $\sigma=1$, $\ell=0.2$.
-We test grid sizes $d\in\{500,1000,2000,4000\}$.
+We test grid sizes $d\in\{200,400,600,800, 1000\}$.
 \end{quote}
 
 \paragraph{Methods.}
 \begin{itemize}
 \item \textbf{Path-wise (analytic).}  \eqref{eq:matheron-update} with the
       $m\!\times\!m$ Woodbury inversion; cost $\mathcal O(dm^{2})$.
-\item \textbf{FilterPy EnKF.}  \texttt{EnsembleKalmanFilter}
-      (\texttt{N} = $\max(200,d/10)$) with a $10^{-8}$ nugget,
-      multiplicative deflation (0.84) and no code changes.
 \item \textbf{Cholesky GP.}  \texttt{GaussianProcessRegressor}
       from \textsc{scikit-learn}.
 \end{itemize}
@@ -492,16 +488,15 @@ spread–skill ratio is $0.97$.
 \paragraph{Speed.}
 Figure~\ref{fig:posterior-timing} plots wall-clock time (log–log).
 For $d\le2000$ the analytic Woodbury update is fastest
-($\!\approx\!0.06$ s at $d=1000$).  Beyond that, the
+($\!\approx\!0.06$s at $d=1000$).  Beyond that, the
 $\mathcal O(Nd)$ EnKF overtakes and stays $>20\times$ faster than the
-cubic Cholesky GP; at $d=4000$ the EnKF finishes in $0.25$ s while the
-GP needs $15$ s.
+cubic Cholesky GP; at $d=4000$ the EnKF finishes in $0.25$s while the
+GP needs $15$s.
 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{fig_posterior_samples.pdf}
   \caption{Posterior draws at $d=1000$.
-           Blue = Woodbury, green = EnKF, orange = GP.
            Means overlap to eye and to $<\!0.03$ RMSE.}
   \label{fig:posterior-samples}
 \end{figure}
@@ -510,16 +505,15 @@ GP needs $15$ s.
   \centering
   \includegraphics[width=\linewidth]{fig_posterior_timing.pdf}
   \caption{Wall-clock to compute one posterior update
-           (log–log).  EnKF scales linearly, GP cubically,
-           Woodbury as $\mathcal O(dm^{2})$.}
-  \label{fig:posterior-timing}
+           (log–log). Training EnKF scales as $\mathcal O(dm^{2})$, GP as $\mathcal O(m^{3})$. We set $m=d/5$.}%
+            \label{fig:posterior-timing}
 \end{figure}
 
 \paragraph{Take-away.}
-A commodity EnKF implementation—originally written for atmospheric data
-assimilation—delivers path-wise GP draws whose accuracy matches the
+A commodity EnKF implementation delivers path-wise GP draws whose accuracy matches the
 analytic update while retaining the $\mathcal O(Nd)$ cost familiar to
-the geophysical community.  The result is an order-of-magnitude speed-up
+the geophysical community.
+The result is an order-of-magnitude speed-up
 over textbook GP regression once $d\!\gtrsim\!2000$, with \emph{zero}
 algebraic changes to the off-the-shelf code.
 
