@@ -10,8 +10,10 @@ with plt.rc_context({
         "figure.dpi": 300,
 }):
     fig, ax = plt.subplots()
-    ax.plot(df.d, df.t_enkf, 'o-', label="EnKF (Woodbury)")
-    ax.plot(df.d, df.t_gp,   's--', label="scikit-GP")
+    ax.errorbar(df.d, df.t_enkf_mean, yerr=df.t_enkf_std, 
+                fmt='o-', label="EnKF (Woodbury)", capsize=3)
+    ax.errorbar(df.d, df.t_gp_mean, yerr=df.t_gp_std,
+                fmt='s--', label="scikit-GP", capsize=3)
     ax.set_xscale("log"); ax.set_yscale("log")
     ax.set_xlabel("State dimension $d$")
     ax.set_ylabel("Wall time [s]")
