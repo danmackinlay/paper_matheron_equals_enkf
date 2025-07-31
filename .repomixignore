@@ -10,17 +10,11 @@
 refs.bib
 # Styles are not at all interesting
 *.sty
-# The endless details about additive manufacturing is interesting to manufacturing people but not helpful for methodoly
-paper_*_related_am.tex
-paper_*metascience.tex
-paper_040_experiments_main.tex
-mindthegapdependencies.tex
-mindthegapdependencies.dot
 llm_context/*
-ab_notes.tex
 CLAUDE.md
-plan*.md
+_plan*.md
 .gitignore
 .repomixignore
-*.xml
-_plan*.md
+*.eps
+__marimo__
+.claud

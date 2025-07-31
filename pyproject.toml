@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11.9"
 dependencies = [
-    "filterpy>=1.4.5",
+    "filterpy==1.4.5",
     "marimo>=0.14.15",
     "matplotlib>=3.10.3",
     "numpy>=2.3.2",

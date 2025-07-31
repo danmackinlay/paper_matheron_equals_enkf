@@ -248,3 +248,5 @@ main.pdf
 
 *.xml
 _plan*.md
+__marimo__
+__pycache__
