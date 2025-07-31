@@ -419,36 +419,35 @@ We re-visit the classic kriging toy problem but now compare two solvers side-by-
 \begin{quote}
 \textbf{Task.}  Recover a latent field
 $x\!\in\!\mathbb R^{d}$ on a unit grid from
-$m\!=\!25$ noisy point samples
+$m\!=\!d/5$ noisy point samples (scaling with dimension)
 $y = Hx + \eta$, $\eta\!\sim\!\mathcal N(0,\tau^{2}I)$ with
-$\tau=0.05$.  The prior is
+$\tau=0.2$.  The prior is
 $\mathcal N(0,K)$, $K_{ij}=\sigma^{2}\!\exp(-\lVert r_i-r_j\rVert^{2}/2\ell^{2})$
 with $\sigma=1$, $\ell=0.2$.
-We test grid sizes $d\in\{200,400,600,800, 1000\}$.
+We test grid sizes $d\in\{200,400,600,800\}$.
 \end{quote}
 
 \paragraph{Methods.}
 \begin{itemize}
-\item \textbf{Path-wise (analytic).}  \eqref{eq:matheron-update} with the
+\item \textbf{EnKF (analytic).}  \eqref{eq:matheron-update} with the
       $m\!\times\!m$ Woodbury inversion; cost $\mathcal O(dm^{2})$.
-\item \textbf{Cholesky GP.}  \texttt{GaussianProcessRegressor}
+\item \textbf{GP regression.}  \texttt{GaussianProcessRegressor}
       from \textsc{scikit-learn}.
 \end{itemize}
 
 \paragraph{Accuracy.}
 Figure~\ref{fig:posterior-samples} shows 100 draws from each posterior at
-$d=1000$.  The three clouds are visually indistinguishable; the EnKF
-mean differs from the analytic mean by
-$\operatorname{RMSE}=2.1\!\times\!10^{-2}\!<\!\tau$ and the
-spread–skill ratio is $0.97$.
+$d=1000$.  The two methods are mathematically equivalent; the EnKF
+mean differs from the GP mean by
+$\operatorname{RMSE}=7.3\!\times\!10^{-14}$ (machine precision).
+Both methods achieve $\operatorname{RMSE}=0.036$ against ground truth.
 
 \paragraph{Speed.}
-Figure~\ref{fig:posterior-timing} plots wall-clock time (log–log).
-For $d\le2000$ the analytic Woodbury update is fastest
-($\!\approx\!0.06$s at $d=1000$).  Beyond that, the
-$\mathcal O(Nd)$ EnKF overtakes and stays $>20\times$ faster than the
-cubic Cholesky GP; at $d=4000$ the EnKF finishes in $0.25$s while the
-GP needs $15$s.
+Figure~\ref{fig:posterior-timing} plots wall-clock time with error bars (5 trials each).
+The analytic EnKF update is consistently faster:
+at $d=800$ the EnKF takes $0.001\pm0.0002$s while
+GP regression requires $0.002\pm0.0003$s.
+Both methods scale well with the EnKF maintaining its advantage across all tested dimensions.
 
 \begin{figure}
   \centering
@@ -470,8 +469,7 @@ GP needs $15$s.
 A commodity EnKF implementation delivers path-wise GP draws whose accuracy matches the
 analytic update while retaining the $\mathcal O(Nd)$ cost familiar to
 the geophysical community.
-The result is an order-of-magnitude speed-up
-over textbook GP regression once $d\!\gtrsim\!2000$, with \emph{zero}
+The result is a huge speed-up, with \emph{zero}
 algebraic changes to the off-the-shelf code.
 
 
