@@ -19,9 +19,7 @@
 \usepackage{orcidlink}
 \usepackage{xparse}
 
-\usepackage{amsmath}     % for math environments
 \usepackage{xcolor}      % for syntax‐highlighting colours
-\usepackage{listings}    % for the lstlisting environment
 \usepackage{caption}     % if you want to tweak captions of listings
 
 % then define a little Python style to make things look nice
@@ -40,10 +38,6 @@
 % and finally, apply that style everywhere
 \lstset{style=python}
 
-% % TikZ for diagrams (if needed)
-% \usepackage{tikz}
-% \usetikzlibrary{shapes,arrows,calc,positioning,automata,decorations.pathreplacing,quotes}
-% \usetikzlibrary{bayesnet}
 
 % Custom commands and notation
 \newcommand{\Ex}{\mathbb{E}}
@@ -89,11 +83,6 @@
 
 \newcommand{\one}{\mathbbold{1}}
 
-% \theoremstyle{plain}
-% \newtheorem{theorem}{Theorem}[section]
-% \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{definition}[theorem]{Definition}
-% \newtheorem{proposition}[theorem]{Proposition}
 
 
 % Change the conference header to something arXiv-friendly.
@@ -225,7 +214,7 @@ This \emph{pathwise} approach to conditioning Gaussian variates has gained curre
 \section{Kalman Filter}
 We begin by recalling that in state filtering the goal is to update our estimate of the system state when a new observation becomes available. In a general filtering problem the objective is to form the posterior distribution \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t, \vv{y}^*]\) from the prior \(\Law[\vrv{x}_{t+1} \gvn \vrv{x}_t]\) by incorporating the new information in the observation \(\vv{y}^*\).
 
-We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$ are a priori related to state $\vrv{x}$ by $\vrv{y}=\op{H}(\vrv{x}\vrv)$; Thus there exists a joint law for the prior random vector
+We assume a known observation operator $\op{H}$ such that observations $\vrv{y}$ are a priori related to state $\vrv{x}$ by $\vrv{y}=\op{H}(\vrv{x})$; Thus there exists a joint law for the prior random vector
 \begin{align}
     \begin{bmatrix}
         \vrv{x}\\
@@ -293,7 +282,7 @@ where
 &\coloneq \mm{C}_{\vrv{xx}}\,\mm{H}^\top \left(\mm{H}\,\mm{C}_{\vrv{xx}}\,\mm{H}^\top + \mm{R}\right)^{-1},
 \end{align}
 is the \emph{Kalman gain}.
-Herafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\mm{R}=\rho^2\mm{I}_{D_{\vrv{y}}}\).
+Hereafter we consider a constant diagonal \(\mm{R}\) for simplicity, so that \(\mm{R}=\rho^2\mm{I}_{D_{\vrv{y}}}\).
 
 \section{Ensemble Kalman Filter}
 
@@ -307,7 +296,7 @@ and working with the empirical measure $\ELaw[\mm{X}]\approx \Law$.
 Gaussian measures are specified entirely by their first two moments, so we aim to construct empirical measures which match the desired target in terms of these moments.
 For convenience, we introduce notation for, respectively, matrix mean and deviations,
 \begin{align}
-    \mmmean{X} \coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i),}
+    \mmmean{X} \coloneq \frac{1}{N}\sum_{i=1}^N \vv{x}^{(i)}
     \quad\quad
     \mmdev{X} \coloneq \frac{1}{\sqrt{N-1}} \Bigl( \mm{X} - \mmmean{X}\,\vv{1}^\top \Bigr)
      \label{eq:deviation_matrix}
@@ -325,9 +314,7 @@ Abusing notation, we associate a Gaussian distribution with the empirical measur
 \begin{align}
 \ELaw[\mm{X}] \approx \Normal(\widehat{\Ex}[\vrv{x}], \widehat{\var}(\vrv{x})) = \Normal(\mmmean{X}, \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}}).
 \end{align}
-This association should be understood as a mnemonic device;
-rigorous convergence of such empirical measures to the true distribution is beyond the scope of this short note, and is rather subtle~\citep{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability}.
-For now, we regard posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$ as successful if we can find a new ensemble $\mm{X}'$ such that its empirical moments approximate the desired target distribution, i.e. we seek to obtain an ensemble $\mm{X}'$ such that
+For posterior inference about $\vrv{x}$ given $\vrv{y}=\vv{y}^*$, we seek an ensemble $\mm{X}'$ such that (see~\cite{LeGland2009Large,Mandel2011Convergence,Kelly2014Wellposedness,Kwiatkowski2015Convergence,DelMoral2017Stability} for finite-ensemble convergence)
 \begin{align}
     \Ex_{\vrv{x}\sim \ELaw[\mm{X}']}[ \vrv{x}] &\approx \Ex_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} [\vrv{x}]\\
     \var_{\vrv{x}\sim \ELaw[\mm{X}']} (\vrv{x}) &\approx \var_{\vrv{x}\sim (\Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*])} (\vrv{x})
@@ -363,10 +350,7 @@ The term
 \(\mm{Y}\)), while \(\rho^2\mm{I}_{D_{\vrv{y}}}\) represents the known covariance of the observation noise.
 Combining these two gives the effective covariance in the observation space.
 
-Note that although we are still treating the ensemble as a sample from a Gaussian distribution, the predictive will in general not be Gaussian if the observation operator is nonlinear.
-Nonetheless, since the moments are by definition well-defined for any empirical distribution, the ensemble update is still well-defined in this case.
-Practitioners in the field gloss over this point, and the EnKF is widely used in nonlinear settings based on empirical effectivenes.
-Practical convergence guarantees in nonlinearity seem ellusive.
+(The EnKF extends to nonlinear observation operators, though Gaussian assumptions no longer hold exactly~\cite{Evensen2009Data}.)
 
 For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\).
 We also define
@@ -397,29 +381,7 @@ the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble
 \end{proof}
 
 \section{Computational Complexity}
-As is well understood in the EnKF literature, part of the  utility  of the EnKF lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
-In contrast, the naive Kalman update must operate directly on these full covariance matrices, which can be prohibitively expensive in high-dimensional settings.
-This is unneeded in the EnKF; in practice we calculate the gain~\eqref{eq:ensemble-kalman-gain} as
-\begin{align}
-    \widehat{\mm{K}}&= \widehat{\mm{C}}_{\vrv{xx}}\, \op{H}^\top \left(\op{H}\,\widehat{\mm{C}}_{\vrv{xx}}\,\op{H}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\right)^{-1}\\
-    &= \mmdev{X} \mmdev{Y}^\top   \left(
-        \mmdev{Y} \mmdev{Y}^\top + \gamma^2 \mm{I}_{D_{\vrv{y}}}
-    \right)^{-1}\\
-    &= \gamma^{-2}\mm{I}_{D_{\vrv{y}}}
-    - \gamma^{-4}\mmdev{Y}
-    \left(
-        \mm{I}_N + \gamma^{-2}\mmdev{Y}^\top\mmdev{Y}
-    \right)^{-1}
-    \mmdev{Y}^\top
-\end{align}
-where \(\gamma^2 = \upsilon^2 + \rho^2\) aggregates the regularization term for the empirical observation covariance (\(\upsilon^2\mm{I}_{D_{\vrv{y}}}\)) and the intrinsic observation noise (\(\rho^2\mm{I}_{D_{\vrv{y}}}\)).
-%
-The overall computational cost of the ensemble update is thus
-\[
-    \mathcal{O}\left(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N\right).
-\]
-Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update which is dominated by \(\mathcal{O}(D_{\vrv{y}}^3)\) operations.
-By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
+The EnKF avoids computing full covariance matrices, instead using empirical ensemble statistics with cost $\mathcal{O}(D_{\vrv{y}}N^2 + N^3 + D_{\vrv{x}}D_{\vrv{y}}N)$. Since ensemble size $N$ is typically much smaller than dimensions $D_{\vrv{x}}, D_{\vrv{y}}$, this is significantly more efficient than the naive Kalman update's $\mathcal{O}(D_{\vrv{y}}^3)$ cost.
 
 \section{Capabilities Unlocked by the Equivalence}\label{sec:capabilities}
 
@@ -510,7 +472,7 @@ algebraic changes to the off-the-shelf code.
 
 \section{Conclusion and Implications}
 
-By making the affine residual identity explicit we provide a ``Rosetta-stone'' that translates freely between kriging, optimal-interpolation, ensemble-Kalman, and path-wise GP jargon.  This synthesis upgrades each field: geoscientists inherit differentiable, variational, and sparse-GP tools; machine-learning researchers gain decades of localisation, inflation, and convergence theory; and inverse-problem analysts get a unifying algebra that bridges finite-ensemble and infinite-dimensional limits.
+The affine residual identity is a Rosetta stone linking kriging, optimal-interpolation, ensemble-Kalman, and path-wise GP sampling. This synthesis upgrades each field: geoscientists inherit differentiable, variational, and sparse-GP tools; machine-learning researchers gain decades of localisation, inflation, and convergence theory; and inverse-problem analysts get a unifying algebra that bridges finite-ensemble and infinite-dimensional limits.
 
 The literature of the EnKF is vast, and we have only scratched the surface of the many variants and extensions that have been proposed.
 Many of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
