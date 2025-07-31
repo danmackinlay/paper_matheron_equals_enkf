@@ -1,14 +1,13 @@
 % !TEX root = ./main.tex
+\pdfoutput=1 % force PDF mode on arXiv
 \documentclass[wcp]{jmlr} % Conference proceedings class
 
-% \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % URL typesetting
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{amsmath, amsfonts, amssymb} % math packages
 \usepackage{mathtools}      % extended math tools
 \usepackage{nicefrac}       % compact fractions
 \usepackage{microtype}      % microtypography
-% \usepackage{cleveref}       % intelligent cross-referencing
 \usepackage{graphicx}       % graphics
 \usepackage{natbib}         % bibliography support
 \usepackage{doi}            % DOI formatting
@@ -98,21 +97,6 @@
 
 \begin{document}
 
-% \hypersetup{
-%     colorlinks=true,
-%     linkcolor=blue,
-%     citecolor=blue,
-%     urlcolor=blue,
-% }
-
-% Set PDF metadata using hyperref (does not work)
-% \usepackage[pdftex,
-%             pdfauthor={Dan MacKinlay},
-%             pdftitle={The Ensemble Kalman Update is an Empirical Matheron Update},
-%             pdfsubject={Data assimilation, Ensemble Kalman Filter, Gaussian conditioning},
-%             pdfkeywords={EnKF, Matheron update, Gaussian process, data assimilation},
-%             pdfproducer={LaTeX with JMLR class},
-%             pdfcreator={pdflatex}]{hyperref}
 
 
 \maketitle
@@ -121,9 +105,9 @@
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems, with an ensemble update step equivalent to an empirical version of the Matheron update popular in Gaussian process regression—a connection that links half a century of data-assimilation engineering to modern path-wise GP sampling.
 
 This paper provides a compact introduction to this simple but under-exploited connection, with necessary definitions accessible to all fields involved.
-
-\keywords{Ensemble Kalman Filter \and Matheron Update \and Gaussian Process \and Data Assimilation \and Geostatistics}
 \end{abstract}
+
+\keywords{Ensemble Kalman Filter, Matheron Update, Gaussian Process, Data Assimilation, Geostatistics}
 
 \section{Introduction}
 
@@ -155,7 +139,7 @@ so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\dist
 Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law[\vrv[x]]$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
 When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).
-We follow standard measure notation; Appendix~\ref{sec:densities-please} provides a density-based translation.
+We follow standard measure notation; Appendix~\sectionref{sec:densities-please} provides a density-based translation.
 
 \section{Matheron Update}
 
@@ -428,33 +412,33 @@ We test grid sizes $d\in\{200,400,600,800\}$.
 \end{itemize}
 
 \paragraph{Accuracy.}
-Figure~\ref{fig:posterior-samples} shows 100 draws from each posterior at
+\figureref{fig:posterior-samples} shows 100 draws from each posterior at
 $d=1000$.  The two methods are mathematically equivalent; the EnKF
 mean differs from the GP mean by
 $\operatorname{RMSE}=7.3\!\times\!10^{-14}$ (machine precision).
 Both methods achieve $\operatorname{RMSE}=0.036$ against ground truth.
 
 \paragraph{Speed.}
-Figure~\ref{fig:posterior-timing} plots wall-clock time with error bars (5 trials each).
+\figureref{fig:posterior-timing} plots wall-clock time with error bars (5 trials each).
 The analytic EnKF update is consistently faster:
 at $d=800$ the EnKF takes $0.001\pm0.0002$s while
 GP regression requires $0.002\pm0.0003$s.
 Both methods scale well with the EnKF maintaining its advantage across all tested dimensions.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{fig_posterior_samples.pdf}
-  \caption{Posterior draws at $d=1000$.
-           Means overlap to eye and to $<\!0.03$ RMSE.}
-  \label{fig:posterior-samples}
+\begin{figure}[htbp]
+  \floatconts
+    {fig:posterior-samples} % label
+    {\caption{Posterior draws at $d=1000$.
+             Means overlap to eye and to $<\!0.03$ RMSE.}} % caption
+    {\centering\includegraphics[width=\linewidth]{fig_posterior_samples.pdf}}
 \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\linewidth]{fig_posterior_timing.pdf}
-  \caption{Wall-clock to compute one posterior update
-           (log–log). Training EnKF scales as $\mathcal O(dm^{2})$, GP as $\mathcal O(m^{3})$. We set $m=d/5$.}%
-            \label{fig:posterior-timing}
+\begin{figure}[htbp]
+  \floatconts
+    {fig:posterior-timing} % label
+    {\caption{Wall-clock to compute one posterior update
+             (log–log). Training EnKF scales as $\mathcal O(dm^{2})$, GP as $\mathcal O(m^{3})$. We set $m=d/5$.}} % caption
+    {\centering\includegraphics[width=\linewidth]{fig_posterior_timing.pdf}}
 \end{figure}
 
 \paragraph{Take-away.}
@@ -476,6 +460,8 @@ For example, it provides a clear probabilistic interpretation of the ensemble up
 For one example, the Local Ensemble Transform Kalman Filter~\citep{Bocquet2020Online} provides state-of-the-art performance in high-dimensional filtering and system identification settings, and could be adapted to the Matheron update.
 
 By recasting the EnKF update as an empirical Matheron update, we’ve exposed a straightforward, unifying mechanism behind two seemingly different approaches. This connection cuts through the usual complexity and suggests that many of the practical tricks developed for the EnKF—like improved regularization—could be reinterpreted and possibly enhanced when applied to Gaussian process problems. It’s a reminder that sometimes a simple change in perspective can open up entirely new avenues for improvement.
+
+\acks{The author thanks CSIRO's Machine Learning and Artifical Intelligence Future Science Platform for supporting this research.}
 
 \bibliography{refs}
 
