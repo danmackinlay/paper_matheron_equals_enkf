@@ -17,4 +17,6 @@ _plan*.md
 .repomixignore
 *.eps
 __marimo__
-.claud
+.claude
+*.cls
+*.bst

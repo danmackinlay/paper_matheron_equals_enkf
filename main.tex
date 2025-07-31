@@ -8,7 +8,7 @@
 \usepackage{mathtools}      % extended math tools
 \usepackage{nicefrac}       % compact fractions
 \usepackage{microtype}      % microtypography
-\usepackage{cleveref}       % intelligent cross-referencing
+% \usepackage{cleveref}       % intelligent cross-referencing
 \usepackage{graphicx}       % graphics
 \usepackage{natbib}         % bibliography support
 \usepackage{doi}            % DOI formatting
@@ -197,9 +197,9 @@ Taking moments of the right hand side of \eqref{eq:matheron-update}
 &=\vv{m}_{\vrv{x}\gvn\vrv{y}}\\
 \var\left[\vrv{x}+\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})\right]
 &=
-    \var[\vrv{x}]+\var[\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})] \\
-    &\hspace{2em} +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))
-    +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))^{\top}\\
+    \var[\vrv{x}]+\var[\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y})] \nonumber \\
+    &\hspace{2em} +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))\nonumber \\
+    &\hspace{2em} +\var(\vrv{x},\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}(\vv{y}^*-\vrv{y}))^{\top}\\
 &=\mm{C}_{\vrv{x}\vrv{x}} +\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}
 -  2\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}}\\
 &=\mm{C}_{\vrv{x}\vrv{x}} -\mm{C}_{\vrv{xy}} \mm{C}_{\vrv{yy}}^{-1}\mm{C}_{\vrv{yx}} =\mm{C}_{\vrv{x}\gvn\vrv{y}}
@@ -348,9 +348,7 @@ where \(\rho^2\mm{I}_{D_{\vrv{y}}}\) is the observation error covariance matrix.
 The term
 \(\upsilon^2\mm{I}_{D_{\vrv{y}}}\) comes from the regularization of the empirical observation covariance (as defined by the ensemble of
 \(\mm{Y}\)), while \(\rho^2\mm{I}_{D_{\vrv{y}}}\) represents the known covariance of the observation noise.
-Combining these two gives the effective covariance in the observation space.
-
-(The EnKF extends to nonlinear observation operators, though Gaussian assumptions no longer hold exactly~\cite{Evensen2009Data}.)
+Combining these two gives the effective covariance in the observation space.\footnote{The EnKF extends to nonlinear observation operators, though Gaussian assumptions no longer hold exactly~\cite{Evensen2009Data}.}
 
 For compactness we define \(\gamma^2 \coloneq \upsilon^2 + \rho^2\) so that the combined covariance is \(\mm{C}_{\vrv{yy}} = \mmdev{Y} \mmdev{Y}^\top + \gamma^2\mm{I}_{D_{\vrv{y}}}\).
 We also define
