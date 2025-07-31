@@ -429,8 +429,8 @@ We test grid sizes $d\in\{500,1000,2000,4000\}$.
 \end{quote}
 
 \paragraph{Methods.}
-\begin{itemize}[leftmargin=1.8em]
-\item \textbf{Woodbury path-wise (analytic).}  Eq.\,(1) with the
+\begin{itemize}
+\item \textbf{Path-wise (analytic).}  \eqref{eq:matheron-update} with the
       $m\!\times\!m$ Woodbury inversion; cost $\mathcal O(dm^{2})$.
 \item \textbf{FilterPy EnKF.}  \texttt{EnsembleKalmanFilter}
       (\texttt{N} = $\max(200,d/10)$) with a $10^{-8}$ nugget,
