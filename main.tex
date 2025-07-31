@@ -137,29 +137,18 @@
 \maketitle
 
 \begin{abstract}
-The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems.
-In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical version of the Matheron update popular in the study of Gaussian process regression in Machine Learning.
-Recognising that this update is \emph{also} the classical ``conditioning-by-kriging'' of geostatistics and the ``optimal-interpolation'' step of Numerical Weather Prediction immediately links half a century of data-assimilation engineering to modern path-wise GP sampling.
+The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems, with an ensemble update step equivalent to an empirical version of the Matheron update popular in Gaussian process regression—a connection that links half a century of data-assimilation engineering to modern path-wise GP sampling.
 
-While this connection is simple, it seems not to be widely known, the literature about each technique seems distinct, and connections between the methods are not exploited.
-This paper exists to provide a compact introduction to the connection, with the necessary definitions so that it is intelligible to as broad an audience as possible.
-Throughout we attempt to use terminology that will be accessible to all fields involved in this work.
+This paper provides a compact introduction to this simple but under-exploited connection, with necessary definitions accessible to all fields involved.
 
 \keywords{Ensemble Kalman Filter \and Matheron Update \and Gaussian Process \and Data Assimilation \and Geostatistics}
 \end{abstract}
 
 \section{Introduction}
 
-The Ensemble Kalman Filter (EnKF)~\cite{Evensen2003Ensemble,Evensen2009Data} is a cornerstone in data assimilation for large-scale dynamical systems due to its computational efficiency and scalability.
-The EnKF approximates the state estimation problem by evolving an ensemble of state vectors through the model dynamics and updating them using observational data.
+The Ensemble Kalman Filter (EnKF)~\cite{Evensen2003Ensemble,Evensen2009Data} is a cornerstone method that evolves ensembles of state vectors through model dynamics and updates them using observational data. The Matheron update provides a sample-based method for conditioning Gaussian random variables on observations~\cite{Doucet2010Note,Wilson2020Efficiently,Wilson2021Pathwise}, well-established in geostatistics but with little-known connections to ensemble data assimilation.
 
-Separately, the Matheron update provides a sample-based method for conditioning Gaussian random variables on observations~\cite{Doucet2010Note,Wilson2020Efficiently,Wilson2021Pathwise}.
-This approach is well-established in geostatistics and spatial statistics but the connection to ensemble methods in data assimilation seems not to be well-known.
-
-In this work, we establish that the ensemble update step in the EnKF is equivalent to an empirical Matheron update, by putting them on a common probabilistic footing.
-By explicitly representing the ensemble mean and covariance using empirical approximations, we demonstrate this equivalence.
-Recognizing this connection provides an alternative probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
-Conversely, the analytic Matheron updates in the literature could benefit from the many computational optimisations arising from the data assimilation community.
+We establish that the ensemble update step in the EnKF is equivalent to an empirical Matheron update by putting them on a common probabilistic footing. This connection provides an alternative foundation for the EnKF and suggests improvements by leveraging computational optimizations from both communities.
 
 \subsection{Historical Context and Related Work}\label{sec:history}
 
@@ -174,9 +163,7 @@ Although the affine residual update first appeared in geostatistics under the ba
     \item \textbf{Theory of ensemble inversion.}  Convergence proofs for ensemble inversion~\cite{Schillings2016EnKFInverse} and extensions via transport maps~\cite{Spantini2022Coupling} all start from the linear Matheron/EnKF identity.
 \end{itemize}
 
-Hence our observation more than mere curiosity.
-Rather, it is the common algebraic core of at least six research communities.
-Making the equivalence explicit turns a patchwork of field-specific heuristics into transferable technology.
+This equivalence forms the algebraic core of at least six research communities, turning a patchwork of field-specific heuristics into transferable technology.
 
 \subsection{Notation}
 
@@ -186,8 +173,8 @@ The law, or measure, of a random variate $\vrv{x}$ is denoted $\Law[\vrv{x}]$,
 so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
 Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law[\vrv[x]]$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
-When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).\footnote{As part of our commitment to treating disparate disciplines equally, we note that his measure notation from probability theory is unpopular in both machine learning and data assimilation. However, it makes the core result much easer to understand.
-We include a translation in Appendix~\ref{sec:densities-please}.}
+When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).
+We follow standard measure notation; Appendix~\ref{sec:densities-please} provides a density-based translation.
 
 \section{Matheron Update}
 
