@@ -1,7 +1,78 @@
 % !TEX root = ./main.tex
 \documentclass[wcp]{jmlr} % Conference proceedings class
 
-\input{preamble.tex}
+% \usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsmath, amsfonts, amssymb} % math packages
+\usepackage{mathtools}      % extended math tools
+\usepackage{nicefrac}       % compact fractions
+\usepackage{microtype}      % microtypography
+\usepackage{cleveref}       % intelligent cross-referencing
+\usepackage{graphicx}       % graphics
+\usepackage{natbib}         % bibliography support
+\usepackage{doi}            % DOI formatting
+\usepackage{subfiles}       % subfile support
+\usepackage{listings}       % source code listings
+\usepackage[normalem]{ulem} % underline/strikeout (remove before final submission)
+\usepackage[]{todonotes}    % inline todo notes (optional)
+\usepackage{orcidlink}
+\usepackage{xparse}
+
+% % TikZ for diagrams (if needed)
+% \usepackage{tikz}
+% \usetikzlibrary{shapes,arrows,calc,positioning,automata,decorations.pathreplacing,quotes}
+% \usetikzlibrary{bayesnet}
+
+% Custom commands and notation
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\var}{\operatorname{Var}}
+\newcommand{\cov}{\operatorname{Cov}}
+\newcommand{\corr}{\operatorname{Corr}}
+\newcommand{\argmin}{\operatorname{arg\,min}}
+\newcommand{\argmax}{\operatorname{arg\,max}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\vecop}{\operatorname{vec}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pd}{\mathrm{d}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\vv}[1]{\boldsymbol{#1}}
+\newcommand{\mm}[1]{\mathrm{#1}}
+\newcommand{\mmmean}[1]{\bar{\mathrm{#1}}}
+\newcommand{\mmdev}[1]{\breve{\mathrm{#1}}}
+\newcommand{\rv}[1]{\mathsf{#1}}
+\newcommand{\vrv}[1]{\vv{\rv{#1}}}
+\newcommand{\dist}[1]{\mathcal{#1}}
+% \newcommand{\set}[1]{\mathcal{#1}}
+\newcommand{\op}[1]{\mathcal{#1}}
+\newcommand{\proj}{\mm{P}}
+\newcommand{\disteq}{\stackrel{\mathrm{d}}{=}}
+\newcommand{\Normal}{\mathcal{N}}
+\newcommand{\approxdisteq}{\stackrel{\mathrm{d}}{\approx}}
+\newcommand{\gvn}{\mid}
+\renewcommand{\Pr}{\mathbb{P}}
+\newcommand{\solop}{\mathcal{G}^{\dagger}}
+%
+% Measure notation commands:
+
+\NewDocumentCommand{\Law}{o}{%
+  \mu\IfValueT{#1}{_{#1}}%
+}
+
+\NewDocumentCommand{\ELaw}{o}{%
+  \widehat{\mu}\IfValueT{#1}{_{#1}}%
+}
+% Independence symbol
+\newcommand\indep{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\one}{\mathbbold{1}}
+
+% \theoremstyle{plain}
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{proposition}[theorem]{Proposition}
 
 
 % Change the conference header to something arXiv-friendly.
