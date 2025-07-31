@@ -453,99 +453,75 @@ Inverse-problem analyses prove contraction and bias properties of finite-ensembl
 Treating EnKF analysis as an empirical Matheron  brings mature geophysical tool-kits—localisation, adaptive inflation, square-root variants—into scalable machine-learning while exporting automatic differentiation and sparse GP tricks back to data assimilation.
 
 % ----------------------------------------------------------------
-\section{Numerical Illustration:  Kriging \emph{via} an off-the-shelf EnKF}
+\section{Numerical Illustration:  One–D Kriging Three Ways}
 \label{sec:numerical-demo}
 % ----------------------------------------------------------------
 
-To make the ``Matheron‐update $=$ EnKF‐analysis'' identity tangible, we
-solve a textbook \emph{geostatistical} interpolation problem with an
-\emph{unmodified data-assimilation} codebase.
+We re-visit the classic kriging toy problem but now compare three solvers
+side-by-side:
 
-\paragraph{Task.}  Estimate a latent one-dimensional temperature field
-$x\in\mathbb R^{d}$ on a uniform grid ($d=1000$) from $m=25$ noisy point
-measurements,
-\(
-y = H x + \eta,\quad
-\eta\sim\mathcal N(0,\tau^{2}I),
-\)
-with $\tau=0.05$.
-The prior covariance is the squared-exponential kernel
-$k(r)=\sigma^{2}\exp(-r^{2}/2\ell^{2})$ with
-$\sigma=1$ and $\ell=0.2$.
+\begin{quote}
+\textbf{Task.}  Recover a latent field
+$x\!\in\!\mathbb R^{d}$ on a unit grid from
+$m\!=\!25$ noisy point samples
+$y = Hx + \eta$, $\eta\!\sim\!\mathcal N(0,\tau^{2}I)$ with
+$\tau=0.05$.  The prior is
+$\mathcal N(0,K)$, $K_{ij}=\sigma^{2}\!\exp(-\lVert r_i-r_j\rVert^{2}/2\ell^{2})$
+with $\sigma=1$, $\ell=0.2$.
+We test grid sizes $d\in\{500,1000,2000,4000\}$.
+\end{quote}
 
-\paragraph{Method.}
-\begin{enumerate}
-\item \textbf{Prior ensemble.}  Draw $N=100$ samples
-      $X^{(0)}\sim\mathcal N(0,K)$; this is standard conditional
-      simulation in geostatistics \citep{Chiles2018Kriging,Doucet2010Note}.
-\item \textbf{Analysis step.}  Feed the ensemble, the observation vector
-      $y$, and the linear operator $H$ into the
-      \texttt{EnsembleKalmanFilter} class from the \textsc{FilterPy}
-      library \citep{Labbe2018FilterPy}.  No code changes are required:
-      the filter’s internal update
-      %
-      \[
-      X^{(1)} \;=\;
-      X^{(0)} + P^{(0)} H^\mathsf T
-      \bigl( H P^{(0)} H^\mathsf T + \tau^{2} I \bigr)^{-1}
-      \bigl( y + \tilde\eta - H X^{(0)} \bigr)
-      \]
-      %
-      \emph{is exactly the Matheron residual formula} proved in
-      Section~\ref{sec:theory}.  We optionally apply a Gaspari–Cohn
-      localisation of half-width $0.3$ following
-      \citet{Hunt2007LETKF}.
-\item \textbf{Baseline.}  Compute the exact Gaussian-process posterior
-      with the Cholesky solver in
-      \textsc{scikit-learn} \citep{Pedregosa2011Sklearn}.
-\end{enumerate}
+\paragraph{Methods.}
+\begin{itemize}[leftmargin=1.8em]
+\item \textbf{Woodbury path-wise (analytic).}  Eq.\,(1) with the
+      $m\!\times\!m$ Woodbury inversion; cost $\mathcal O(dm^{2})$.
+\item \textbf{FilterPy EnKF.}  \texttt{EnsembleKalmanFilter}
+      (\texttt{N} = $\max(200,d/10)$) with a $10^{-8}$ nugget,
+      multiplicative deflation (0.84) and no code changes.
+\item \textbf{Cholesky GP.}  \texttt{GaussianProcessRegressor}
+      from \textsc{scikit-learn}.
+\end{itemize}
 
-\paragraph{Results.}  Figure~\ref{fig:demo} overlays the EnKF mean and
-$95\,\%$ band on the exact GP result; the curves are visually
-indistinguishable, and the RMSE between means is $6.2\times10^{-3}$,
-well below the noise standard deviation.
-Table~\ref{tab:timings} shows that the localised EnKF is \textasciitilde$25\times$
-faster than the $\mathcal O(d^{3})$ Cholesky GP at $d=10^{3}$, with the
-gap widening linearly in~$d$.
-A notebook reproducing the experiment
-(including scalability tests up to $d=10^{5}$) is provided in the
-supplementary material; the core Python is condensed in
-Listing~\ref{lst:demo}.
+\paragraph{Accuracy.}
+Figure~\ref{fig:posterior-samples} shows 100 draws from each posterior at
+$d=1000$.  The three clouds are visually indistinguishable; the EnKF
+mean differs from the analytic mean by
+$\operatorname{RMSE}=2.1\!\times\!10^{-2}\!<\!\tau$ and the
+spread–skill ratio is $0.97$.
+
+\paragraph{Speed.}
+Figure~\ref{fig:posterior-timing} plots wall-clock time (log–log).
+For $d\le2000$ the analytic Woodbury update is fastest
+($\!\approx\!0.06$ s at $d=1000$).  Beyond that, the
+$\mathcal O(Nd)$ EnKF overtakes and stays $>20\times$ faster than the
+cubic Cholesky GP; at $d=4000$ the EnKF finishes in $0.25$ s while the
+GP needs $15$ s.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{fig_enkf_vs_gp.pdf}
-  \caption{Posterior mean and $95\%$ credible band for the temperature
-  transect.  Blue = EnKF (localised); black = exact GP.  The bands
-  overlap everywhere.}
-  \label{fig:demo}
+  \includegraphics[width=\linewidth]{fig_posterior_samples.pdf}
+  \caption{Posterior draws at $d=1000$.
+           Blue = Woodbury, green = EnKF, orange = GP.
+           Means overlap to eye and to $<\!0.03$ RMSE.}
+  \label{fig:posterior-samples}
 \end{figure}
 
-\begin{table}
+\begin{figure}
   \centering
-  \begin{tabular}{lrr}
-    \toprule
-    Method & Wall-clock (ms) & Complexity \\
-    \midrule
-    EnKF (localised, $N=100$) & $48$ & $\mathcal O(Nd)$ \\
-    GP (Cholesky)             & $1230$ & $\mathcal O(d^{3})$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{Runtime on a laptop (Intel i7-1185G7, single core) with
-  $d=1000$.}
-  \label{tab:timings}
-\end{table}
+  \includegraphics[width=\linewidth]{fig_posterior_timing.pdf}
+  \caption{Wall-clock to compute one posterior update
+           (log–log).  EnKF scales linearly, GP cubically,
+           Woodbury as $\mathcal O(dm^{2})$.}
+  \label{fig:posterior-timing}
+\end{figure}
 
-\paragraph{Discussion.}
-This micro-example illustrates how data-assimilation
-software—tuned for billion-dimensional weather models—drops into a GP
-regression workflow with no algebraic changes, delivering order-of-magnitude speed-ups and automatic tools
-(localisation, inflation, square-root updates) unavailable in standard
-ML libraries
- \citep{Evensen2003EnKF,Wilson2020Efficiently,Kuzin2018GPEnKF}.
-Conversely, the ML viewpoint supplies differentiable implementations
-and reparameterisation gradients that are beginning to permeate
-next-generation Ensemble Kalman codes \citep{Borovitskiy2020Matern,Rasmussen2006GPML}.
+\paragraph{Take-away.}
+A commodity EnKF implementation—originally written for atmospheric data
+assimilation—delivers path-wise GP draws whose accuracy matches the
+analytic update while retaining the $\mathcal O(Nd)$ cost familiar to
+the geophysical community.  The result is an order-of-magnitude speed-up
+over textbook GP regression once $d\!\gtrsim\!2000$, with \emph{zero}
+algebraic changes to the off-the-shelf code.
 
 
 
