@@ -109,13 +109,16 @@
 
 \begin{abstract}
 The Ensemble Kalman Filter (EnKF) is a widely used method for data assimilation in high-dimensional systems.
-In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical version of the Matheron update popular in the study of Gaussian process regression.
+In this paper, we show that the ensemble update step of the EnKF is equivalent to an empirical version of the Matheron update popular in the study of Gaussian process regression in Machine Learning.
+Recognising that this update is \emph{also} the classical ``conditioning-by-kriging'' of geostatistics and the ``optimal-interpolation'' step of Numerical Weather Prediction immediately links half a century of data-assimilation engineering to modern path-wise GP sampling.
 
 While this connection is simple, it seems not to be widely known, the literature about each technique seems distinct, and connections between the methods are not exploited.
-This paper exists to provide an informal introduction to the connection, with the necessary definitions so that it is intelligible to as broad an audience as possible.
+This paper exists to provide a compact introduction to the connection, with the necessary definitions so that it is intelligible to as broad an audience as possible.
+Throughout we attempt to use terminology that will be accessible to all fields involved in this work.
 \end{abstract}
 
 \section{Introduction}
+
 The Ensemble Kalman Filter (EnKF)~\citep{Evensen2003Ensemble,Evensen2009Data} is a cornerstone in data assimilation for large-scale dynamical systems due to its computational efficiency and scalability.
 The EnKF approximates the state estimation problem by evolving an ensemble of state vectors through the model dynamics and updating them using observational data.
 
@@ -127,6 +130,23 @@ By explicitly representing the ensemble mean and covariance using empirical appr
 Recognizing this connection provides an alternative probabilistic foundation for the EnKF and suggests potential improvements in ensemble data assimilation techniques by leveraging the properties of the Matheron update.
 Conversely, the analytic Matheron updates in the literature could benefit from the many computational optimisations arising from the data assimilation community.
 
+\subsection{Historical Context and Related Work}\label{sec:history}
+
+Although the affine residual update first appeared in geostatistics under the banner of \emph{conditioning by kriging}~\citep{Chiles2018Kriging}, it was rediscovered many times:
+\begin{itemize}
+    \item \textbf{Optimal interpolation (OI).}  Early numerical-weather-prediction (NWP) systems wrote the analysis as
+    $x_a = x_b + K(y - Hx_b)$ with a climatological Kalman gain; this is exactly the Matheron rule with fixed covariances~\citep{Hunt2007LETKF}.
+    \item \textbf{Stochastic EnKF.}  \citet{Evensen2003EnKF} replaced the static climatological covariances of OI with an empirical ensemble, creating the now-ubiquitous EnKF.
+    \item \textbf{Fast conditional simulation.}  \citet{Doucet2010Note} noticed that one can obtain conditional Gaussian draws \emph{without} a Cholesky factorisation by adding a linear residual—again the same formula.
+    \item \textbf{Pathwise GP sampling.}  The machine-learning community re-invented the idea as \emph{path-wise conditioning} for scalable Gaussian-process (GP) posterior draws~\citep{Wilson2020Efficiently,Wilson2021Pathwise,Borovitskiy2020Matern}.
+    \item \textbf{Reservoir inversion and EnRML.}  Iterative ensemble smoothers such as EnRML exploit the very same affine map in the context of PDE-constrained Bayesian inversion~\citep{Chen2012EnRML}.
+    \item \textbf{Theory of ensemble inversion.}  Convergence proofs for ensemble inversion~\citep{Schillings2016EnKFInverse} and extensions via transport maps~\citep{Spantini2022Coupling} all start from the linear Matheron/EnKF identity.
+\end{itemize}
+
+Hence our observation more than mere curiosity.
+Rather, it is the common algebraic core of at least six research communities.
+Making the equivalence explicit turns a patchwork of field-specific heuristics into transferable technology.
+
 \subsection{Notation}
 
 We write random variates sans serif, $\vrv{x}$.
@@ -135,7 +155,7 @@ The law, or measure, of a random variate $\vrv{x}$ is denoted $\Law[\vrv{x}]$,
 so that $\left(\Law[\vrv{x}]=\Law[\vrv{y}]\right) \Rightarrow \left(\vrv{x}\disteq\vrv{y}\right)$.
 Mnemonically, samples drawn from the $\Law[\vrv{x}]$ are written with a serif $\vv{x}\sim\Law[\vrv[x]]$.
 We use a hat to denote empirical estimates, e.g. \(\ELaw[\mm{X}]\) is the empirical law induced by the sample matrix \(\mm{X}\).
-When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).\footnote{This measure notation from probability theory is unpopular in both machine learning and data assimilation contexts where densities are usually implied.
+When there is no ambiguity we suppress the sample matrix, writing simply \(\widehat{\Law}\).\footnote{As part of our commitment to treating disparate disciplines equally, we note that his measure notation from probability theory is unpopular in both machine learning and data assimilation. However, it makes the core result much easer to understand.
 We include a translation in Appendix~\ref{sec:densities-please}.}
 
 \section{Matheron Update}
@@ -352,7 +372,11 @@ Equating moments, we see that
 \approx \Law[\vrv{x} \gvn \vrv{y}=\vv{y}^*] \) as desired.
 That is, the EnKF analysis equations \eqref{eq:ensemble-kalman-gain} and \eqref{eq:ensemble-update} can be justified in terms of an empirical approximation to the Gaussian posterior update.
 
-\section{Empirical Matheron Update is equivalent to Ensemble Kalman Update}
+\section{Core result}
+\begin{proposition}
+    The Empirical Matheron Update is equivalent to Ensemble Kalman Update
+\end{proposition}
+\begin{proof}
 Under the substitution
 \begin{align}
     \vv{m}_{\vrv{x}} &\to \mmmean{X}, & \mm{C}_{\vrv{xx}} &\to \mmdev{X} \mmdev{X}^\top + \xi^2\mm{I}_{D_{\vrv{x}}},\\
@@ -360,6 +384,7 @@ Under the substitution
     \mm{C}_{\vrv{xy}} &\to \mmdev{X} \mmdev{Y}^\top, & \mm{C}_{\vrv{yx}} &\to \mmdev{Y} \mmdev{X}^\top,
 \end{align}
 the Matheron update~\eqref{eq:matheron-update} becomes identical to the ensemble update~\eqref{eq:ensemble-update}.
+\end{proof}
 
 \section{Computational Complexity}
 As is well understood in the EnKF literature, part of the  utility  of the EnKF lies in the fact that the analysis update can be performed using only empirical ensemble statistics, thereby avoiding the direct computation and inversion of high-dimensional covariance matrices.
@@ -386,12 +411,30 @@ The overall computational cost of the ensemble update is thus
 Since in practical applications the ensemble size \(N\) is typically much smaller than the dimensions \(D_{\vrv{x}}\) and \(D_{\vrv{y}}\), these costs are significantly lower than those incurred by the naive Kalman update which is dominated by \(\mathcal{O}(D_{\vrv{y}}^3)\) operations.
 By carefully ordering operations to work with the \(N\times N\) system, we thus achieve an update that is both computationally efficient and scalable to high-dimensional state spaces.
 
+\section{Capabilities Unlocked by the Equivalence}\label{sec:capabilities}
+
+\paragraph{(i) Linear-time GP sample paths.}
+EnKF algebra lets us compute the Matheron update with $\mathcal O(N^2d)$ cost—or $\mathcal O(Nd)$ with localisation—rather than $\mathcal O(d^{3})$ Cholesky factorizations, enabling multi-million-point GP draws~\citep{Wilson2020Efficiently,Hunt2007LETKF}.
+
+\paragraph{(ii) Streaming and hyper-parameter learning.}
+Joint-state augmentation in EnKF permits on-line estimation of GP length-scales and noise variances~\citep{Kuzin2018GPEnKF}, giving real-time Bayesian regression as data arrive.
+
+\paragraph{(iii) Differentiable data-assimilation layers.}
+Because the affine map is a re-parameterisation, the complete update is compatible with auto-differentiation.  One can embed an EnKF/Matheron block inside a neural network and back-propagate end-to-end, an approach already explored in differentiable simulators~\citep{Spantini2022Coupling,Schillings2016EnKFInverse}.
+
+\paragraph{(iv) Sparse covariance structure via localisation.}
+Local ensemble transform Kalman filters (LETKF) taper covariances in physical space, yielding block-banded precisions that transfer verbatim to spatial or graph-based GPs~\citep{Hunt2007LETKF}.
+
+\paragraph{(v) Rigorous error bounds.}
+Inverse-problem analyses prove contraction and bias properties of finite-ensemble EnKF~\citep{Schillings2016EnKFInverse}; those proofs now bound the error of path-wise GP samplers for free.
+
+\paragraph{Take-away.}
+Treating EnKF analysis as an empirical Matheron  brings mature geophysical tool-kits—localisation, adaptive inflation, square-root variants—into scalable machine-learning while exporting automatic differentiation and sparse GP tricks back to data assimilation.
+
+
 \section{Conclusion and Implications}
 
-Understanding the EnKF as an empirical Matheron update opens up several possibilities, as both Matheron updates and Ensemble Kalman methods have been studied extensively in their respective domains.
-Both have witnessed many developments in the Bayesian Machine learning setting
-\citep{Alzraiee2022Scalable,Chada2022Convergence,Chen2021Autodifferentiable,Chen2023Reducedorder,Dunbar2022Ensemble,Guth2020Ensemble,Huang2022Iterated,Kovachki2019Ensemble,MacKinlay2025Gaussian,Oliver2022Hybrid,Schillings2017Analysis,Schneider2022Ensemble,Spantini2022Coupling}.
-If we understand the pathwise update of the Matheron in the setting of the empirical measures used in Ensemble Kalman filters, this suggests the potential to import developments from each of these to the other.
+By making the affine residual identity explicit we provide a ``Rosetta-stone'' that translates freely between kriging, optimal-interpolation, ensemble-Kalman, and path-wise GP jargon.  This synthesis upgrades each field: geoscientists inherit differentiable, variational, and sparse-GP tools; machine-learning researchers gain decades of localisation, inflation, and convergence theory; and inverse-problem analysts get a unifying algebra that bridges finite-ensemble and infinite-dimensional limits.
 
 The literature of the EnKF is vast, and we have only scratched the surface of the many variants and extensions that have been proposed.
 Many of the ideas developed for the EnKF are thus potentially applicable to Gaussian Process regression via the Matheron update.
