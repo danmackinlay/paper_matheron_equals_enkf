@@ -9,6 +9,7 @@
 \usepackage{nicefrac}       % compact fractions
 \usepackage{microtype}      % microtypography
 \usepackage{graphicx}       % graphics
+\graphicspath{{figures/}}   % figure directory
 \usepackage{natbib}         % bibliography support
 \usepackage{doi}            % DOI formatting
 \usepackage{subfiles}       % subfile support
@@ -430,7 +431,7 @@ Both methods scale well with the EnKF maintaining its advantage across all teste
     {fig:posterior-samples} % label
     {\caption{Posterior draws at $d=1000$.
              Means overlap to eye and to $<\!0.03$ RMSE.}} % caption
-    {\centering\includegraphics[width=\linewidth]{fig_posterior_samples.pdf}}
+    {\centering\includegraphics[width=\linewidth]{posterior_samples.pdf}}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -438,7 +439,7 @@ Both methods scale well with the EnKF maintaining its advantage across all teste
     {fig:posterior-timing} % label
     {\caption{Wall-clock to compute one posterior update
              (log–log). Training EnKF scales as $\mathcal O(dm^{2})$, GP as $\mathcal O(m^{3})$. We set $m=d/5$.}} % caption
-    {\centering\includegraphics[width=\linewidth]{fig_posterior_timing.pdf}}
+    {\centering\includegraphics[width=\linewidth]{perf_scaling.pdf}}
 \end{figure}
 
 \paragraph{Take-away.}
