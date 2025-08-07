@@ -63,41 +63,70 @@ All backends follow the signature: `run(problem: Problem, **kwargs) -> dict`
 
 ## Installation
 
+**Prerequisites**: You need Python ≥ 3.11, `uv` (or `pip`), `doit`, and `latexmk`.
+
 **IMPORTANT**: All commands should be run from the root directory of this repository.
 
 ```bash
-# 1. Create virtual environment and install dependencies
-uv venv
-uv sync
+# 1. Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Run commands using `uv run`
+# 2. Create virtual environment and install dependencies
+uv venv
+uv sync                    # Installs doit, numpy, matplotlib, latexmk deps, etc.
+
+# 3. Test installation
 uv run pytest da_gp/tests/
+uv run doit list           # Show available build tasks
 ```
 
-## Quick Start
+## Usage
 
-This provides a minimal, end-to-end workflow to generate a result.
+### One-Command Build
+
+Generate all benchmarks, figures, and the final PDF with a single command:
 
 ```bash
-# 1. Generate timing data with internal benchmarking (NEW: separate fit/predict times)
-uv run python da_gp/scripts/bench.py \
-    --n_obs_grid 100 500 --grid_size_fixed 1000 \
-    --backends sklearn dapper_enkf dapper_letkf --csv data/timing_quick.csv
-
-# 2. Create dual-curve timing plots showing fit vs predict times (NEW)
-uv run python da_gp/scripts/plot_timing.py data/timing_quick.csv --output-dir figures
-
-# 3. Generate a posterior plot showing all three backends
-uv run python da_gp/scripts/plot_posterior.py --n_obs 50
-
-# 4. Build the paper
-latexmk -pdf main.tex
+doit pdf   # Complete pipeline: benchmarks → figures → main.pdf
+# OR use make syntax:
+make pdf   # Equivalent convenience wrapper
 ```
 
+This automatically handles all dependencies and builds everything needed for the paper. Rerun `doit pdf` after making edits; only stale steps will rebuild thanks to intelligent dependency tracking.
 
-## Full Timing Benchmarking Workflow
+Use `doit clean` (or `make clean`) to force a full rebuild from scratch.
 
-This is the complete workflow to reproduce the timing figures for the paper using the new internal timing system.
+### Incremental Development
+
+For development and debugging, you can run individual parts:
+
+```bash
+# View all available tasks
+doit list
+
+# Generate just the timing data
+doit timing_data
+
+# Generate just the figures  
+doit figures
+
+# Run tests
+doit test
+
+# Clean specific parts
+doit clean_figures  # Remove generated plots
+doit clean_data     # Remove CSV files
+doit clean_latex    # Remove LaTeX aux files
+```
+
+### Legacy Manual Workflow (Deprecated)
+
+**⚠️ The manual commands below are deprecated. Use `doit pdf` instead for automated dependency management.**
+
+<details>
+<summary>Click to expand deprecated manual workflow</summary>
+
+The following manual workflow still works but requires manual dependency tracking:
 
 ```bash
 # Step 1: Generate comprehensive timing data (observation scaling)
@@ -120,14 +149,19 @@ uv run python da_gp/scripts/bench.py \
 uv run python da_gp/scripts/plot_timing.py data/timing_obs.csv --output-dir figures
 uv run python da_gp/scripts/plot_timing.py data/timing_dim.csv --output-dir figures
 
-# Step 4: Generate the posterior comparison plot
+# Step 4: Generate the posterior comparison plot  
 uv run python da_gp/scripts/plot_posterior.py --n_obs 50
 
-# Output files used by main.tex:
-# - figures/timing_vs_observations.pdf  (NEW: fit + predict times vs # observations)  
-# - figures/timing_vs_dimensions.pdf    (NEW: fit + predict times vs state dimension)
-# - figures/posterior_samples.pdf       (posterior comparison)
+# Step 5: Build the paper
+latexmk -pdf main.tex
 ```
+
+Output files used by main.tex:
+- `figures/timing_vs_observations.pdf` (fit + predict times vs # observations)
+- `figures/timing_vs_dimensions.pdf` (fit + predict times vs state dimension)  
+- `figures/posterior_samples.pdf` (posterior comparison across all methods)
+
+</details>
 
 ## Key Improvements in Timing System
 
@@ -137,8 +171,12 @@ The new timing system provides several advantages:
 2. **Internal timing**: Uses `time.perf_counter()` to eliminate Python startup and I/O overhead  
 3. **Statistical robustness**: Includes warm-up runs and reports median of 5 timing repeats
 4. **Shared datasets**: All backends use identical synthetic data for fair comparison
-5. **Hardened plotting**: Validates data points, uses unified JMLR styling, supports color-blind friendly palettes
-6. **Flexible visualization**: CLI flags for fixed values, legend control, and explicit scale settings
+5. **Dual figure workflow**: Two separate CSVs generate two complementary timing plots:
+   - `timing_obs.csv` → `timing_vs_observations.pdf` (scaling with observation count)
+   - `timing_dim.csv` → `timing_vs_dimensions.pdf` (scaling with state dimension)
+6. **Smart plotting**: `plot_timing.py` auto-detects data variation and generates appropriate plots
+7. **Hardened plotting**: Validates data points, uses unified JMLR styling, supports color-blind friendly palettes
+8. **Flexible visualization**: CLI flags for fixed values, legend control, and explicit scale settings
 
 
 ## Testing
