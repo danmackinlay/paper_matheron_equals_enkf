@@ -200,6 +200,24 @@ Output files used by main.tex:
 
 </details>
 
+## Logging Policy
+
+- We use Python's `logging` for all diagnostics. No `print` in library code.
+- CLIs accept logging flags:
+  - `--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}` (default: WARNING)
+  - `--log-json` for JSON-formatted logs
+- Examples:
+  ```bash
+  uv run python da_gp/scripts/bench.py --log-level=INFO
+  uv run python da_gp/scripts/plot_timing.py data/timing_obs.csv --log-level=DEBUG
+  ```
+
+From `doit`, logs default to WARNING. Set a different level temporarily:
+
+```bash
+LOG_LEVEL=INFO uv run doit pdf
+```
+
 ## Key Improvements in Timing System
 
 The new timing system provides several advantages:
