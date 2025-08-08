@@ -119,6 +119,43 @@ doit clean_data     # Remove CSV files
 doit clean_latex    # Remove LaTeX aux files
 ```
 
+## Benchmarks & Plots (doit)
+
+- CSVs and figures are auto-regenerated when sweep params or backends change.
+- We track these knobs: `OBS_SWEEP`, `DIM_SWEEP`, `BACKENDS`, `REPEATS`, and the fixed values (`n_obs_fixed`, `grid_size_fixed`).
+- If a sweep has only one unique value, the corresponding plot is skipped by design.
+
+### Typical workflow
+```bash
+uv run doit pdf             # build paper + generate/plot benchmarks as needed
+```
+
+### Clean vs force rebuild
+
+```bash
+uv run doit clean           # removes CSVs/figures/paper (tasks declare their own targets)
+uv run doit pdf             # full rebuild from scratch
+```
+
+### Got only sklearn curves?
+
+* Ensure DAPPER backends are installed and listed in `BACKENDS`.
+* Ensure sweeps have ≥2 values (e.g., `OBS_SWEEP=[100, 500, 1000]`).
+* You can smoke-test:
+
+  ```bash
+  uv run python da_gp/scripts/bench.py \
+    --n_obs_grid 50 100 --grid_size_fixed 2000 \
+    --backends sklearn dapper_enkf dapper_letkf \
+    --csv /tmp/check.csv --repeats 1
+  ```
+
+  Then:
+
+  ```bash
+  uv run python da_gp/scripts/plot_timing.py /tmp/check.csv --output-dir figures
+  ```
+
 ### Legacy Manual Workflow (Deprecated)
 
 **⚠️ The manual commands below are deprecated. Use `doit pdf` instead for automated dependency management.**
